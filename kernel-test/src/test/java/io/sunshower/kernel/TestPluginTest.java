@@ -1,5 +1,6 @@
 package io.sunshower.kernel;
 
+import io.sunshower.kernel.test.SunshowerPluginManager;
 import org.junit.jupiter.api.Test;
 import org.pf4j.PluginManager;
 

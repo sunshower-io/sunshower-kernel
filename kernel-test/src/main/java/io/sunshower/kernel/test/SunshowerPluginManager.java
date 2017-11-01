@@ -1,4 +1,4 @@
-package io.sunshower.kernel;
+package io.sunshower.kernel.test;
 
 import org.pf4j.*;
 import org.slf4j.Logger;

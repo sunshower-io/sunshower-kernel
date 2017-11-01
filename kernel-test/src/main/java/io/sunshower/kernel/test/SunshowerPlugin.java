@@ -1,5 +1,6 @@
-package io.sunshower.kernel;
+package io.sunshower.kernel.test;
 
+import io.sunshower.kernel.Plugin;
 import org.pf4j.Extension;
 
 @Extension
