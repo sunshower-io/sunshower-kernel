@@ -1,0 +1,10 @@
+
+dependencies {
+    compile project(":kernel-api")
+}
+
+jar {
+    manifest {
+        attributes("sunshower-plugin": "true")
+    }
+}

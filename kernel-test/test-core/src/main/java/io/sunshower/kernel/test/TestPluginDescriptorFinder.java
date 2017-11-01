@@ -16,6 +16,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class TestPluginDescriptorFinder implements PluginDescriptorFinder {
+    
+    
     @Override
     public boolean isApplicable(Path pluginPath) {
         final String pathName = pluginPath.toString();

@@ -1,0 +1,18 @@
+
+
+dependencies {
+
+    compileOnly 'org.pf4j:pf4j'
+    
+    plugin 'org.springframework:spring-core'
+}
+
+jar {
+    into('lib') {
+        from configurations.plugin
+    }
+    
+    manifest {
+        attributes("sunshower-plugin": "true")
+    }
+}

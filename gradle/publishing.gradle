@@ -1,5 +1,4 @@
 apply plugin: 'com.jfrog.artifactory'
-apply plugin: 'maven-publish'
 
 
 ext {
@@ -8,11 +7,13 @@ ext {
             'libs-snapshot-local'
 }
 
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
+afterEvaluate {
+    apply plugin: 'maven-publish'
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
         }
     }
 }

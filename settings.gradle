@@ -1,2 +1,12 @@
-include 'kernel-api', 'kernel-core', 'kernel-main', 'kernel-test', 'test-plugin'
+include (
+        'kernel-api', 
+        'kernel-core', 
+        'kernel-main', 
+        'kernel-test:test-core',
+        'kernel-test:test-spring',
+        'test-plugins:simple-test',
+        'test-plugins:spring:simple', 
+        'kernel-spring:spring-core', 
+        'kernel-spring:spring-security'
+)
 
