@@ -1,0 +1,2 @@
+include 'kernel-api', 'kernel-core', 'kernel-main', 'kernel-test', 'test-plugin'
+

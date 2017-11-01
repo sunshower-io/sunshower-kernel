@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':kernel-api')
+    compile 'org.yaml:snakeyaml:1.19'
+}

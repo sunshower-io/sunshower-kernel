@@ -1,0 +1,101 @@
+import groovy.xml.XmlUtil
+
+import java.util.logging.Level
+
+/**
+ * -Pprojects=sunshower-schemata.version:1.0.33.Final
+ */
+
+def extractProperties = {
+    if (!projects) {
+        logger.log(Level.WARNING, 'Cannot update maven properties if no projects are set')
+        return;
+    }
+
+    def projectList = projects.split("\\s*,\\s*")
+    return projectList.collect { t ->
+        def values = t.split(":")
+        def pattern = "<${values[0]}>.*</${values[0]}>".toString()
+        def subs = "<${values[0]}>${values[1]}</${values[0]}>".toString()
+        return [pattern, subs]
+    }
+
+}
+
+
+
+
+task listUpstream() {
+
+    def file = file("${project.rootDir}/bom/imported/pom.xml")
+
+    def pom = new XmlSlurper().parse(file)
+
+
+    println("Hasli Upstream: ")
+    pom.properties.childNodes().findAll { t ->
+        t.name.startsWith('sunshower-')
+    }.each { t ->
+        println("\t${t.name}: ${t.text()}")
+    }
+}
+
+
+
+task setUpstream() {
+    if(project.properties.containsKey('upstreamVersion')) {
+        
+        def include = [] as Set;
+
+        if(project.properties.containsKey('includeProjects')) {
+            include = (project.properties.includeProjects.split(",") as Set).collect {"${it}.version".toString()}
+            println("Including projects: ${include}")
+        }
+
+        def pomFile = file("${project.rootDir}/bom/imported/pom.xml")
+        def pom = new XmlSlurper(false, false).parse(pomFile)
+
+        def propertiesFile = file("${project.rootDir}/gradle.properties")
+
+        println("Updating project version...")
+        def properties = new Properties()
+        properties.load(new FileReader(propertiesFile))
+        properties.setProperty("version", upstreamVersion)
+        properties.store(new FileOutputStream(propertiesFile),
+                "updating version to $upstreamVersion")
+
+        println("Successfully updated project version")
+
+
+        println("Updating upstream version to: ${upstreamVersion}")
+        pom.properties.childNodes().findAll { t ->
+            t.name.startsWith('sunshower-') && (include.isEmpty() ? true : include.contains(t.name))
+        }.each { t ->
+            t.replaceBody(upstreamVersion)
+        }
+
+        def bound = new groovy.xml.StreamingMarkupBuilder().bind { mkp.yield pom }
+        def serialize = XmlUtil.serialize(bound)
+        pomFile.write(serialize)
+    } else {
+        println("No version specified")
+    }
+}
+
+task updateMavenVersions() {
+
+    doLast {
+
+        def props = extractProperties()
+
+        def file = new File("${project.rootDir}/bom/imported/pom.xml")
+        def ft = file.text
+        props.each { i ->
+            ft = ft.replaceAll(i[0], i[1])
+        }
+
+        file.write(ft)
+    }
+
+}
+

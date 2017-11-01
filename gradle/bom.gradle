@@ -1,0 +1,16 @@
+apply plugin: 'bom'
+
+bom {
+    mavenHome = System.getProperty('M2_HOME')
+}
+task installBomBefore(type:GradleBuild, dependsOn: 'installBillOfMaterials') {
+
+}
+
+task releaseBom(dependsOn: [
+        'setBomVersion',
+        'installBillOfMaterials',
+        'uploadBom']
+) {
+    group = 'bill of materials'
+}

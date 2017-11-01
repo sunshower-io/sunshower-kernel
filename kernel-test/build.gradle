@@ -1,0 +1,6 @@
+dependencies {
+    compile 'org.pf4j:pf4j'
+    compile project(':kernel-api')
+    compile project(':kernel-core')
+    testCompile "io.sunshower.kernel:test-plugin:${project.version}"
+}

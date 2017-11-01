@@ -1,0 +1,99 @@
+/**
+ * Buildscript Plugins Section
+ *
+ * @author haswell
+ */
+buildscript {
+    apply from: 'gradle/buildscript.gradle', to: buildscript
+}
+
+allprojects {
+    apply plugin: 'java'
+
+    
+}
+
+/**
+ * Subproject configurations
+ */
+
+subprojects {
+    version = rootProject.version
+    
+    
+
+    apply plugin: 'java'
+    apply plugin: 'nebula.optional-base'
+    
+    apply from: "$rootDir/gradle/dependencies.gradle"
+    apply from: "$rootDir/gradle/idea.gradle"
+    apply from: "$rootDir/gradle/jacoco.gradle"
+    apply from: "$rootDir/gradle/publishing.gradle"
+    apply from: "$rootDir/gradle/test.gradle"
+
+    dependencies {
+        compile 'org.pf4j:pf4j'
+        compile ('org.apache.logging.log4j:log4j-api')
+        compile('org.apache.logging.log4j:log4j-core')
+
+        [
+                'orm',
+                'context'
+        ].each{
+            compile("org.springframework:spring-$it")
+        }
+
+        compile('org.springframework:spring-context')
+        [
+                'core',
+                'config',
+                'acl',
+                'crypto',
+                'aspects',
+                'ldap'
+        ].each {
+            compile("org.springframework.security:spring-security-$it")
+        }
+        compile group: 'org.eclipse.persistence', name: 'org.eclipse.persistence.moxy'
+        testCompile("org.springframework:spring-test")
+        testCompile("io.sunshower.barometer.modules:jaxrs")
+        testCompile('org.junit.platform:junit-platform-launcher')
+        testCompile("org.springframework.security:spring-security-test")
+    }
+
+    test {
+        testLogging {
+            showStandardStreams = true
+        }
+    }
+
+}
+
+task prepareForRelease() {
+    doLast {
+        def flagged = []
+        def pom = new XmlSlurper().parse("$rootDir/bom/imported/pom.xml")
+
+        pom.properties.'*'*.name().each { dep ->
+            if (pom.properties."${dep}" =~ "FEATURE") {
+                flagged.add("$dep --> ${pom.properties."${dep}"}")
+            }
+        }
+
+        if (!flagged.isEmpty()) {
+            throw new org.gradle.api.GradleException("Found FEATURE versions while preparing for release, please " +
+                    "release the following components and update the project dependencies in bom/imported/pom.xml: \n\n" +
+                    "${flagged.join("\n")}"
+            )
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = gradleWrapperVersion
+}
+
+apply from: "$rootDir/gradle/bom.gradle"
+apply from: "$rootDir/gradle/tasks.gradle"
+
+defaultTasks "installBillOfMaterials", "clean", "build"
