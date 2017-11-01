@@ -1,5 +1,6 @@
 package io.sunshower.kernel.test;
 
+import io.sunshower.kernel.YamlPluginDescriptor;
 import org.pf4j.PluginDescriptor;
 import org.pf4j.PluginDescriptorFinder;
 import org.pf4j.PluginException;
@@ -14,7 +15,7 @@ import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-public class SunshowerPluginDescriptorFinder implements PluginDescriptorFinder {
+public class TestPluginDescriptorFinder implements PluginDescriptorFinder {
     @Override
     public boolean isApplicable(Path pluginPath) {
         final String pathName = pluginPath.toString();
@@ -54,7 +55,7 @@ public class SunshowerPluginDescriptorFinder implements PluginDescriptorFinder {
 
     private PluginDescriptor readEntry(ZipFile zipFile, ZipEntry entry) throws IOException {
         final Yaml yaml = new Yaml();
-        Map load = yaml.load(zipFile.getInputStream(entry));
-        return new SunshowerPluginDescriptor(load);
+        Map load = (Map) yaml.load(zipFile.getInputStream(entry));
+        return new YamlPluginDescriptor(load);
     }
 }

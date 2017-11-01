@@ -7,12 +7,12 @@ import org.pf4j.PluginManager;
 
 import java.nio.file.Path;
 
-public class SunshowerPluginLoader implements PluginLoader {
+public class TestPluginLoader implements PluginLoader {
 
     final ClassLoader parent;
     final PluginManager pluginManager;
 
-    public SunshowerPluginLoader(ClassLoader parent, PluginManager pluginManager) {
+    public TestPluginLoader(ClassLoader parent, PluginManager pluginManager) {
         this.parent = parent;
         this.pluginManager = pluginManager;
     }

@@ -1,11 +1,11 @@
-package io.sunshower.kernel.test;
+package io.sunshower.kernel;
 
 import org.pf4j.DefaultPluginDescriptor;
 import org.pf4j.PluginDescriptor;
 
 import java.util.Map;
 
-public class SunshowerPluginDescriptor extends DefaultPluginDescriptor {
+public class YamlPluginDescriptor extends DefaultPluginDescriptor {
     
     public static final String GROUP_ID_NAME = "group";
     public static final String ARTIFACT_ID_NAME = "artifact";
@@ -14,7 +14,7 @@ public class SunshowerPluginDescriptor extends DefaultPluginDescriptor {
     public static final String PLUGIN_CLASS_NAME = "plugin-class";
     
     
-    public SunshowerPluginDescriptor(Map load) {
+    public YamlPluginDescriptor(Map load) {
         super(
                 getRequired(GROUP_ID_NAME, load),
                 get(DESCRIPTION_NAME, load),

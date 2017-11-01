@@ -5,8 +5,8 @@ import org.pf4j.ExtensionFinder;
 import org.pf4j.PluginManager;
 
 
-public class SunshowerExtensionFinder extends DefaultExtensionFinder implements ExtensionFinder {
-    public SunshowerExtensionFinder(PluginManager pluginManager) {
+public class TestExtensionFinder extends DefaultExtensionFinder implements ExtensionFinder {
+    public TestExtensionFinder(PluginManager pluginManager) {
         super(pluginManager);
     }
 

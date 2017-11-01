@@ -2,7 +2,7 @@ package io.sunshower.kernel.test;
 
 import org.pf4j.PluginStatusProvider;
 
-public class SunshowerPluginStatusProvider implements PluginStatusProvider {
+public class TestStatusProvider implements PluginStatusProvider {
     @Override
     public boolean isPluginDisabled(String pluginId) {
         return false;

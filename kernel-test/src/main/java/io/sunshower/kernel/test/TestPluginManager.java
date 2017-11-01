@@ -12,7 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 
-public class SunshowerPluginManager implements PluginManager {
+public class TestPluginManager implements PluginManager {
 
 
     private static final Logger log = LoggerFactory.getLogger(AbstractPluginManager.class);
@@ -77,7 +77,7 @@ public class SunshowerPluginManager implements PluginManager {
     /**
      * The plugins root is supplied by {@code System.getProperty("pf4j.pluginsDir", "plugins")}.
      */
-    public SunshowerPluginManager() {
+    public TestPluginManager() {
         initialize();
     }
 
@@ -86,7 +86,7 @@ public class SunshowerPluginManager implements PluginManager {
      *
      * @param pluginsRoot the root to search for plugins
      */
-    public SunshowerPluginManager(Path pluginsRoot) {
+    public TestPluginManager(Path pluginsRoot) {
         this.pluginsRoot = pluginsRoot;
 
         initialize();
@@ -598,7 +598,7 @@ public class SunshowerPluginManager implements PluginManager {
     }
 
     protected PluginFactory getPluginFactory() {
-        return new SunshowerPluginFactory();
+        return new TestPluginFactory();
     }
 
     protected Map<String, ClassLoader> getPluginClassLoaders() {
@@ -856,7 +856,7 @@ public class SunshowerPluginManager implements PluginManager {
     }
 
     protected PluginLoader createPluginLoader() {
-        return new SunshowerPluginLoader(ClassLoader.getSystemClassLoader(), this);
+        return new TestPluginLoader(ClassLoader.getSystemClassLoader(), this);
     }
 
     protected VersionManager createVersionManager() {
@@ -864,11 +864,11 @@ public class SunshowerPluginManager implements PluginManager {
     }
 
     protected ExtensionFinder createExtensionFinder() {
-        return new SunshowerExtensionFinder(this);
+        return new TestExtensionFinder(this);
     }
 
     protected PluginStatusProvider createPluginStatusProvider() {
-        return new SunshowerPluginStatusProvider();
+        return new TestStatusProvider();
     }
 
     protected PluginRepository createPluginRepository() {
@@ -876,14 +876,14 @@ public class SunshowerPluginManager implements PluginManager {
     }
 
     protected PluginFactory createPluginFactory() {
-        return new SunshowerPluginFactory();
+        return new TestPluginFactory();
     }
 
     protected ExtensionFactory createExtensionFactory() {
-        return new SunshowerExtensionFactory();
+        return new TestExtensionFactory();
     }
 
     protected PluginDescriptorFinder createPluginDescriptorFinder() {
-        return new SunshowerPluginDescriptorFinder();
+        return new TestPluginDescriptorFinder();
     }
 }
