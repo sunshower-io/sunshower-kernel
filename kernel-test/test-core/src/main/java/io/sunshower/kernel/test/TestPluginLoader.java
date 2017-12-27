@@ -24,6 +24,8 @@ public class TestPluginLoader implements PluginLoader {
 
     @Override
     public ClassLoader loadPlugin(Path pluginPath, PluginDescriptor pluginDescriptor) {
-        return new PluginClassLoader(pluginManager, pluginDescriptor, parent);
+        final PluginClassLoader loader = new PluginClassLoader(pluginManager, pluginDescriptor, parent);
+        loader.addFile(pluginPath.toFile());
+        return loader;
     }
 }

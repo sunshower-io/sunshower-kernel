@@ -22,13 +22,13 @@
 
 
             <dependency>
-                <groupId>io.sunshower.kernel</groupId>
+                <groupId>io.sunshower.api</groupId>
                 <artifactId>common-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>io.sunshower.kernel</groupId>
+                <groupId>io.sunshower.api</groupId>
                 <artifactId>core-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -36,7 +36,7 @@
 
 
             <dependency>
-                <groupId>io.sunshower.kernel</groupId>
+                <groupId>io.sunshower.api</groupId>
                 <artifactId>security-api</artifactId>
                 <version>${project.version}</version>
             </dependency>

@@ -2,5 +2,7 @@ dependencies {
     compile 'org.pf4j:pf4j'
     compile project(':kernel-api')
     compile project(':kernel-core')
-    testCompile "io.sunshower.kernel:test-plugin:${project.version}"
+    compile 'org.springframework:spring-core'
+    testCompile 'org.junit.platform:junit-platform-runner'
+    testPlugin project(':test-plugins:simple-test')
 }

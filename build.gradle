@@ -1,101 +1,172 @@
-/**
- * Buildscript Plugins Section
- *
- * @author haswell
- */
 buildscript {
     apply from: 'gradle/buildscript.gradle', to: buildscript
 }
+apply plugin: 'nebula-aggregate-javadocs'
 
 allprojects {
+    apply plugin: 'idea'
     apply plugin: 'java'
-}
+    apply plugin: 'maven-publish'
+    apply plugin: 'project-report'
+    apply plugin: 'com.bmuschko.clover'
+    apply plugin: 'io.spring.dependency-management'
 
-/**
- * Subproject configurations
- */
-
-subprojects {
-    version = rootProject.version
-   
     configurations {
         plugin
-        
-    }
-    
-
-    apply plugin: 'java'
-    apply plugin: 'nebula.optional-base'
-    
-    apply from: "$rootDir/gradle/dependencies.gradle"
-    apply from: "$rootDir/gradle/idea.gradle"
-    apply from: "$rootDir/gradle/jacoco.gradle"
-    apply from: "$rootDir/gradle/test.gradle"
-    apply from: "$rootDir/gradle/publishing.gradle"
-
-    dependencies {
-//        compile 'org.pf4j:pf4j'
-//        compile ('org.apache.logging.log4j:log4j-api')
-//        compile('org.apache.logging.log4j:log4j-core')
-//
-//        [
-//                'orm',
-//                'context'
-//        ].each{
-//            compile("org.springframework:spring-$it")
-//        }
-//
-//        compile('org.springframework:spring-context')
-//        [
-//                'core',
-//                'config',
-//                'acl',
-//                'crypto',
-//                'aspects',
-//                'ldap'
-//        ].each {
-//            compile("org.springframework.security:spring-security-$it")
-//        }
-//        compile group: 'org.eclipse.persistence', name: 'org.eclipse.persistence.moxy'
-        testCompile("org.springframework:spring-test")
-        testCompile("io.sunshower.barometer.modules:jaxrs")
-        testCompile('org.junit.platform:junit-platform-launcher')
-        testCompile("org.springframework.security:spring-security-test")
-    }
-
-    test {
-        testLogging {
-            showStandardStreams = true
+        testPlugin {
+            transitive = false
         }
     }
 
-}
 
-task prepareForRelease() {
-    doLast {
-        def flagged = []
-        def pom = new XmlSlurper().parse("$rootDir/bom/imported/pom.xml")
+    clover {
+        report {
+            html = true
+        }
 
-        pom.properties.'*'*.name().each { dep ->
-            if (pom.properties."${dep}" =~ "FEATURE") {
-                flagged.add("$dep --> ${pom.properties."${dep}"}")
+        compiler {
+            debug = true
+            additionalArgs = '-parameters'
+        }
+    }
+
+
+    def repos = [
+            'https://mymavenrepo.com/repo/Bwb7CZ1J9Ud5KCkBvnhI',
+            'http://repo.spring.io/snapshot',
+            "http://repo.spring.io/libs-milestone",
+            "http://oss.sonatype.org/content/repositories/snapshots"
+    ]
+
+
+
+
+    task sourceJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+
+    dependencies {
+        clover 'org.openclover:clover:4.2.0'
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+
+        maven {
+            url mavenRepositoryUrl
+
+            credentials {
+                username mavenRepositoryUsername
+                password mavenRepositoryPassword
+            }
+        }
+        repos.each { repo ->
+            maven { url "$repo" }
+        }
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom("io.sunshower.kernel:bom-imported:${version}") {
+                bomProperties([
+                        'env.version': '1.0.0.Final'
+                ])
+            }
+        }
+    }
+
+    plugins.withType(JavaPlugin) {
+
+        dependencies {
+            compile 'javax.ws.rs:javax.ws.rs-api'
+            compile 'org.eclipse.persistence:org.eclipse.persistence.moxy'
+            compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api'
+
+
+            testCompile 'javax.mail:mail'
+            testCompile('org.mockito:mockito-core')
+            testCompile('org.junit.platform:junit-platform-launcher')
+            testCompile('org.junit.platform:junit-platform-commons')
+            testCompile('org.junit.jupiter:junit-jupiter-engine')
+            testCompile('org.junit.vintage:junit-vintage-engine')
+        }
+    }
+
+
+    publishing {
+        repositories {
+            maven {
+                url mavenRepositoryUrl
+
+                credentials {
+                    username mavenRepositoryUsername
+                    password mavenRepositoryPassword
+                }
             }
         }
 
-        if (!flagged.isEmpty()) {
-            throw new org.gradle.api.GradleException("Found FEATURE versions while preparing for release, please " +
-                    "release the following components and update the project dependencies in bom/imported/pom.xml: \n\n" +
-                    "${flagged.join("\n")}"
-            )
+        publications {
+            maven(MavenPublication) {
+                from components.java
+
+                artifact sourceJar {
+                    classifier "sources"
+                }
+            }
+        }
+    }
+
+    task copyTestPlugins(type: Copy) {
+        into "${project.buildDir}/plugins"
+        from configurations.testPlugin
+    }
+
+
+    testClasses.dependsOn copyTestPlugins
+
+}
+
+
+publishing {
+    repositories {
+        maven {
+            url mavenRepositoryUrl
+
+            credentials {
+                username mavenRepositoryUsername
+                password mavenRepositoryPassword
+            }
+        }
+    }
+
+    publications {
+        maven(MavenPublication) {
+            artifact archiveReports {
+                classifier 'reports'
+            }
         }
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = gradleWrapperVersion
+task archiveReports(type: Zip) {
+    from "$buildDir/docs"
+    include "/**/*"
+
+    from "$buildDir/reports/clover"
+
+    archiveName 'reports.zip'
 }
 
-apply from: "$rootDir/gradle/bom.gradle"
-apply from: "$rootDir/gradle/tasks.gradle"
 
-defaultTasks "installBillOfMaterials", "clean", "build"
+assemble.dependsOn cloverAggregateReports
+assemble.dependsOn 'aggregateJavadocs'
+
+assemble.dependsOn archiveReports
+archiveReports.mustRunAfter cloverAggregateReports
+archiveReports.mustRunAfter 'aggregateJavadocs'
+
+
+defaultTasks 'clean', 'build', 'cloverAggregateReports', 'aggregateJavadocs'

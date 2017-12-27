@@ -294,7 +294,7 @@ public class TestPluginManager implements PluginManager {
                 try {
                     log.info("Start plugin '{}'", getPluginLabel(pluginWrapper.getDescriptor()));
                     pluginWrapper.getPlugin().start();
-//                    pluginWrapper.setPluginState(PluginState.STARTED);
+                    pluginWrapper.setPluginState(PluginState.STARTED);
                     startedPlugins.add(pluginWrapper);
 
                     firePluginStateEvent(new PluginStateEvent(this, pluginWrapper, pluginState));
@@ -749,9 +749,9 @@ public class TestPluginManager implements PluginManager {
 
             // create the plugin wrapper
             log.debug("Creating wrapper for plugin '{}'", pluginPath);
-            PluginWrapper pluginWrapper = new PluginWrapper(this, pluginDescriptor, pluginPath, pluginClassLoader, pluginFactory);
-//        pluginWrapper.setPluginFactory(getPluginFactory());
-//        pluginWrapper.setRuntimeMode(getRuntimeMode());
+            PluginWrapper pluginWrapper = new PluginWrapper(this, pluginDescriptor, pluginPath, pluginClassLoader);
+            pluginWrapper.setPluginFactory(getPluginFactory());
+            pluginWrapper.setRuntimeMode(getRuntimeMode());
 
             // test for disabled plugin
             if (isPluginDisabled(pluginDescriptor.getPluginId())) {
@@ -832,7 +832,6 @@ public class TestPluginManager implements PluginManager {
     /**
      * Set to true to allow requires expression to be exactly x.y.z.
      * The default is false, meaning that using an exact version x.y.z will
-     * implicitly mean the same as >=x.y.z
      *
      * @param exactVersionAllowed set to true or false
      */
@@ -872,7 +871,7 @@ public class TestPluginManager implements PluginManager {
     }
 
     protected PluginRepository createPluginRepository() {
-        return new ClassPathPluginRepository();
+        return new DirectoryPluginRepository(pluginsRoot.toFile());
     }
 
     protected PluginFactory createPluginFactory() {

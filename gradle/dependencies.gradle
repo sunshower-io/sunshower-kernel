@@ -1,66 +1,10 @@
-apply plugin: 'io.spring.dependency-management'
-
-def repos = [
-        'http://repo.spring.io/snapshot',
-        "http://repo.spring.io/libs-milestone",
-        "$artifactory_contextUrl/libs-release",
-        "$artifactory_contextUrl/libs-snapshot",
-        "http://oss.sonatype.org/content/repositories/snapshots"
-]
-
-
-
-repositories {
-    mavenLocal()
-    mavenCentral()
-
-    repos.each { repo ->
-        maven { url "$repo" }
-    }
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "io.sunshower.api:bom-imported:${version}"
-    }
-}
 
 configurations {
     wildfly
 }
 
 
-allprojects {
-    apply plugin: 'nebula.optional-base'
-
-    plugins.withType(JavaPlugin) {
-
-
-//        task testJar(type:Jar) {
-//            classifier 'test'
-//            from sourceSets.test.output
-//        }
-
-
-//        configurations {
-//            tests.extendsFrom testRuntime
-//        }
-//
-//
-//        artifacts {
-//            tests testJar
-//        }
-
-        dependencies {
-
-
-            testCompile('org.mockito:mockito-core')
-
-            testCompile('org.junit.jupiter:junit-jupiter-engine')
-            testCompile('org.junit.vintage:junit-vintage-engine')
-        }
-    }
-
+subprojects {
 }
 
 
