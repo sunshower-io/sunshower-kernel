@@ -1,4 +1,5 @@
 dependencies {
+    compile 'org.pf4j:pf4j'
     compile project(':kernel-api')
     compile 'org.yaml:snakeyaml:1.19'
 }

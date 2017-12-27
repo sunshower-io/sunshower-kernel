@@ -1,7 +1,8 @@
 include (
         'kernel-api', 
         'kernel-core', 
-        'kernel-main', 
+        'kernel-main',
+        'kernel-test:test-api',
         'kernel-test:test-core',
         'kernel-test:test-spring',
         'test-plugins:simple-test',

@@ -1,4 +1,4 @@
-package io.sunshower.kernel.test;
+package io.sunshower.kernel;
 
 import org.pf4j.PluginRepository;
 

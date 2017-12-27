@@ -13,6 +13,7 @@ allprojects {
 
     configurations {
         plugin
+        
         testPlugin {
             transitive = false
         }

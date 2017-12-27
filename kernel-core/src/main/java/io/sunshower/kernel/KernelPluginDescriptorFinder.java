@@ -1,6 +1,5 @@
-package io.sunshower.kernel.test;
+package io.sunshower.kernel;
 
-import io.sunshower.kernel.YamlPluginDescriptor;
 import org.pf4j.PluginDescriptor;
 import org.pf4j.PluginDescriptorFinder;
 import org.pf4j.PluginException;
@@ -15,7 +14,7 @@ import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-public class TestPluginDescriptorFinder implements PluginDescriptorFinder {
+public class KernelPluginDescriptorFinder implements PluginDescriptorFinder {
     
     
     @Override
