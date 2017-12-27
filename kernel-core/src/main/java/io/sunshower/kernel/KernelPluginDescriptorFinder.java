@@ -44,7 +44,12 @@ public class KernelPluginDescriptorFinder implements PluginDescriptorFinder {
     public PluginDescriptor find(Path pluginPath) throws PluginException {
         try {
             final ZipFile zipFile = new ZipFile(pluginPath.toFile());
-            final ZipEntry entry = zipFile.getEntry("plugin.yml");
+            ZipEntry entry = zipFile.getEntry("plugin.yml");
+            if(entry != null) {
+                return readEntry(zipFile, entry);
+            }
+           
+            entry = zipFile.getEntry("BOOT-INF/classes/plugin.yml");
             if(entry != null) {
                 return readEntry(zipFile, entry);
             }

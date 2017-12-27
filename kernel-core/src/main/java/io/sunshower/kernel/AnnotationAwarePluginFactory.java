@@ -30,9 +30,6 @@ public class AnnotationAwarePluginFactory implements PluginFactory {
             log.error(e.getMessage(), e);
             return null;
         }
-
-        // once we have the class, we can do some checks on it to ensure
-        // that it is a valid implementation of a plugin.
         int modifiers = pluginClass.getModifiers();
         if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers)
                 || (!Plugin.class.isAssignableFrom(pluginClass))) {
