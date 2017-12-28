@@ -11,7 +11,13 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(JUnitPlatform.class)
 public class PluginConfigurationTest extends KernelTestCase {
-   
+
+    @Test
+    public void ensureReadingWorks() {
+        configuration.addProperty("frapper", "dapper");
+        configuration.read(pluginWrapper);
+    }
+    
     @Test
     public void ensureWritingWorks() {
         configuration.addProperty("frapper", "dapper");
