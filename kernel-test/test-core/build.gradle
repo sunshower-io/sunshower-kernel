@@ -2,6 +2,9 @@ dependencies {
     compile 'org.pf4j:pf4j'
     compile project(':kernel-api')
     compile project(':kernel-core')
+    compile project(path: ':kernel-core', configuration: 'tests')
+    
+    
     testCompile project(':kernel-test:test-api')
     compile 'org.springframework:spring-core'
     testCompile 'org.junit.platform:junit-platform-runner'

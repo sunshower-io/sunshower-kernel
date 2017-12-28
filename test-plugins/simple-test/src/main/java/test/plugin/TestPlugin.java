@@ -13,6 +13,8 @@ import org.pf4j.PluginWrapper;
 public class TestPlugin extends Plugin implements LifecycleExposedPlugin {
 
     volatile PluginStatus status;
+    
+    
     public TestPlugin(PluginWrapper wrapper) {
         super(wrapper);
     }

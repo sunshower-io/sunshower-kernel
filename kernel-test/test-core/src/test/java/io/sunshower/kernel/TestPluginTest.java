@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static io.sunshower.kernel.PluginTestUtilities.pluginRoot;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -67,21 +68,4 @@ public class TestPluginTest {
         assertEquals(lfPlugin.getState(), PluginStatus.Stopped);
     }
     
-    final Path pluginRoot() {
-        final File file = cwd();
-        for(File p = file; p != null; p = p.getParentFile()) {
-            final File candidate = new File(p, "build");
-            if(candidate.exists()) {
-                File pluginDirectory = new File(candidate, "plugins");
-                assertTrue(pluginDirectory.exists());
-                logger.log(Level.INFO, "Using directory: {0} as plugin root", pluginDirectory);
-                return pluginDirectory.toPath();
-            }
-        }
-        throw new IllegalStateException("Plugin root not found!");
-    }
-
-    private File cwd() {
-        return new File(ClassLoader.getSystemResource(".").getFile());
-    }
 }

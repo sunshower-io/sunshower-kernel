@@ -6,12 +6,15 @@ import org.pf4j.*;
 import org.pf4j.Plugin;
 
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import static io.sunshower.kernel.Plugins.fire;
 
 public class KernelPluginManager extends DefaultPluginManager {
-
+    
     static final Logger logger = Logger.getLogger(KernelPluginManager.class.getName());
 
     public KernelPluginManager(Path pluginsRoot) {
@@ -55,4 +58,5 @@ public class KernelPluginManager extends DefaultPluginManager {
         Class<? extends Plugin> pluginClass = plugin.getClass();
         fire(pluginClass, plugin, OnUnload.class);
     }
+    
 }

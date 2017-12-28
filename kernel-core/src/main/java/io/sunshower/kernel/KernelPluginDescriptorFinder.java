@@ -46,12 +46,12 @@ public class KernelPluginDescriptorFinder implements PluginDescriptorFinder {
             final ZipFile zipFile = new ZipFile(pluginPath.toFile());
             ZipEntry entry = zipFile.getEntry("plugin.yml");
             if(entry != null) {
-                return readEntry(zipFile, entry);
+                return readEntry(zipFile, entry, pluginPath);
             }
            
             entry = zipFile.getEntry("BOOT-INF/classes/plugin.yml");
             if(entry != null) {
-                return readEntry(zipFile, entry);
+                return readEntry(zipFile, entry, pluginPath);
             }
             
             throw new InvalidPluginException(String.format("attempted to " +
@@ -62,9 +62,9 @@ public class KernelPluginDescriptorFinder implements PluginDescriptorFinder {
         }
     }
 
-    private PluginDescriptor readEntry(ZipFile zipFile, ZipEntry entry) throws IOException {
+    private PluginDescriptor readEntry(ZipFile zipFile, ZipEntry entry, Path pluginPath) throws IOException {
         final Yaml yaml = new Yaml();
         Map load = yaml.load(zipFile.getInputStream(entry));
-        return new YamlPluginDescriptor(load);
+        return new YamlPluginDescriptor(load, pluginPath);
     }
 }
