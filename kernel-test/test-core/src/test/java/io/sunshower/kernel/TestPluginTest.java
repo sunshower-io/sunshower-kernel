@@ -30,7 +30,6 @@ public class TestPluginTest {
 
     @BeforeEach
     public void setUp() {
-
         pluginManager = new KernelPluginManager(pluginRoot());
     }
     
@@ -44,7 +43,7 @@ public class TestPluginTest {
         pluginManager.loadPlugins();
         pluginManager.startPlugins();
         List<PluginWrapper> extensions = pluginManager.getStartedPlugins();
-        assertThat(extensions.size(), is(1));
+        assertThat(extensions.size(), is(2));
     }
    
     @Test
@@ -63,7 +62,7 @@ public class TestPluginTest {
         pluginManager.loadPlugins();
         pluginManager.startPlugins();
         pluginManager.stopPlugins();
-        Plugin plugin = pluginManager.getPlugins().get(0).getPlugin();
+        Plugin plugin = pluginManager.getPlugins().get(1).getPlugin();
         LifecycleExposedPlugin lfPlugin = (LifecycleExposedPlugin) plugin;
         assertEquals(lfPlugin.getState(), PluginStatus.Stopped);
     }

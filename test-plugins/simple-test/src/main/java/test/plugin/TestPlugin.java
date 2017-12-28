@@ -6,6 +6,7 @@ import io.sunshower.kernel.api.OnStop;
 import io.sunshower.kernel.api.OnUnload;
 import io.sunshower.kernel.test.LifecycleExposedPlugin;
 import io.sunshower.kernel.test.PluginStatus;
+import org.pf4j.Extension;
 import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;
 
@@ -40,7 +41,11 @@ public class TestPlugin extends Plugin implements LifecycleExposedPlugin {
         status = PluginStatus.Unloaded;
         System.out.println("Unloaded!");
     }
-    
+
+    @Extension
+    public static class TestExtension {
+
+    }
 
     @Override
     public PluginStatus getState() {

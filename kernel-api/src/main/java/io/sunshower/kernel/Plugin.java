@@ -1,6 +1,8 @@
 package io.sunshower.kernel;
 
 
-public interface Plugin {
+import org.pf4j.ExtensionPoint;
+
+public interface Plugin extends ExtensionPoint {
     
 }

@@ -53,7 +53,10 @@ public class KernelPluginDescriptorFinder implements PluginDescriptorFinder {
             if(entry != null) {
                 return readEntry(zipFile, entry);
             }
-            return null;
+            
+            throw new InvalidPluginException(String.format("attempted to " +
+                    "load plugin from '%s' but failed.  " +
+                    "Reason: No plugin.yml found", pluginPath));
         } catch (IOException e) {
             throw new PluginException(e);
         }

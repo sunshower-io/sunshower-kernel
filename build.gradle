@@ -13,10 +13,7 @@ allprojects {
 
     configurations {
         plugin
-        
-        testPlugin {
-            transitive = false
-        }
+        testPlugin
     }
 
 
@@ -120,15 +117,49 @@ allprojects {
         }
     }
 
-    task copyTestPlugins(type: Copy) {
-        into "${project.buildDir}/plugins"
-        from configurations.testPlugin
-    }
 
+//    task copyTestPlugins() {
+//        dependsOn configurations.testPlugin
+//        configurations.testPlugin.resolvedConfiguration.firstLevelModuleDependencies.each { deps ->
+//            println("GOT: $deps")
+//            new File("$project.buildDir/plugins/$deps.name/lib").mkdirs()
+//        }
+//    }
 
-    testClasses.dependsOn copyTestPlugins
-
+//    task copyTestPlugins(type: Copy) {
+//        dependsOn configurations.testPlugin
+////        configurations.testPlugin.asFileTree.files { cfg ->
+////            from cfg 
+////            into "$project.buildDir/plugins/$cfg.name/lib"
+////            
+////        }
+////        configurations.testPlugin.artifacts.files.each { file ->
+////            from file
+////            into "$project.buildDir/plugins/$cfg.name/lib"
+////        }  
+//        configurations.testPlugin.each { cfg ->
+//
+//        }
+////                .resolvedArtifacts.each { dep ->
+////            into("$project.buildDir/")
+//
+//    }
+////                .firstLevelModuleDependencies.each { ResolvedDependency dep ->
+////            into("static/docs/${dep.moduleName}/${dep.moduleVersion}/javadoc") {
+////                from(dep.moduleArtifacts.collect { zipTree(it.file) })
+////            }
 }
+
+//configurations.testPlugin.artifacts.files.each {
+//    from it
+//    into "${project.buildDir}/plugins"
+//}
+//
+//}
+
+
+//testClasses.dependsOn copyTestPlugins
+
 
 
 publishing {

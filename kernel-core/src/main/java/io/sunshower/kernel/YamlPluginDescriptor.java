@@ -1,7 +1,6 @@
 package io.sunshower.kernel;
 
 import org.pf4j.DefaultPluginDescriptor;
-import org.pf4j.PluginDescriptor;
 
 import java.util.Map;
 
@@ -12,6 +11,7 @@ public class YamlPluginDescriptor extends DefaultPluginDescriptor {
     public static final String VERSION_NAME = "version";
     public static final String DESCRIPTION_NAME = "version";
     public static final String PLUGIN_CLASS_NAME = "plugin-class";
+    public static final String DEPENDENCIES_NAME = "dependencies";
     
     
     public YamlPluginDescriptor(Map load) {
@@ -24,6 +24,11 @@ public class YamlPluginDescriptor extends DefaultPluginDescriptor {
                 "noone",
                 "license"
         );
+
+        String s = get(DEPENDENCIES_NAME, load);
+        if(s != null) {
+            setDependencies(s);
+        }
     }
 
     private static String getRequired(String pluginClassName, Map load) {
