@@ -50,15 +50,26 @@ public class PluginConfiguration {
         try {
             return SerializationContextHolder.instance.read(cfg, wrapper);
         } catch (JAXBException e) {
-            logger.log(Level.SEVERE, "Failed to " +
+            logger.log(Level.INFO, "Failed to " +
                     "unmarshall configuration for {0}.  " +
                     "Reason: {1}", new Object[]{wrapper, e});
         } catch (FileNotFoundException e) {
-            logger.log(Level.SEVERE, "Failed to " +
+            logger.log(Level.INFO, "Failed to " +
                     "unmarshall configuration for {0}.  " +
-                    "Reason: File not found", wrapper);
+                    "Reason: File not found.  Attempting to create...", wrapper);
+
+            try {
+                SerializationContextHolder.instance.create(wrapper);
+                logger.log(Level.INFO, 
+                        "Successfully created and persisted plugin configuration"
+                );
+            } catch (Exception ex ) {
+                logger.warning("Failed to create wrapper on last attempt.  " +
+                        "You have a detached plugin configuration " +
+                        "(your configuration changes will not survive a reboot)");
+            }
         }
-        return null;
+        return new PluginConfiguration();
     }
 
 
@@ -74,7 +85,6 @@ public class PluginConfiguration {
     static final class SerializationContext {
 
         final JAXBContext context;
-
         SerializationContext() {
             try {
                 context = JAXBContextFactory.createContext(
@@ -103,7 +113,7 @@ public class PluginConfiguration {
                         wrapper.getPluginId());
                 return;
             }
-            final File file       = Paths.get(location).toFile();
+            final File file       = Paths.get(location).toFile().getParentFile();
             if(!file.exists()) {
                 file.mkdirs();
             }
@@ -134,7 +144,7 @@ public class PluginConfiguration {
                         wrapper.getPluginId());
                 return null;
             }
-            final File   file         = Paths.get(location).toFile();
+            final File   file         = Paths.get(location).toFile().getParentFile();
             Unmarshaller unmarshaller = context.createUnmarshaller();
             return unmarshaller.unmarshal(
                     new StreamSource(
@@ -142,6 +152,38 @@ public class PluginConfiguration {
                                     new FileInputStream(new File(file, "plugin.xml")))
                     ), PluginConfiguration.class
             ).getValue();
+        }
+
+        public PluginConfiguration create(PluginWrapper wrapper) throws IOException, JAXBException {
+
+            PluginDescriptor descriptor = wrapper.getDescriptor();
+            if (descriptor == null) {
+                logger.log(Level.WARNING, "Failed to save plugin context " +
+                                "for plugin: {0}.  No plugin descriptor was found",
+                        wrapper.getPluginId());
+                return new PluginConfiguration();
+            }
+            URI location = descriptor.getLocation();
+            if (location == null) {
+                logger.log(Level.WARNING, "Failed to save plugin context " +
+                                "for plugin: {0}.  No plugin descriptor was found",
+                        wrapper.getPluginId());
+                return new PluginConfiguration();
+            }
+            
+            final File file       = Paths.get(location).toFile().getParentFile();
+            if(!file.exists()) {
+                file.mkdirs();
+            }
+            final File pluginFile = new File(file, "plugin.xml");
+            if(!pluginFile.createNewFile()) {
+                logger.warning("Failed to create plugin file.  " +
+                        "You will have a detatched plugin configuration");
+                
+            }
+            PluginConfiguration cfg = new PluginConfiguration();
+            write(cfg, wrapper);
+            return cfg;
         }
     }
 

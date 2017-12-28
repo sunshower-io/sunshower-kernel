@@ -40,8 +40,8 @@ allprojects {
 
     def repos = [
             'https://mymavenrepo.com/repo/Bwb7CZ1J9Ud5KCkBvnhI',
-            'http://repo.spring.io/snapshot',
-            "http://repo.spring.io/libs-milestone",
+//            'http://repo.spring.io/snapshot',
+//            "http://repo.spring.io/libs-milestone",
             "http://oss.sonatype.org/content/repositories/snapshots"
     ]
 
@@ -61,6 +61,7 @@ allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
+        jcenter()
 
         maven {
             url mavenRepositoryUrl
