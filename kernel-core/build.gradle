@@ -4,4 +4,6 @@ dependencies {
     compile 'org.pf4j:pf4j'
     compile project(':kernel-api')
     compile 'org.yaml:snakeyaml:1.19'
+    
+    testCompile 'org.junit.platform:junit-platform-runner'
 }

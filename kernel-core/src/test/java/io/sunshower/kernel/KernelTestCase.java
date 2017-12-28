@@ -2,6 +2,8 @@ package io.sunshower.kernel;
 
 import io.sunshower.kernel.configuration.PluginConfiguration;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 import org.pf4j.DefaultPluginDescriptor;
 import org.pf4j.PluginManager;
 import org.pf4j.PluginWrapper;

@@ -14,10 +14,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.transform.stream.StreamSource;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -110,8 +107,19 @@ public class PluginConfiguration {
                 return;
             }
             final File file       = Paths.get(location).toFile();
+            if(!file.exists()) {
+                file.mkdirs();
+            }
+            final File pluginFile = new File(file, "plugin.xml");
+            if(!pluginFile.exists()) {
+                try {
+                    pluginFile.createNewFile();
+                } catch (IOException e) {
+                    throw new KernelPluginException(e);
+                }
+            }
             Marshaller marshaller = context.createMarshaller();
-            marshaller.marshal(configuration, new File(file, "plugin.xml"));
+            marshaller.marshal(configuration, pluginFile);
         }
 
         synchronized PluginConfiguration read(PluginConfiguration cfg, PluginWrapper wrapper) throws JAXBException, FileNotFoundException {
