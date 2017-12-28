@@ -44,6 +44,9 @@ public class TestPlugin extends Plugin implements LifecycleExposedPlugin {
 
     @Extension
     public static class TestExtension {
+        
+        public TestExtension() {
+        }
 
     }
 

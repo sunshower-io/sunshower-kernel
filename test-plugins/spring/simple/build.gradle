@@ -1,8 +1,8 @@
 
 dependencies {
-    compile 'io.sunshower.service:service-api'
     compileOnly 'org.pf4j:pf4j'
     compileOnly project(":kernel-api")
+    compile 'io.sunshower.service:service-api'
     compileOnly project(":test-plugins:simple-test")
 }
 

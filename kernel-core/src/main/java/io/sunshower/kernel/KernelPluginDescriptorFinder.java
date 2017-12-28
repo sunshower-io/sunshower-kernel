@@ -64,7 +64,7 @@ public class KernelPluginDescriptorFinder implements PluginDescriptorFinder {
 
     private PluginDescriptor readEntry(ZipFile zipFile, ZipEntry entry) throws IOException {
         final Yaml yaml = new Yaml();
-        Map load = (Map) yaml.load(zipFile.getInputStream(entry));
+        Map load = yaml.load(zipFile.getInputStream(entry));
         return new YamlPluginDescriptor(load);
     }
 }

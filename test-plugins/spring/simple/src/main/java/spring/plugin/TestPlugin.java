@@ -1,6 +1,7 @@
 package spring.plugin;
 
 import io.sunshower.kernel.api.OnStart;
+import io.sunshower.model.core.Version;
 import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;
 import test.plugin.TestExtension;
@@ -15,7 +16,10 @@ public class TestPlugin extends Plugin {
     
     @OnStart
     public void onStart() {
-        List<TestExtension> extensions = this.getWrapper().getPluginManager().getExtensions(TestExtension.class);
+        List<TestExtension> extensions = this.getWrapper()
+                .getPluginManager()
+                .getExtensions(TestExtension.class);
         extensions.forEach(TestExtension::sayHelloFromOtherPlugin);
+        System.out.println(new Version());
     }
 }

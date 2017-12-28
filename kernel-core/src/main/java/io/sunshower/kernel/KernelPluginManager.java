@@ -18,6 +18,13 @@ public class KernelPluginManager extends DefaultPluginManager {
         super(pluginsRoot);
     }
 
+    @Override
+    protected PluginLoader createPluginLoader() {
+        return new CompoundPluginLoader()
+                .add(new KernelPluginLoader(this, pluginClasspath))
+                .add(new DefaultPluginLoader(this, pluginClasspath))
+                .add(new JarPluginLoader(this));
+    }
 
     @Override
     protected PluginDescriptorFinder createPluginDescriptorFinder() {
