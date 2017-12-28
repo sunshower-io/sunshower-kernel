@@ -45,10 +45,12 @@ public class AnnotationAwarePluginFactory implements PluginFactory {
         try {
             Constructor<?> constructor = pluginClass.getConstructor(PluginWrapper.class);
             final Plugin   plugin      = (Plugin) constructor.newInstance(pluginWrapper);
-            new ConfigurationInjector(
-                    (Class<? extends Plugin>) pluginClass,
-                    plugin
-            ).inject(configuration);
+            if(configuration != null) {
+                new ConfigurationInjector(
+                        (Class<? extends Plugin>) pluginClass,
+                        plugin
+                ).inject(configuration);
+            }
             fire(pluginClass, plugin, OnLoad.class);
             fire(pluginClass, plugin, OnStart.class);
             return plugin;

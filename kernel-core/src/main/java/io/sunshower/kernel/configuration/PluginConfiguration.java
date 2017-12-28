@@ -1,6 +1,5 @@
 package io.sunshower.kernel.configuration;
 
-import io.sunshower.common.rs.MapAdapter;
 import io.sunshower.kernel.api.KernelPluginException;
 import org.eclipse.persistence.jaxb.JAXBContextFactory;
 import org.pf4j.PluginDescriptor;
@@ -12,7 +11,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 import java.net.URI;
@@ -28,7 +26,6 @@ public class PluginConfiguration {
     static final Logger logger = Logger.getLogger(PluginConfiguration.class.getName());
 
     @XmlElement(name = "properties")
-    @XmlJavaTypeAdapter(MapAdapter.class)
     private Map<String, String> pluginArguments;
 
 
