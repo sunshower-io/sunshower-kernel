@@ -31,7 +31,7 @@ public class TestPluginTest {
 
     @BeforeEach
     public void setUp() {
-        pluginManager = new KernelPluginManager(pluginRoot());
+        pluginManager = new KernelPluginManager(pluginRoot(false));
     }
     
     @AfterEach

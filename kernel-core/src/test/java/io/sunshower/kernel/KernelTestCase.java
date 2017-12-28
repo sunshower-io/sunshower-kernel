@@ -29,7 +29,7 @@ public class KernelTestCase {
     public void setUp() {
         pluginDirectory = resolveFromRoot("test-plugin").toFile();
         pluginManager = new KernelPluginManager(
-                pluginRoot()
+                pluginRoot(true)
         );
         Map cfg = new HashMap();
         cfg.put(YamlPluginDescriptor.GROUP_ID_NAME, "hello");

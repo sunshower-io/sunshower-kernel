@@ -15,6 +15,10 @@ public class PluginTestUtilities {
     }
     
     public static final Path pluginRoot() {
+        return pluginRoot(false);
+    }
+    
+    public static final Path pluginRoot(boolean create) {
         final File file = cwd();
         for(File p = file; p != null; p = p.getParentFile()) {
             final File candidate = new File(p, "build");
@@ -23,10 +27,12 @@ public class PluginTestUtilities {
                 logger.log(Level.INFO, "Using directory: {0} as plugin root", pluginDirectory);
                 return pluginDirectory.toPath();
             } else {
-                File pluginDirectory = new File(candidate, "plugins");
-                assertTrue(pluginDirectory.mkdirs());
-                logger.log(Level.INFO, "Creating directory: {0} as plugin root", pluginDirectory);
-                return pluginDirectory.toPath();
+                if(create) {
+                    File pluginDirectory = new File(candidate, "plugins");
+                    assertTrue(pluginDirectory.mkdirs());
+                    logger.log(Level.INFO, "Creating directory: {0} as plugin root", pluginDirectory);
+                    return pluginDirectory.toPath();
+                }
             }
         }
         throw new IllegalStateException("Plugin root not found!");
