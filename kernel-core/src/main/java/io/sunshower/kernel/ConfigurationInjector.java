@@ -3,18 +3,32 @@ package io.sunshower.kernel;
 import io.sunshower.kernel.api.KernelPluginException;
 import io.sunshower.kernel.configuration.PluginConfiguration;
 import org.pf4j.Plugin;
+import org.pf4j.PluginException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 public class ConfigurationInjector {
     final Plugin                  instance;
     final Class<? extends Plugin> type;
+    
+    final Class<? extends Annotation> injectType;
+    final Class<? extends Annotation> namedType;
 
+    @SuppressWarnings("unchecked")
     public ConfigurationInjector(Class<? extends Plugin> type, Plugin plugin) {
         this.type = type;
         this.instance = plugin;
+        try {
+            ClassLoader pluginClassloader = plugin.getWrapper().getPluginClassLoader();
+            injectType = (Class<? extends Annotation>) pluginClassloader.loadClass(Inject.class.getName());
+            namedType = (Class<? extends Annotation>) pluginClassloader.loadClass(Named.class.getName());
+        } catch(Exception ex) {
+            throw new KernelPluginException(ex);
+        }
     }
     
     public void read(PluginConfiguration configuration) {
@@ -26,7 +40,7 @@ public class ConfigurationInjector {
             Field[] fields = current.getDeclaredFields();
             for(Field field : fields) {
                 final String propertyName;
-                if(field.isAnnotationPresent(Inject.class)) {
+                if(field.isAnnotationPresent(injectType)) {
                     if(PluginConfiguration.class.equals(field.getType())) {
                         continue;
                     }
@@ -35,8 +49,8 @@ public class ConfigurationInjector {
                                 "java.lang.String--cannot inject");
 
                     }
-                    if(field.isAnnotationPresent(Named.class)) {
-                        propertyName = field.getAnnotation(Named.class).value();
+                    if(field.isAnnotationPresent(namedType)) {
+                        propertyName = namedValue(field.getAnnotation(namedType));
                     } else {
                         propertyName = field.getName();
                     }
@@ -74,8 +88,8 @@ public class ConfigurationInjector {
                     }
                     
                     if(String.class.equals(type)) {
-                        if (field.isAnnotationPresent(Named.class)) {
-                            propertyName = field.getAnnotation(Named.class).value();
+                        if (field.isAnnotationPresent(namedType)) {
+                            propertyName = namedValue(field.getAnnotation(namedType));
                         } else {
                             propertyName = field.getName();
                         }
@@ -100,5 +114,13 @@ public class ConfigurationInjector {
                 }
             }
         }
+    }
+
+    private String namedValue(Annotation annotation) {
+        try {
+            return String.valueOf(namedType.getMethod("value").invoke(annotation));
+        } catch (ReflectiveOperationException e) {
+        }
+        return "";
     }
 }

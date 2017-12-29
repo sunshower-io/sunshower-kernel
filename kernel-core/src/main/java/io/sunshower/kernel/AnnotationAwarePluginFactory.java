@@ -1,5 +1,6 @@
 package io.sunshower.kernel;
 
+import io.sunshower.kernel.api.KernelPluginException;
 import io.sunshower.kernel.api.OnLoad;
 import io.sunshower.kernel.api.OnStart;
 import io.sunshower.kernel.configuration.PluginConfiguration;
@@ -19,6 +20,15 @@ public class AnnotationAwarePluginFactory implements PluginFactory {
 
     private static final Logger log = LoggerFactory.getLogger(AnnotationAwarePluginFactory.class);
 
+   
+    static class UnstartablePlugin extends Plugin {
+
+        public UnstartablePlugin(PluginWrapper wrapper) {
+            super(wrapper);
+        }
+    }
+    
+    
     @Override
     @SuppressWarnings("unchecked")
     public Plugin create(final PluginWrapper pluginWrapper) {
@@ -32,13 +42,13 @@ public class AnnotationAwarePluginFactory implements PluginFactory {
             pluginClass = pluginWrapper.getPluginClassLoader().loadClass(pluginClassName);
         } catch (ClassNotFoundException e) {
             log.error(e.getMessage(), e);
-            return null;
+            throw new KernelPluginException(e);
         }
         int modifiers = pluginClass.getModifiers();
         if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers)
                 || (!Plugin.class.isAssignableFrom(pluginClass))) {
             log.error("The plugin class '{}' is not valid", pluginClassName);
-            return null;
+            throw new KernelPluginException(String.format("Type '%s' is not valid", pluginClass));
         }
 
         // create the plugin instance
@@ -55,9 +65,8 @@ public class AnnotationAwarePluginFactory implements PluginFactory {
             fire(pluginClass, plugin, OnStart.class);
             return plugin;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            throw new KernelPluginException(e);
         }
-        return null;
     }
 
 
