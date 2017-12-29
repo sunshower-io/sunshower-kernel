@@ -1,5 +1,6 @@
 package io.sunshower.kernel;
 
+import io.sunshower.kernel.configuration.PluginConfiguration;
 import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;
 
@@ -7,6 +8,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 class TestPlugin extends Plugin {
+   
+    @Inject
+    private PluginConfiguration configuration;
+    
     @Inject
     private String name;
 
@@ -32,5 +37,13 @@ class TestPlugin extends Plugin {
 
     public void setHelloName(String helloName) {
         this.helloName = helloName;
+    }
+
+    public PluginConfiguration getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(PluginConfiguration configuration) {
+        this.configuration = configuration;
     }
 }

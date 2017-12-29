@@ -27,6 +27,9 @@ public class ConfigurationInjector {
             for(Field field : fields) {
                 final String propertyName;
                 if(field.isAnnotationPresent(Inject.class)) {
+                    if(PluginConfiguration.class.equals(field.getType())) {
+                        continue;
+                    }
                     if(!String.class.equals(field.getType())) {
                         throw new KernelPluginException("Field does not have type " +
                                 "java.lang.String--cannot inject");
@@ -61,22 +64,38 @@ public class ConfigurationInjector {
             for(Field field : fields) {
                 final String propertyName;
                 if(field.isAnnotationPresent(Inject.class)) {
-                    if(!String.class.equals(field.getType())) {
+                   
+                    Class<?> type = field.getType();
+                    
+                    if(!(String.class.equals(type) || PluginConfiguration.class.equals(type))) {
                         throw new KernelPluginException("Field does not have type " +
-                                "java.lang.String--cannot inject");
+                                "java.lang.String or PluginConfiguration--cannot inject");
                         
                     }
-                    if(field.isAnnotationPresent(Named.class)) {
-                        propertyName = field.getAnnotation(Named.class).value();
-                    } else {
-                        propertyName = field.getName();
-                    }
-                    String property = configuration.getProperty(propertyName);
-                    field.setAccessible(true);
-                    try {
-                        field.set(instance, property);
-                    } catch (IllegalAccessException e) {
-                        throw new KernelPluginException(e);
+                    
+                    if(String.class.equals(type)) {
+                        if (field.isAnnotationPresent(Named.class)) {
+                            propertyName = field.getAnnotation(Named.class).value();
+                        } else {
+                            propertyName = field.getName();
+                        }
+                        String property = configuration.getProperty(propertyName);
+                        field.setAccessible(true);
+                        try {
+                            field.set(instance, property);
+                        } catch (IllegalAccessException e) {
+                            throw new KernelPluginException(e);
+                        }
+                    } 
+                    if(PluginConfiguration.class.equals(type)) {
+
+                        field.setAccessible(true);
+                        try {
+                            field.set(instance, configuration);
+                        } catch (IllegalAccessException e) {
+                            throw new KernelPluginException(e);
+                        }
+                        
                     }
                 }
             }

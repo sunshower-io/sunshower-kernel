@@ -15,19 +15,28 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 import java.net.URI;
 import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @XmlRootElement(name = "configuration")
-public class PluginConfiguration {
+public class PluginConfiguration implements Iterable<Map.Entry<String, String>> {
 
     static final Logger logger = Logger.getLogger(PluginConfiguration.class.getName());
 
     @XmlElement(name = "properties")
     private Map<String, String> pluginArguments;
 
+    @Override
+    public Iterator<Map.Entry<String, String>> iterator() {
+        if(pluginArguments != null) {
+            return pluginArguments.entrySet().iterator();
+        }
+        return Collections.<String, String>emptyMap().entrySet().iterator();
+    }
 
     public void addProperty(String key, String value) {
         if (pluginArguments == null) {
@@ -80,6 +89,7 @@ public class PluginConfiguration {
             throw new KernelPluginException(e);
         }
     }
+
 
 
     static final class SerializationContext {

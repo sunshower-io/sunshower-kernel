@@ -1,12 +1,18 @@
 package io.sunshower.kernel;
 
 import org.junit.jupiter.api.Test;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 
 public class ConfigurationInjectorTest extends KernelTestCase {
+    
+    @Test
+    public void ensureInjectingConfigurationWorks() {
+        configurationInjector.inject(configuration);
+        assertThat(plugin.getConfiguration(), is(not(nullValue())));
+    }
 
     @Test
     public void ensurePluginDescriptorWriteWritesNameFromFieldValue() {
