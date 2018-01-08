@@ -3,7 +3,7 @@
 
 source /scripts/set-version.sh
 
-mvn clean install deploy -f bom/pom.xml -Denv.version=1.0.0.Final
+mvn clean install deploy -f bom/pom.xml 
 #mvn versions:set -DnewVersion=${VERSION} -f bom/pom.xml
 gradle clean build pTML publish \
 -PmavenRepositoryUrl=${MVN_REPO_URL} \
