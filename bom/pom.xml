@@ -16,7 +16,7 @@
   <url>http://maven.apache.org</url>
 
   <properties>
-    <env.version>1.0.0.Final</env.version>
+    <env.version>1.0.0-SNAPSHOT</env.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <modules>
