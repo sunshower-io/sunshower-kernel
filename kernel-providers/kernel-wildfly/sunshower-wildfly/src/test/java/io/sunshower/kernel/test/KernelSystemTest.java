@@ -1,5 +1,6 @@
 package io.sunshower.kernel.test;
 
+import io.sunshower.kernel.api.PluginManager;
 import io.sunshower.kernel.api.PluginStorage;
 import io.sunshower.kernel.spi.EphemeralPluginStorage;
 import io.sunshower.test.common.TestClasspath;
@@ -25,8 +26,6 @@ public class KernelSystemTest {
     
     @Inject
     private PluginStorage pluginStorage;
-    
-    @Inject
     
     @Deployment
     public static WebArchive webArchive() {

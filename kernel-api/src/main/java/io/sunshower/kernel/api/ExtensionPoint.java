@@ -7,4 +7,8 @@ import java.lang.annotation.*;
 @Target({ElementType.ANNOTATION_TYPE, ElementType.TYPE})
 public @interface ExtensionPoint {
     String value() default "__default";
+    
+    Class<?> extensionPoint();
+    
+    Class<? extends Annotation> definition();
 }

@@ -1,5 +1,9 @@
 apply plugin: 'war'
 
+dependencies {
+    compile project(':kernel-api')
+}
+
 configurations {
     war {}
 }

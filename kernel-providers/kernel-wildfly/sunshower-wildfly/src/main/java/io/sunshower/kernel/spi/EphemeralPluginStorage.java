@@ -8,4 +8,5 @@ import javax.ejb.Stateless;
 public class EphemeralPluginStorage implements PluginStorage {
     
     
+    
 }
