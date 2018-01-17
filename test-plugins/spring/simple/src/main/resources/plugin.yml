@@ -1,5 +1,0 @@
-group: io.sunshower.kernel.core
-artifact: test-plugin
-version: 1.0.0
-plugin-class: spring.plugin.TestPlugin
-dependencies: io.sunshower.kernel

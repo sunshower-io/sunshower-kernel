@@ -1,0 +1,131 @@
+import static com.github.zhurlik.Ver.V_1_3
+
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven { url 'http://repo.spring.io/snapshot' }
+        maven { url 'http://plugins.gradle.org/m2/' }
+    }
+
+    dependencies {
+        classpath "gradle.plugin.com.github.zhurlik:gradle-jboss-modules:0.18"
+    }
+}
+
+
+apply plugin: 'maven-publish'
+apply plugin: 'com.github.zhurlik.jbossmodules'
+
+configurations {
+    wildfly
+}
+
+dependencies {
+    wildfly group: 'io.sunshower', name: 'wildfly', version: '11.0.0.Final', ext: 'zip'
+    jbossmodules project(":kernel-api")
+    jbossmodules project(":kernel-common")
+    jbossmodules project(":kernel-core")
+}
+
+
+jbossrepos {
+    'wildfly11.0.0' {
+        version = V_1_3
+    }
+}
+
+repositories {
+    ivy {
+        url "http://download.jboss.org/wildfly"
+        layout "pattern", {
+            artifact "[revision]/[module]-[revision].[ext]"
+        }
+    }
+}
+
+
+task distributionZip(type: Zip, dependsOn: 'assembleAll') {
+    from "$project.buildDir/dist/wildfly-11.0.0.Final"
+}
+
+publishing {
+    publications {
+        distribution(MavenPublication) {
+            groupId 'io.sunshower.wildfly'
+            artifactId 'sunshower-wildfly'
+            artifact distributionZip
+        }
+    }
+}
+
+
+modules {
+    sunshowerKernel {
+        moduleName = 'io.sunshower.kernel'
+        resources = [
+                "kernel-api-${project.version}.jar",
+                "kernel-core-${project.version}.jar",
+                "kernel-common-${project.version}.jar"
+        ]
+        dependencies = [
+                'javax.api'
+        ]
+    }
+}
+
+task copyWildfly(type: Copy) {
+    dependsOn configurations.wildfly
+    configurations.wildfly.each {
+        from(zipTree(it))
+    }
+    into file("${project.buildDir}/dist")
+
+}
+
+
+
+task overlayStandalone(type: Copy) {
+    from fileTree("${project.projectDir}/wildfly-dist/resources")
+    into file("${project.buildDir}/dist/wildfly-11.0.0.Final/standalone/configuration")
+}
+
+task overlay(type: Copy) {
+
+
+    from fileTree("${project.buildDir}/install/wildfly11.0.0")
+    into file("${project.buildDir}/dist/wildfly-11.0.0.Final")
+
+    doLast {
+        def slurper = new groovy.util.XmlSlurper(false, false)
+
+        def f = file(
+                "${project.buildDir}/dist/wildfly-11.0.0.Final/" +
+                        "modules/system/layers/base/org/jboss/" +
+                        "resteasy/resteasy-validator-provider-11/main/module.xml")
+
+        def t = slurper.parseText(f.text)
+        t.dependencies.appendNode({ module(name: 'org.eclipse.moxy') })
+
+
+        def bound = new groovy.xml.StreamingMarkupBuilder().bind { mkp.yield t }
+        def serialize = groovy.xml.XmlUtil.serialize(bound)
+        f.write(serialize)
+
+
+    }
+}
+
+task createDistribution(type: Zip, dependsOn: ['copyWildfly', 'overlay', 'overlayStandalone']) {
+    from "${project.buildDir}/dist/wildfly-11.0.0.Final"
+    into "sunshower-wildfly"
+}
+
+
+task assembleAll(dependsOn: ['wildfly11.0.0DistZip', 'createDistribution', 'distZip']) {
+}
+
+build.dependsOn 'assembleAll'
+
+defaultTasks 'clean', 'copyWildfly', 'overlay', 'distZip'

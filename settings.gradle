@@ -1,13 +1,12 @@
 include(
         'kernel-api',
         'kernel-core',
-        'kernel-main',
-        'kernel-test:test-api',
-        'kernel-test:test-core',
-        'kernel-test:test-spring',
-        'test-plugins:simple-test',
-        'test-plugins:spring:simple',
-        'kernel-spring:spring-core',
-        'kernel-spring:spring-security'
+        'kernel-common',
+        'kernel-providers:kernel-wildfly',
+        'kernel-providers:kernel-wildfly:sunshower-wildfly',
+        'kernel-providers:kernel-wildfly:wildfly-test-plugins',
+        'kernel-providers:kernel-wildfly:kernel-wildfly-provider',
+        'kernel-providers:kernel-wildfly:wildfly-test-plugins:simple-test',
+        'kernel-providers:kernel-wildfly:wildfly-test-plugins:wildfly-system-tests'
 )
 

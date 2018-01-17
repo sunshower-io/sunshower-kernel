@@ -17,19 +17,11 @@
 
 
     <properties>
-      <pf4j.version>2.1.0-SNAPSHOT</pf4j.version>
       <sunshower-base.version>1.0.0-SNAPSHOT</sunshower-base.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-
-          <dependency>
-            <groupId>org.pf4j</groupId>
-            <artifactId>pf4j</artifactId>
-            <version>${pf4j.version}</version>
-          </dependency>
-
           <dependency>
             <groupId>io.sunshower.test</groupId>
             <artifactId>test-ws</artifactId>
