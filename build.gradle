@@ -8,7 +8,7 @@ allprojects {
     apply plugin: 'java'
     apply plugin: 'maven-publish'
     apply plugin: 'project-report'
-    apply plugin: 'com.bmuschko.clover'
+//    apply plugin: 'com.bmuschko.clover'
     apply plugin: 'io.spring.dependency-management'
 
     configurations {
@@ -25,17 +25,17 @@ allprojects {
     artifacts {
         tests archiveTests
     }
-
-    clover {
-        report {
-            html = true
-        }
-
-        compiler {
-            debug = true
-            additionalArgs = '-parameters'
-        }
-    }
+//
+//    clover {
+//        report {
+//            html = true
+//        }
+//
+//        compiler {
+//            debug = true
+//            additionalArgs = '-parameters'
+//        }
+//    }
 
 
     def repos = [
@@ -55,7 +55,7 @@ allprojects {
 
 
     dependencies {
-        clover 'org.openclover:clover:4.2.0'
+//        clover 'org.openclover:clover:4.2.0'
     }
 
     repositories {
@@ -145,31 +145,32 @@ publishing {
         }
     }
 
-    publications {
-        maven(MavenPublication) {
-            artifact archiveReports {
-                classifier 'reports'
-            }
-        }
-    }
+//    publications {
+//        maven(MavenPublication) {
+//            artifact archiveReports {
+//                classifier 'reports'
+//            }
+//        }
+//    }
 }
 
-task archiveReports(type: Zip) {
-    from "$buildDir/docs"
-    include "/**/*"
+//task archiveReports(type: Zip) {
+//    from "$buildDir/docs"
+//    include "/**/*"
+//
+//    from "$buildDir/reports/clover"
+//
+//    archiveName 'reports.zip'
+//}
 
-    from "$buildDir/reports/clover"
 
-    archiveName 'reports.zip'
-}
-
-
-assemble.dependsOn cloverAggregateReports
+//assemble.dependsOn cloverAggregateReports
 assemble.dependsOn 'aggregateJavadocs'
 
-assemble.dependsOn archiveReports
-archiveReports.mustRunAfter cloverAggregateReports
-archiveReports.mustRunAfter 'aggregateJavadocs'
+//assemble.dependsOn archiveReports
+//archiveReports.mustRunAfter cloverAggregateReports
+//archiveReports.mustRunAfter 'aggregateJavadocs'
 
+//add to default tasks'cloverAggregateReports', 
 
-defaultTasks 'clean', 'build', 'cloverAggregateReports', 'aggregateJavadocs'
+defaultTasks 'clean', 'build', 'aggregateJavadocs'
