@@ -10,13 +10,23 @@ buildscript {
     }
 
     dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.4.RELEASE"
         classpath "gradle.plugin.com.github.zhurlik:gradle-jboss-modules:0.18"
     }
 }
 
 
 apply plugin: 'maven-publish'
+apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.github.zhurlik.jbossmodules'
+
+
+dependencyManagement {
+    imports {
+        mavenBom('org.jboss.arquillian:arquillian-bom:1.2.0.Final')
+    }
+}
+
 
 configurations {
     wildfly
@@ -27,6 +37,9 @@ dependencies {
     jbossmodules project(":kernel-api")
     jbossmodules project(":kernel-common")
     jbossmodules project(":kernel-core")
+
+    testCompile group: 'org.jboss.arquillian.junit', name: 'arquillian-junit-container'
+    testCompile group: 'org.wildfly.arquillian', name: 'wildfly-arquillian-container-managed'
 }
 
 

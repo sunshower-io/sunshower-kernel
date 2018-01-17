@@ -1,0 +1,9 @@
+<jboss-deployment-structure>
+
+
+  <deployment>
+    <dependencies>
+      <module name="io.sunshower.kernel"/>
+    </dependencies>
+  </deployment>
+</jboss-deployment-structure>
