@@ -16,6 +16,7 @@ buildscript {
 }
 
 
+apply plugin: 'war'
 apply plugin: 'maven-publish'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.github.zhurlik.jbossmodules'
@@ -37,7 +38,15 @@ dependencies {
     jbossmodules project(":kernel-api")
     jbossmodules project(":kernel-common")
     jbossmodules project(":kernel-core")
+    
+    compile project(":kernel-api")
+    compile project(":kernel-core")
+    compile project(":kernel-common")
+    
+    compileOnly group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2'
 
+
+    testCompile 'io.sunshower.test:test-common'
     testCompile group: 'org.jboss.arquillian.junit', name: 'arquillian-junit-container'
     testCompile group: 'org.wildfly.arquillian', name: 'wildfly-arquillian-container-managed'
 }
