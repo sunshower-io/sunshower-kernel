@@ -6,9 +6,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.ANNOTATION_TYPE, ElementType.TYPE})
 public @interface ExtensionPoint {
+    String namespace() default "__";
     String value() default "__default";
-    
-    Class<?> extensionPoint();
-    
-    Class<? extends Annotation> definition();
 }
