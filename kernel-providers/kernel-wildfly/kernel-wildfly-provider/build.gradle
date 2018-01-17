@@ -1,0 +1,5 @@
+dependencies {
+    compile project(':kernel-api')
+    compile project(':kernel-core')
+    compile project(':kernel-common')
+}

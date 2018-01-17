@@ -26,6 +26,8 @@ public class KernelSystemTest {
     @Inject
     private PluginStorage pluginStorage;
     
+    @Inject
+    
     @Deployment
     public static WebArchive webArchive() {
         return ShrinkWrap.create(WebArchive.class)
@@ -49,7 +51,7 @@ public class KernelSystemTest {
     @Test
     public void ensureWildflyPluginStorageIsAvailableAtJNDILocation() {
         
-        
-        
     }
+    
+    
 }

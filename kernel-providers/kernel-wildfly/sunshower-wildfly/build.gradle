@@ -31,6 +31,8 @@ dependencyManagement {
 
 configurations {
     wildfly
+    
+    kernelModule 
 }
 
 dependencies {
@@ -43,14 +45,28 @@ dependencies {
     compile project(":kernel-core")
     compile project(":kernel-common")
     
+    compile project(':kernel-providers:kernel-wildfly:kernel-wildfly-provider')
+    
     compileOnly group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2'
 
 
     testCompile 'io.sunshower.test:test-common'
     testCompile group: 'org.jboss.arquillian.junit', name: 'arquillian-junit-container'
     testCompile group: 'org.wildfly.arquillian', name: 'wildfly-arquillian-container-managed'
+    
+    kernelModule project(path: ':kernel-providers:kernel-wildfly:wildfly-test-plugins:simple-test', configuration: 'war')
 }
 
+
+task copyModules(type: Copy) {
+    dependsOn configurations.kernelModule
+
+    from configurations.kernelModule
+    destinationDir = file("$project.buildDir/dist/wildfly-11.0.0.Final/standalone/deployments")
+}
+
+test.dependsOn copyModules
+test.mustRunAfter copyModules
 
 jbossrepos {
     'wildfly11.0.0' {

@@ -1,0 +1,9 @@
+apply plugin: 'war' 
+
+configurations {
+    war {}
+}
+
+artifacts {
+    war tasks.war
+}
