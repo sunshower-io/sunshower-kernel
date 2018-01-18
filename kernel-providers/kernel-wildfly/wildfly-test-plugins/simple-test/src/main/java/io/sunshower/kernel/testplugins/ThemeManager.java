@@ -12,5 +12,4 @@ public interface ThemeManager {
     
     Theme getActiveTheme();
     
-    
 }

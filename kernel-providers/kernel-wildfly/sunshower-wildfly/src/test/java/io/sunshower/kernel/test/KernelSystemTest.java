@@ -18,7 +18,6 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import java.io.File;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(Arquillian.class)
@@ -30,15 +29,19 @@ public class KernelSystemTest {
     
     @Inject
     private PluginStorage pluginStorage;
-    
-    
+
+
+    @Resource(
+            name = "java:global/kernel-test-war/WildflyPluginManager!io.sunshower.kernel.api.PluginManager"
+    )
+    private PluginManager pluginManager;
+
     @Resource(name = "java:global/simple-test-1.0.0-SNAPSHOT/DefaultThemeManager!io.sunshower.kernel.testplugins.ThemeManager")
     private ThemeManager themeManager;
     
     @Deployment
     public static WebArchive webArchive() {
         return ShrinkWrap.create(WebArchive.class, "kernel-test-war.war")
-//                .addAsWebInfResource(file("src/test/webapp/WEB-INF/beans.xml"))
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsWebInfResource(file("src/test/webapp/WEB-INF/jboss-deployment-structure.xml"))
                 .addClass(KernelSystemTest.class)
@@ -47,13 +50,6 @@ public class KernelSystemTest {
                 .addClass(EphemeralPluginStorage.class);
     }
 
-    public ThemeManager getThemeManager() {
-        return themeManager;
-    }
-
-    public void setThemeManager(ThemeManager themeManager) {
-        this.themeManager = themeManager;
-    }
 
     @Test
     public void ensurePluginClassIsLoadable() throws ClassNotFoundException {
@@ -68,6 +64,10 @@ public class KernelSystemTest {
     @Test
     public void ensureWildflyPluginStorageIsAvailableAtJNDILocation() {
         themeManager.getActiveTheme();
+    }
+    
+    public void setPluginManager(PluginManager pluginManager) {
+        this.pluginManager = pluginManager;
     }
     
     

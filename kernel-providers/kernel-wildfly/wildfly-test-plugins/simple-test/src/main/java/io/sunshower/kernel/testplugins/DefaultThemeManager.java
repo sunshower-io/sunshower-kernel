@@ -2,17 +2,22 @@ package io.sunshower.kernel.testplugins;
 
 import io.sunshower.kernel.api.PluginManager;
 
-import javax.annotation.Resource;
-import javax.ejb.Stateless;
+import javax.annotation.PostConstruct;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import javax.inject.Inject;
 import java.util.List;
 
-@Stateless
+@Startup
+@Singleton
 public class DefaultThemeManager implements ThemeManager {
 
-  @Resource(
-    name = "java:global/kernel-test-war/WildflyPluginManager!io.sunshower.kernel.api.PluginManager"
-  )
   private PluginManager pluginManager;
+
+  @Inject
+  public DefaultThemeManager(PluginManager pluginManager) {
+    this.pluginManager = pluginManager;
+  }
 
   @Override
   public List<Theme> themes() {
@@ -21,19 +26,7 @@ public class DefaultThemeManager implements ThemeManager {
 
   @Override
   public Theme getActiveTheme() {
-    pluginManager.register(ThemeManager.class, this);
-    return null;
+    return new Theme() { };
   }
 
-  public void postConstruct() {
-    pluginManager.register(ThemeManager.class, this);
-  }
-
-  public PluginManager getPluginManager() {
-    return pluginManager;
-  }
-
-  public void setPluginManager(PluginManager pluginManager) {
-    this.pluginManager = pluginManager;
-  }
 }

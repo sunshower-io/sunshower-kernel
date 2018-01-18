@@ -3,6 +3,7 @@ package io.sunshower.kernel.wildfly;
 import io.sunshower.kernel.api.*;
 
 import javax.ejb.Singleton;
+import javax.enterprise.inject.spi.CDI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,12 +11,13 @@ import java.util.List;
 public class WildflyPluginManager implements PluginManager {
     
     private List<Object> extensions = new ArrayList<>();
-    
+
+
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> List<T> resolve(Class<T> extension) {
-        return (List<T>) extensions;
+    public <T> T resolve(Class<T> extension) {
+        return (T) CDI.current().getBeanManager().getBeans(extension).iterator().next();
     }
 
     @Override
