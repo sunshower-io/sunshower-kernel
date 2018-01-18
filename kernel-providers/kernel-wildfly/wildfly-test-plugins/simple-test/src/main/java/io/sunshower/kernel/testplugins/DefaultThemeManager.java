@@ -3,9 +3,11 @@ package io.sunshower.kernel.testplugins;
 import io.sunshower.kernel.api.PluginManager;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import java.util.List;
 
+@Stateless
 public class DefaultThemeManager implements ThemeManager {
     
     @Inject

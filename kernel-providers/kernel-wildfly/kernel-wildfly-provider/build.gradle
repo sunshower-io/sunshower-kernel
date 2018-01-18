@@ -2,4 +2,5 @@ dependencies {
     compile project(':kernel-api')
     compile project(':kernel-core')
     compile project(':kernel-common')
+    compileOnly group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2'
 }

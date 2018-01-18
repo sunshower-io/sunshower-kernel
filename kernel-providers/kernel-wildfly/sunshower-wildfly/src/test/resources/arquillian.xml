@@ -17,6 +17,9 @@
   <container qualifier="widlfly-managed" default="true">
     <configuration>
       <property name="jbossHome">${jbossHome:build/dist/wildfly-11.0.0.Final}</property>
+      <!--<property name="javaVmArguments">-Xmx512m -XX:MaxPermSize=128m-->
+         <!-- -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y-->
+      <!--</property>-->
     </configuration>
   </container>
 </arquillian>

@@ -2,6 +2,8 @@ apply plugin: 'war'
 
 dependencies {
     compile project(':kernel-api')
+    compileOnly group: 'javax', name: 'javaee-api', version: '7.0'
+    compileOnly group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2'
 }
 
 configurations {

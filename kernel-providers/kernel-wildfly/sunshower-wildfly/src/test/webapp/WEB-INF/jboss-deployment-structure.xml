@@ -4,6 +4,7 @@
   <deployment>
     <dependencies>
       <module name="io.sunshower.kernel"/>
+      <module name="deployment.simple-test-1.0.0-SNAPSHOT.war" />
     </dependencies>
   </deployment>
 </jboss-deployment-structure>

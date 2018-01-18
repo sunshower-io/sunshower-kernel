@@ -54,7 +54,7 @@ dependencies {
     testCompile group: 'org.jboss.arquillian.junit', name: 'arquillian-junit-container'
     testCompile group: 'org.wildfly.arquillian', name: 'wildfly-arquillian-container-managed'
 
-    testCompile project(path: ':kernel-providers:kernel-wildfly:wildfly-test-plugins:simple-test', configuration: 'war')
+    testCompile project(':kernel-providers:kernel-wildfly:wildfly-test-plugins:simple-test')
     kernelModule project(path: ':kernel-providers:kernel-wildfly:wildfly-test-plugins:simple-test', configuration: 'war')
 }
 

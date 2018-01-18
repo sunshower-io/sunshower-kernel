@@ -2,9 +2,11 @@ package io.sunshower.kernel.wildfly;
 
 import io.sunshower.kernel.api.*;
 
+import javax.ejb.Stateless;
 import java.util.ArrayList;
 import java.util.List;
 
+@Stateless
 public class WildflyPluginManager implements PluginManager {
     
     private List<Object> extensions = new ArrayList<>();
