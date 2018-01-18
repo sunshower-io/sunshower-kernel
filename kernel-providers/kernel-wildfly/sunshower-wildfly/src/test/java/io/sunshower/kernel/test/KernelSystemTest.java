@@ -31,16 +31,15 @@ public class KernelSystemTest {
     @Inject
     private PluginStorage pluginStorage;
     
-    @Inject
-    private PluginManager pluginManager;
     
     @Resource(name = "java:global/simple-test-1.0.0-SNAPSHOT/DefaultThemeManager!io.sunshower.kernel.testplugins.ThemeManager")
     private ThemeManager themeManager;
     
     @Deployment
     public static WebArchive webArchive() {
-        return ShrinkWrap.create(WebArchive.class)
-                .addAsWebInfResource(file("src/test/webapp/WEB-INF/beans.xml"))
+        return ShrinkWrap.create(WebArchive.class, "kernel-test-war.war")
+//                .addAsWebInfResource(file("src/test/webapp/WEB-INF/beans.xml"))
+                .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsWebInfResource(file("src/test/webapp/WEB-INF/jboss-deployment-structure.xml"))
                 .addClass(KernelSystemTest.class)
                 .addClass(TestClasspath.class)
@@ -68,7 +67,7 @@ public class KernelSystemTest {
     
     @Test
     public void ensureWildflyPluginStorageIsAvailableAtJNDILocation() {
-        assertEquals(pluginManager.resolve(ThemeManager.class).size(), 1);
+        themeManager.getActiveTheme();
     }
     
     
