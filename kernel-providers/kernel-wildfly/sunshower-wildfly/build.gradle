@@ -20,6 +20,7 @@ apply plugin: 'war'
 apply plugin: 'maven-publish'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.github.zhurlik.jbossmodules'
+apply from: 'gradle/modules.gradle'
 
 
 dependencyManagement {
@@ -36,25 +37,35 @@ configurations {
 }
 
 dependencies {
+
+    /**
+     * Wildfly core dependency
+     */
     wildfly group: 'io.sunshower', name: 'wildfly', version: '11.0.0.Final', ext: 'zip'
-    jbossmodules project(":kernel-api")
-    jbossmodules project(":kernel-common")
-    jbossmodules project(":kernel-core")
-    
+
+    /**
+     * Compile dependencies
+     */
     compile project(":kernel-api")
     compile project(":kernel-core")
     compile project(":kernel-common")
     
-    compile project(':kernel-providers:kernel-wildfly:kernel-wildfly-provider')
     
     compileOnly group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2'
+    compileOnly project(':kernel-providers:kernel-wildfly:kernel-wildfly-provider')
 
 
+    /**
+     * Test compile modules
+     */
     testCompile 'io.sunshower.test:test-common'
     testCompile group: 'org.jboss.arquillian.junit', name: 'arquillian-junit-container'
     testCompile group: 'org.wildfly.arquillian', name: 'wildfly-arquillian-container-managed'
-
     testCompile project(':kernel-providers:kernel-wildfly:wildfly-test-plugins:simple-test')
+
+    /**
+     * Kernel modules
+     */
     kernelModule project(path: ':kernel-providers:kernel-wildfly:kernel-wildfly-provider', configuration: 'war')
     kernelModule project(path: ':kernel-providers:kernel-wildfly:wildfly-test-plugins:simple-test', configuration: 'war')
     kernelModule project(path: ':kernel-providers:kernel-wildfly:wildfly-test-plugins:wildfly-system-tests', configuration: 'war')

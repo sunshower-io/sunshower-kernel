@@ -4,7 +4,6 @@ import io.sunshower.kernel.api.PluginManager;
 import io.sunshower.kernel.api.PluginStorage;
 import io.sunshower.kernel.spi.EphemeralPluginStorage;
 import io.sunshower.kernel.testplugins.ThemeManager;
-import io.sunshower.kernel.wildfly.WildflyPluginManager;
 import io.sunshower.test.common.TestClasspath;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -40,7 +39,7 @@ public class KernelSystemTest {
     @Resource(name = "java:global/simple-test-1.0.0-SNAPSHOT/DefaultThemeManager!io.sunshower.kernel.testplugins.ThemeManager")
     private ThemeManager themeManager;
     
-    @Deployment(order = 1000)
+    @Deployment
     public static WebArchive webArchive() {
         return ShrinkWrap.create(WebArchive.class, "kernel-test-war.war")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")

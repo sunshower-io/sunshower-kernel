@@ -1,0 +1,7 @@
+
+
+dependencies {
+    jbossmodules project(":kernel-api")
+    jbossmodules project(":kernel-common")
+    jbossmodules project(":kernel-core")
+}
