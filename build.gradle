@@ -40,9 +40,8 @@ allprojects {
 
     def repos = [
             'https://mymavenrepo.com/repo/Bwb7CZ1J9Ud5KCkBvnhI',
-//            'http://repo.spring.io/snapshot',
-//            "http://repo.spring.io/libs-milestone",
-            "http://oss.sonatype.org/content/repositories/snapshots"
+            "http://oss.sonatype.org/content/repositories/snapshots",
+            "http://www.gridgainsystems.com/nexus/content/repositories/external"
     ]
 
 
@@ -62,6 +61,14 @@ allprojects {
         mavenLocal()
         mavenCentral()
         jcenter()
+
+
+        ivy {
+            url "http://download.jboss.org/wildfly"
+            layout "pattern", {
+                artifact "[revision]/[module]-[revision].[ext]"
+            }
+        }
 
         maven {
             url mavenRepositoryUrl

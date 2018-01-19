@@ -20,5 +20,15 @@ dependencies {
     }
 
 
+    [
+            'core',
+            'config',
+            'acl',
+            'crypto',
+            'aspects',
+            'ldap'
+    ].each {
+        jbossmodules "org.springframework.security:spring-security-$it:${versions('spring-security.version')}"
+    }
 
 }

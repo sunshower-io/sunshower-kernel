@@ -1,5 +1,34 @@
-
 dependencies {
     jbossmodules "aopalliance:aopalliance"
     jbossmodules "org.postgresql:postgresql"
+
+
+    jbossmodules "org.flywaydb:flyway-core"
+
+    jbossmodules 'com.thoughtworks.xstream:xstream'
+
+
+    jbossmodules 'com.caucho:hessian'
+    jbossmodules "javax.cache:cache-api"
+
+    jbossmodules "io.reactivex.rxjava2:rxjava"
+    jbossmodules "org.reactivestreams:reactive-streams"
+
+
+
+    [
+            'ignite-core',
+            'ignite-spring',
+            'ignite-indexing',
+            'ignite-hibernate-core',
+    ].each {
+        jbossmodules "org.apache.ignite:$it"
+    }
+    
+    jbossmodules 'org.apache.ignite:ignite-hibernate_5.1'
+
+
+    jbossmodules 'org.aspectj:aspectjweaver'
+    jbossmodules 'com.thoughtworks.xstream:xstream'
+
 }
