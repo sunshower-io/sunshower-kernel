@@ -1,0 +1,4 @@
+
+ext.versions = { key ->
+    return dependencyManagement.importedProperties.get(key)
+}

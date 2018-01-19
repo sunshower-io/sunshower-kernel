@@ -19,6 +19,7 @@
   <properties>
     <sunshower-base.version>1.0.0-SNAPSHOT</sunshower-base.version>
     <moxy.version>2.7.1</moxy.version>
+    <spring.version>5.0.2.RELEASE</spring.version>
   </properties>
 
   <dependencyManagement>
@@ -28,6 +29,15 @@
         <artifactId>org.eclipse.persistence.moxy</artifactId>
         <version>${moxy.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-framework-bom</artifactId>
+        <version>${spring.version}</version>
+        <type>pom</type>
+      </dependency>
+
+
     </dependencies>
 
   </dependencyManagement>
