@@ -3,24 +3,6 @@ apply from: 'gradle/scripts.gradle'
 dependencies {
 
     /**
-     * Spring core
-     */
-
-    [
-            'web',
-            'context-support',
-            'jdbc',
-            'oxm',
-            'orm',
-            'jms',
-            'webmvc',
-            'websocket',
-            'context'
-    ].each {
-        jbossmodules "org.springframework:spring-${it}:${versions("spring.version")}"
-    }
-
-    /**
      * Spring web
      */
     [

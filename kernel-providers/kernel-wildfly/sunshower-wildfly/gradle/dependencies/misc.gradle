@@ -1,5 +1,5 @@
 
 dependencies {
-    jbossmodules "org.postgresql:postgresql:${versions("postgres.version")}"
-
+    jbossmodules "aopalliance:aopalliance"
+    jbossmodules "org.postgresql:postgresql"
 }

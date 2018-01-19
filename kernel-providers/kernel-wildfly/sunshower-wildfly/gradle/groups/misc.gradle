@@ -1,6 +1,23 @@
 apply from: 'gradle/scripts.gradle'
 
+
+
 modules {
+
+    postgresJdbc {
+        moduleName = 'org.postgresql.driver'
+        resources = ["postgresql-${versions("postgres.version")}.jar"]
+        dependencies = [
+                'javax.api'
+        ]
+    }
+
+
+    aopalliance {
+        moduleName = 'org.aopalliance'
+        resources = ["aopalliance-${versions('aopalliance.version')}.jar"]
+    }
+    
     moxy {
         moduleName = 'org.eclipse.moxy'
         resources = [
@@ -17,5 +34,24 @@ modules {
                 'org.glassfish.javax.json'
         ]
     }
+
+
+//    flyway {
+//        moduleName = "org.flywaydb"
+//        resources = ["flyway-core-${versions("flyway.version")}.jar"]
+//        dependencies = [
+//                "javax.api",
+//                "org.slf4j",
+//                "org.jboss.vfs",
+//                "org.apache.commons.logging"
+//        ]
+//
+//    }
+
+
+//    aopalliance {
+//        moduleName = 'org.aopalliance'
+//        resources = ["aopalliance-${versions('aopalliance.version')}.jar"]
+//    }
 }
     

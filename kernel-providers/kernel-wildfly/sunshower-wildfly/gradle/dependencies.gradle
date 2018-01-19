@@ -1,3 +1,4 @@
+apply from: 'gradle/dependencies/misc.gradle'
 apply from: 'gradle/dependencies/spring.gradle'
 
 dependencies {

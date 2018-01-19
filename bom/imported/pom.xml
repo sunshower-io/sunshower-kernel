@@ -17,92 +17,43 @@
 
 
     <properties>
-      <sunshower-base.version>1.0.0-SNAPSHOT</sunshower-base.version>
+      <moxy.version>2.7.1</moxy.version>
+      <postgres.version>42.1.4</postgres.version>
+      <aopalliance.version>1.0</aopalliance.version>
+      <spring.version>5.0.2.RELEASE</spring.version>
+      
+      <sunshower-common.version>1.0.0-SNAPSHOT</sunshower-common.version>
+      <sunshower-core.version>1.0.0-SNAPSHOT</sunshower-core.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
           <dependency>
-            <groupId>io.sunshower.test</groupId>
-            <artifactId>test-ws</artifactId>
-            <version>${sunshower-base.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.sunshower.test</groupId>
-            <artifactId>test-persist</artifactId>
-            <version>${sunshower-base.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.sunshower.test</groupId>
-            <artifactId>test-common</artifactId>
-            <version>${sunshower-base.version}</version>
+            <groupId>io.sunshower.base</groupId>
+            <artifactId>bom-exported</artifactId>
+            <version>${sunshower-common.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
           </dependency>
 
           <dependency>
-            <groupId>io.sunshower.persist</groupId>
-            <artifactId>persist-ignite</artifactId>
-            <version>${sunshower-base.version}</version>
+            <groupId>io.sunshower.core</groupId>
+            <artifactId>bom-exported</artifactId>
+            <version>${sunshower-core.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
           </dependency>
+          
+          
           <dependency>
-            <groupId>io.sunshower.persist</groupId>
-            <artifactId>persist-hibernate</artifactId>
-            <version>${sunshower-base.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>io.sunshower.common</groupId>
-            <artifactId>annotations</artifactId>
-            <version>${sunshower-base.version}</version>
-          </dependency>
-
-          <dependency>
-            <groupId>io.sunshower.persist</groupId>
-            <artifactId>persist-api</artifactId>
-            <version>${sunshower-base.version}</version>
-          </dependency>
-
-          <dependency>
-            <groupId>io.sunshower.persist</groupId>
-            <artifactId>persist-jpa</artifactId>
-            <version>${sunshower-base.version}</version>
-          </dependency>
-
-          <dependency>
-            <groupId>io.sunshower.common</groupId>
-            <artifactId>core</artifactId>
-            <version>${sunshower-base.version}</version>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-framework-bom</artifactId>
+            <version>${spring.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
           </dependency>
 
 
-          <dependency>
-            <groupId>io.sunshower.common</groupId>
-            <artifactId>common-ws</artifactId>
-            <version>${sunshower-base.version}</version>
-          </dependency>
-
-          <dependency>
-            <groupId>io.sunshower.common</groupId>
-            <artifactId>core-api</artifactId>
-            <version>${sunshower-base.version}</version>
-          </dependency>
-
-          <dependency>
-            <groupId>io.sunshower.service</groupId>
-            <artifactId>service-security</artifactId>
-            <version>${sunshower-base.version}</version>
-          </dependency>
-
-          <dependency>
-            <groupId>io.sunshower.service</groupId>
-            <artifactId>service-core</artifactId>
-            <version>${sunshower-base.version}</version>
-          </dependency>
-
-
-          <dependency>
-            <groupId>io.sunshower.service</groupId>
-            <artifactId>service-api</artifactId>
-            <version>${sunshower-base.version}</version>
-          </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

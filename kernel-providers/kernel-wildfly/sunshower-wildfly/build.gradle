@@ -24,11 +24,11 @@ apply from: 'gradle/modules.gradle'
 apply from: 'gradle/dependencies.gradle'
 
 
-dependencyManagement {
-    imports {
-        mavenBom('org.jboss.arquillian:arquillian-bom:1.2.0.Final')
-    }
-}
+//dependencyManagement {
+//    imports {
+//        mavenBom('org.jboss.arquillian:arquillian-bom:1.2.0.Final')
+//    }
+//}
 
 
 configurations {

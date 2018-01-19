@@ -42,6 +42,13 @@
         <version>${sunshower-kernel.version}</version>
       </dependency>
 
+
+      <dependency>
+        <groupId>io.sunshower.wildfly</groupId>
+        <artifactId>sunshower-wildfly</artifactId>
+        <version>${sunshower-kernel.version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 </project>

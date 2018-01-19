@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.sunshower.env</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0.0.Final</version>
+    <version>1.0.0-SNAPSHOT</version>
   </parent>
   <groupId>io.sunshower.kernel</groupId>
   <artifactId>bom</artifactId>
@@ -22,7 +22,6 @@
   <modules>
     <module>imported</module>
     <module>exported</module>
-    <module>modules</module>
   </modules>
 
   <build>
