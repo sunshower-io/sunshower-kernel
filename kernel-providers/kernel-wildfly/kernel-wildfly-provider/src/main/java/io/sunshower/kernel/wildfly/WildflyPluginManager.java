@@ -16,7 +16,7 @@ public class WildflyPluginManager implements PluginManager {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T resolve(Class<T> extension) {
-        return (T) CDI.current().getBeanManager().getBeans(extension).iterator().next();
+        return (T) extensions.get(0);
     }
 
     @Override

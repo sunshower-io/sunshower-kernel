@@ -2,6 +2,7 @@ package io.sunshower.kernel.testplugins;
 
 import io.sunshower.kernel.api.PluginManager;
 
+import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
@@ -18,6 +19,12 @@ public class DefaultThemeManager implements ThemeManager {
   public DefaultThemeManager(PluginManager pluginManager) {
     this.themes = new LinkedHashSet<>();
     this.pluginManager = pluginManager;
+  }
+  
+  @PostConstruct
+  public void registerAll() {
+      register(new SampleTheme());
+      pluginManager.register(ThemeManager.class, this);
   }
 
   @Override

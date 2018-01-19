@@ -18,6 +18,7 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import java.io.File;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(Arquillian.class)
@@ -71,8 +72,8 @@ public class KernelSystemTest {
     
     @Test
     public void ensureThemeManagerHasCorrectNumberOfThemes() {
-//        assertEquals(pluginManager.resolve(ThemeManager.class).themes().size(), 2);
+        assertEquals(pluginManager.resolve(ThemeManager.class).themes().size(), 2);
     }
-    
-    
+
+
 }
