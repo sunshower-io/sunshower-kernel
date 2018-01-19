@@ -83,15 +83,21 @@ allprojects {
                         'env.version': '1.0.0-SNAPSHOT'
                 ])
             }
+
+            mavenBom("io.sunshower.kernel:bom-modules-imported:${version}") {
+                bomProperties([
+                        'env.version': '1.0.0-SNAPSHOT'
+                ])
+            }
         }
     }
 
     plugins.withType(JavaPlugin) {
 
         dependencies {
-            compile 'javax.ws.rs:javax.ws.rs-api'
-            compile 'org.eclipse.persistence:org.eclipse.persistence.moxy'
-            compile 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api'
+            compileOnly 'javax.ws.rs:javax.ws.rs-api'
+            compileOnly 'org.eclipse.persistence:org.eclipse.persistence.moxy'
+            compileOnly 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api'
 
 
             testCompile 'javax.mail:mail'

@@ -4,7 +4,6 @@
   <deployment>
     <dependencies>
       <module name="io.sunshower.kernel"/>
-      <module name="deployment.kernel-wildfly-provider-1.0.0-SNAPSHOT.war" />
     </dependencies>
   </deployment>
 </jboss-deployment-structure>

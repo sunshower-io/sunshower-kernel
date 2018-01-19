@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.sunshower.kernel</groupId>
+    <artifactId>bom</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <relativePath>../</relativePath>
+  </parent>
+  <groupId>io.sunshower.kernel</groupId>
+  <artifactId>bom-modules-imported</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Sunshower.io SDK Imported Bill-Of-Materials</name>
+  <url>http://www.sunshower.io</url>
+
+
+  <properties>
+    <sunshower-base.version>1.0.0-SNAPSHOT</sunshower-base.version>
+    <moxy.version>2.7.1</moxy.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.eclipse.persistence</groupId>
+        <artifactId>org.eclipse.persistence.moxy</artifactId>
+        <version>${moxy.version}</version>
+      </dependency>
+    </dependencies>
+
+  </dependencyManagement>
+</project>

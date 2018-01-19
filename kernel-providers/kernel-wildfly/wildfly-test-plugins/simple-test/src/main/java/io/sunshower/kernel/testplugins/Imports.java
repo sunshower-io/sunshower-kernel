@@ -9,7 +9,7 @@ public class Imports {
     
     @Produces
     @Resource(
-            name = "java:global/kernel-test-war/WildflyPluginManager!io.sunshower.kernel.api.PluginManager"
+            name = "java:global/kernel-wildfly-provider-1.0.0-SNAPSHOT/WildflyPluginManager!io.sunshower.kernel.api.PluginManager"
     )
     private PluginManager pluginManager;
 

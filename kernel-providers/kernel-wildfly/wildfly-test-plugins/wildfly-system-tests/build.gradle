@@ -1,4 +1,11 @@
-apply plugin: 'war' 
+apply plugin: 'war'
+
+dependencies {
+    compileOnly project(':kernel-api')
+    compileOnly group: 'javax', name: 'javaee-api', version: '7.0'
+    compileOnly group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2'
+    compileOnly project(':kernel-providers:kernel-wildfly:wildfly-test-plugins:simple-test')
+}
 
 configurations {
     war {}

@@ -22,6 +22,7 @@
   <modules>
     <module>imported</module>
     <module>exported</module>
+    <module>modules</module>
   </modules>
 
   <build>

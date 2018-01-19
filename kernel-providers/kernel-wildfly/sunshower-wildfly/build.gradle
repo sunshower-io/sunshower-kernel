@@ -55,7 +55,9 @@ dependencies {
     testCompile group: 'org.wildfly.arquillian', name: 'wildfly-arquillian-container-managed'
 
     testCompile project(':kernel-providers:kernel-wildfly:wildfly-test-plugins:simple-test')
+    kernelModule project(path: ':kernel-providers:kernel-wildfly:kernel-wildfly-provider', configuration: 'war')
     kernelModule project(path: ':kernel-providers:kernel-wildfly:wildfly-test-plugins:simple-test', configuration: 'war')
+    kernelModule project(path: ':kernel-providers:kernel-wildfly:wildfly-test-plugins:wildfly-system-tests', configuration: 'war')
 }
 
 
@@ -110,6 +112,26 @@ modules {
         ]
         dependencies = [
                 'javax.api'
+        ]
+    }
+
+
+    def moxyVersion = "2.7.1"
+
+    moxy {
+        moduleName = 'org.eclipse.moxy'
+        resources = [
+                "org.eclipse.persistence.asm-${moxyVersion}.jar",
+                "org.eclipse.persistence.moxy-${moxyVersion}.jar",
+                "org.eclipse.persistence.core-${moxyVersion}.jar"
+        ]
+        dependencies = [
+                'javax.api',
+                'javax.mail.api',
+                'javax.ws.rs.api',
+                'javax.xml.bind.api',
+                'javax.validation.api',
+                'org.glassfish.javax.json'
         ]
     }
 }

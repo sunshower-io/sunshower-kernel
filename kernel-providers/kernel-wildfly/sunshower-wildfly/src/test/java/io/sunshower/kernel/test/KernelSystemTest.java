@@ -32,21 +32,20 @@ public class KernelSystemTest {
 
 
     @Resource(
-            name = "java:global/kernel-test-war/WildflyPluginManager!io.sunshower.kernel.api.PluginManager"
+            name = "java:global/kernel-wildfly-provider-1.0.0-SNAPSHOT/WildflyPluginManager!io.sunshower.kernel.api.PluginManager"
     )
     private PluginManager pluginManager;
 
     @Resource(name = "java:global/simple-test-1.0.0-SNAPSHOT/DefaultThemeManager!io.sunshower.kernel.testplugins.ThemeManager")
     private ThemeManager themeManager;
     
-    @Deployment
+    @Deployment(order = 1000)
     public static WebArchive webArchive() {
         return ShrinkWrap.create(WebArchive.class, "kernel-test-war.war")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsWebInfResource(file("src/test/webapp/WEB-INF/jboss-deployment-structure.xml"))
                 .addClass(KernelSystemTest.class)
                 .addClass(TestClasspath.class)
-                .addClass(WildflyPluginManager.class)
                 .addClass(EphemeralPluginStorage.class);
     }
 
@@ -63,11 +62,16 @@ public class KernelSystemTest {
     
     @Test
     public void ensureWildflyPluginStorageIsAvailableAtJNDILocation() {
-        themeManager.getActiveTheme();
+        assertNotNull(themeManager.getActiveTheme());
     }
     
     public void setPluginManager(PluginManager pluginManager) {
         this.pluginManager = pluginManager;
+    }
+    
+    @Test
+    public void ensureThemeManagerHasCorrectNumberOfThemes() {
+//        assertEquals(pluginManager.resolve(ThemeManager.class).themes().size(), 2);
     }
     
     

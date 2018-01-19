@@ -13,7 +13,6 @@ public class WildflyPluginManager implements PluginManager {
     private List<Object> extensions = new ArrayList<>();
 
 
-
     @Override
     @SuppressWarnings("unchecked")
     public <T> T resolve(Class<T> extension) {
