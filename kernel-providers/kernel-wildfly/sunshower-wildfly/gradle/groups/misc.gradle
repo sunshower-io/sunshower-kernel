@@ -1,0 +1,21 @@
+apply from: 'gradle/scripts.gradle'
+
+modules {
+    moxy {
+        moduleName = 'org.eclipse.moxy'
+        resources = [
+                "org.eclipse.persistence.asm-${versions("moxy.version")}.jar",
+                "org.eclipse.persistence.moxy-${versions("moxy.version")}.jar",
+                "org.eclipse.persistence.core-${versions("moxy.version")}.jar"
+        ]
+        dependencies = [
+                'javax.api',
+                'javax.mail.api',
+                'javax.ws.rs.api',
+                'javax.xml.bind.api',
+                'javax.validation.api',
+                'org.glassfish.javax.json'
+        ]
+    }
+}
+    

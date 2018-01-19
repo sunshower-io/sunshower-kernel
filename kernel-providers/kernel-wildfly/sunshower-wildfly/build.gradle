@@ -21,6 +21,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.github.zhurlik.jbossmodules'
 apply from: 'gradle/modules.gradle'
+apply from: 'gradle/dependencies.gradle'
 
 
 dependencyManagement {
@@ -113,39 +114,39 @@ publishing {
 }
 
 
-modules {
-    sunshowerKernel {
-        moduleName = 'io.sunshower.kernel'
-        resources = [
-                "kernel-api-${project.version}.jar",
-                "kernel-core-${project.version}.jar",
-                "kernel-common-${project.version}.jar"
-        ]
-        dependencies = [
-                'javax.api'
-        ]
-    }
-
-
-    def moxyVersion = "2.7.1"
-
-    moxy {
-        moduleName = 'org.eclipse.moxy'
-        resources = [
-                "org.eclipse.persistence.asm-${moxyVersion}.jar",
-                "org.eclipse.persistence.moxy-${moxyVersion}.jar",
-                "org.eclipse.persistence.core-${moxyVersion}.jar"
-        ]
-        dependencies = [
-                'javax.api',
-                'javax.mail.api',
-                'javax.ws.rs.api',
-                'javax.xml.bind.api',
-                'javax.validation.api',
-                'org.glassfish.javax.json'
-        ]
-    }
-}
+//modules {
+//    sunshowerKernel {
+//        moduleName = 'io.sunshower.kernel'
+//        resources = [
+//                "kernel-api-${project.version}.jar",
+//                "kernel-core-${project.version}.jar",
+//                "kernel-common-${project.version}.jar"
+//        ]
+//        dependencies = [
+//                'javax.api'
+//        ]
+//    }
+//
+//
+//    def moxyVersion = "2.7.1"
+//
+//    moxy {
+//        moduleName = 'org.eclipse.moxy'
+//        resources = [
+//                "org.eclipse.persistence.asm-${moxyVersion}.jar",
+//                "org.eclipse.persistence.moxy-${moxyVersion}.jar",
+//                "org.eclipse.persistence.core-${moxyVersion}.jar"
+//        ]
+//        dependencies = [
+//                'javax.api',
+//                'javax.mail.api',
+//                'javax.ws.rs.api',
+//                'javax.xml.bind.api',
+//                'javax.validation.api',
+//                'org.glassfish.javax.json'
+//        ]
+//    }
+//}
 
 task copyWildfly(type: Copy) {
     dependsOn configurations.wildfly

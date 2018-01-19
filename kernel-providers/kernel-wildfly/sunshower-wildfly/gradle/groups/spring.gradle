@@ -1,22 +1,16 @@
 apply from: 'gradle/scripts.gradle'
-
-dependencies {
-
-    /**
-     * Spring core
-     */
-
-    [
-            'web',
-            'context-support',
-            'jdbc',
-            'oxm',
-            'orm',
-            'jms',
-            'webmvc',
-            'websocket',
-            'context'
-    ].each {
-        jbossmodules "org.springframework:spring-${it}:${versions("spring.version")}"
+modules {
+    springContext {
+        moduleName = 'org.springframework.context'
+        resources = ["spring-context-${versions('spring.version')}.jar"]
+        dependencies = [
+                'org.springframework.beans',
+                'org.springframework.core',
+                'org.springframework.aop',
+                'org.springframework.expression',
+                'org.apache.commons.logging',
+                'javax.api',
+                'javaee.api'
+        ]
     }
 }

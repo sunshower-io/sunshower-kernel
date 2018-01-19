@@ -1,0 +1,5 @@
+
+dependencies {
+    jbossmodules "org.postgresql:postgresql:${versions("postgres.version")}"
+
+}

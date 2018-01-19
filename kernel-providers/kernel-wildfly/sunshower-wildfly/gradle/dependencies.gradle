@@ -1,0 +1,7 @@
+apply from: 'gradle/dependencies/spring.gradle'
+
+dependencies {
+    jbossmodules project(":kernel-api")
+    jbossmodules project(":kernel-common")
+    jbossmodules project(":kernel-core")
+}
