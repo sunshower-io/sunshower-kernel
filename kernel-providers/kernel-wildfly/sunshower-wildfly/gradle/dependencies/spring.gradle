@@ -13,6 +13,7 @@ dependencies {
             'orm',
             'jms',
             'webmvc',
+            'webflux',
             'websocket',
             'context'
     ].each {

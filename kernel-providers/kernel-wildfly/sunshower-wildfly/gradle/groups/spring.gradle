@@ -161,21 +161,22 @@ modules {
     springWeb {
         moduleName = 'org.springframework.web'
         resources = [
+
                 "spring-web-${versions('spring.version')}.jar",
+                "spring-webmvc-${versions('spring.version')}.jar",
+                "spring-webflux-${versions('spring.version')}.jar",
                 "spring-websocket-${versions('spring.version')}.jar"
         ]
         dependencies = [
                 'javax.faces.api',
+                'io.reactivex',
                 'javax.websocket.api',
+                'org.springframework.aop',
                 'org.springframework.aop',
                 'org.springframework.beans',
                 'org.springframework.context',
                 'org.springframework.core',
                 'org.springframework.oxm',
-                [name: 'com.fasterxml.jackson.core.jackson-annotations', export: true],
-                [name: 'com.fasterxml.jackson.core.jackson-core', export: true],
-                [name: 'com.fasterxml.jackson.core.jackson-databind', export: true],
-                [name: 'com.fasterxml.jackson.jaxrs.jackson-jaxrs-json-provider', export: true],
                 'javax.api', 'javax.servlet.api', 'javax.xml.bind.api', 'org.apache.commons.logging',
         ]
     }
