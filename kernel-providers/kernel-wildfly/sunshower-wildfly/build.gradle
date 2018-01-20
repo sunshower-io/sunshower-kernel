@@ -23,11 +23,6 @@ apply plugin: 'com.github.zhurlik.jbossmodules'
 apply from: 'gradle/modules.gradle'
 apply from: 'gradle/dependencies.gradle'
 
-//dependencyManagement {
-//    imports {
-//        mavenBom('org.jboss.arquillian:arquillian-bom:1.2.0.Final')
-//    }
-//}
 
 
 configurations {
@@ -102,39 +97,6 @@ publishing {
     }
 }
 
-//modules {
-//    sunshowerKernel {
-//        moduleName = 'io.sunshower.kernel'
-//        resources = [
-//                "kernel-api-${project.version}.jar",
-//                "kernel-core-${project.version}.jar",
-//                "kernel-common-${project.version}.jar"
-//        ]
-//        dependencies = [
-//                'javax.api'
-//        ]
-//    }
-//
-//
-//    def moxyVersion = "2.7.1"
-//
-//    moxy {
-//        moduleName = 'org.eclipse.moxy'
-//        resources = [
-//                "org.eclipse.persistence.asm-${moxyVersion}.jar",
-//                "org.eclipse.persistence.moxy-${moxyVersion}.jar",
-//                "org.eclipse.persistence.core-${moxyVersion}.jar"
-//        ]
-//        dependencies = [
-//                'javax.api',
-//                'javax.mail.api',
-//                'javax.ws.rs.api',
-//                'javax.xml.bind.api',
-//                'javax.validation.api',
-//                'org.glassfish.javax.json'
-//        ]
-//    }
-//}
 
 task copyWildfly(type: Copy) {
     dependsOn configurations.wildfly
@@ -178,6 +140,14 @@ task overlay(type: Copy) {
     }
 }
 
+task cleanup(type: Delete) {
+    delete fileTree("$project.buildDir/dist/wildfly-11.0.0.Final/standalone/deployments/") {
+        include "**/*.war"
+        include "**/*.deployed"
+    }
+}
+
+
 task createDistribution(type: Zip, dependsOn: ['copyWildfly', 'overlay', 'overlayStandalone']) {
     from "${project.buildDir}/dist/wildfly-11.0.0.Final"
     into "sunshower-wildfly"
@@ -185,7 +155,10 @@ task createDistribution(type: Zip, dependsOn: ['copyWildfly', 'overlay', 'overla
 
 
 task assembleAll(dependsOn: ['wildfly11.0.0DistZip', 'createDistribution', 'distZip']) {
+    
 }
+
+//test.finalizedBy cleanup
 
 build.dependsOn 'assembleAll'
 

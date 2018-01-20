@@ -75,8 +75,6 @@ modules {
     }
 
 
-
-
     ignite {
         moduleName = 'org.apache.ignite'
         resources = [
@@ -95,6 +93,48 @@ modules {
                 "com.h2database.h2",
                 "org.springframework.context",
                 [name: 'sun.jdk', export: true],
+        ]
+    }
+
+
+
+    hibernate {
+        moduleName ='org.hibernate.latest'
+        resources = [
+                "javassist-${versions('javassist.version')}.jar",
+                "hibernate-core-${versions('hibernate.version')}.jar",
+                "hibernate-envers-${versions('hibernate.version')}.jar",
+                "jipijapa-hibernate5-${versions('jipijapa.version')}.jar",
+                "hibernate-commons-annotations-${versions('hibernate-commons.version')}.jar"
+        ]
+        dependencies = [
+                "org.apache.ignite",
+                "javax.api",
+                "javax.annotation.api",
+                "javax.enterprise.api",
+                "com.fasterxml.classmate",
+                "javax.persistence.api",
+                "javax.transaction.api",
+                "javax.validation.api",
+                "javax.xml.bind.api",
+                "org.antlr",
+                "org.dom4j",
+                "org.jboss.as.jpa.spi",
+                "org.jboss.jandex",
+                "org.jboss.logging",
+                "org.jboss.vfs"
+        ]
+
+    }
+
+
+
+    hikariCp {
+        moduleName = "pools.db.hikari"
+        resources = ["HikariCP-${versions('hikari-cp.version')}.jar"]
+        dependencies = [
+                'javax.api',
+                'org.slf4j'
         ]
     }
 

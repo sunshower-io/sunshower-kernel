@@ -1,26 +1,85 @@
 package io.sunshower.kernel.wildfly;
 
 import io.sunshower.kernel.api.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.ejb.Singleton;
-import javax.enterprise.inject.spi.CDI;
-import java.util.ArrayList;
-import java.util.List;
+import javax.enterprise.inject.Default;
+import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
+@Setter
 @Singleton
+@NoArgsConstructor
 public class WildflyPluginManager implements PluginManager {
-    
-    private List<Object> extensions = new ArrayList<>();
 
+  @Inject @Default private PluginStorage pluginStorage;
+  private final Map<Class<?>, CoordinateBinding> cache = new HashMap<>();
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T resolve(Class<T> extension) {
-        return (T) extensions.get(0);
+  @Override
+  public <T> T resolve(Class<T> extension) {
+    final ExtensionPointDefinition<T> definition = locate(extension);
+    return definition.load(pluginStorage);
+  }
+
+  @Override
+  public <T> void register(Class<T> extensionPoint, T instance) {
+    final ExtensionPointDefinition definition = create(extensionPoint, instance);
+    pluginStorage.save(definition);
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T> ExtensionPointDefinition create(Class<T> extensionPoint, T instance) {
+    CoordinateBinding coordinate = getCoordinate(extensionPoint);
+    InMemoryExtensionPointDefinition<T> definition =
+        new InMemoryExtensionPointDefinition<>(
+            (Class<T>) coordinate.type, coordinate.coordinate, t -> instance);
+    pluginStorage.save(definition);
+    return definition;
+  }
+
+  private <T> ExtensionPointDefinition<T> locate(Class<T> extension) {
+    CoordinateBinding coordinate = getCoordinate(extension);
+    if (coordinate == null) {
+      throw new NoSuchElementException(
+          String.format("Extension with type %s not found", extension));
     }
+    return pluginStorage.get(coordinate.coordinate);
+  }
 
-    @Override
-    public <T> void register(Class<T> extensionPoint, T instance) {
-        extensions.add(instance);
+  private CoordinateBinding getCoordinate(Class<?> extensionPoint) {
+    if (cache.containsKey(extensionPoint)) {
+      return cache.get(extensionPoint);
     }
+    for (Class<?> current = extensionPoint; current != null; current = current.getSuperclass()) {
+      final ExtensionPoint definition = current.getAnnotation(ExtensionPoint.class);
+      if (definition == null) {
+        for (Class<?> ifaceType : current.getInterfaces()) {
+          CoordinateBinding result = getCoordinate(ifaceType);
+          if (result != null) {
+            return result;
+          }
+        }
+      } else {
+        ExtensionCoordinate build =
+            ExtensionCoordinate.builder()
+                .name(definition.value())
+                .namespace(definition.namespace())
+                .group(definition.group())
+                .build();
+        return new CoordinateBinding(current, build);
+      }
+    }
+    return null;
+  }
+
+  @AllArgsConstructor
+  static class CoordinateBinding {
+    final Class<?> type;
+    final ExtensionCoordinate coordinate;
+  }
 }

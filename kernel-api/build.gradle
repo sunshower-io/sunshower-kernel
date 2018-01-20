@@ -1,3 +1,4 @@
 dependencies {
     compile 'javax.inject:javax.inject'
+    testCompile 'org.junit.platform:junit-platform-runner'
 }

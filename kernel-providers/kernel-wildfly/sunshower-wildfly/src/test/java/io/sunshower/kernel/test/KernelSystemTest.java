@@ -2,7 +2,6 @@ package io.sunshower.kernel.test;
 
 import io.sunshower.kernel.api.PluginManager;
 import io.sunshower.kernel.api.PluginStorage;
-import io.sunshower.kernel.spi.EphemeralPluginStorage;
 import io.sunshower.kernel.testplugins.ThemeManager;
 import io.sunshower.test.common.TestClasspath;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -14,7 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.annotation.Resource;
-import javax.inject.Inject;
 import java.io.File;
 
 import static org.junit.Assert.assertEquals;
@@ -27,9 +25,10 @@ public class KernelSystemTest {
         return new File(TestClasspath.buildDir().getParentFile(), path);
     }
     
-    @Inject
+    @Resource(
+            name = "java:global/kernel-wildfly-provider-1.0.0-SNAPSHOT/InMemoryPluginStorage!io.sunshower.kernel.api.PluginStorage"
+    )
     private PluginStorage pluginStorage;
-
 
     @Resource(
             name = "java:global/kernel-wildfly-provider-1.0.0-SNAPSHOT/WildflyPluginManager!io.sunshower.kernel.api.PluginManager"
@@ -45,8 +44,7 @@ public class KernelSystemTest {
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
                 .addAsWebInfResource(file("src/test/webapp/WEB-INF/jboss-deployment-structure.xml"))
                 .addClass(KernelSystemTest.class)
-                .addClass(TestClasspath.class)
-                .addClass(EphemeralPluginStorage.class);
+                .addClass(TestClasspath.class);
     }
 
 

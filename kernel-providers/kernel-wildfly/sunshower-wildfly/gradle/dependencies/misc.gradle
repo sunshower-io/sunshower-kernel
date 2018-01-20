@@ -10,11 +10,16 @@ dependencies {
 
     jbossmodules 'com.caucho:hessian'
     jbossmodules "javax.cache:cache-api"
+    jbossmodules 'com.zaxxer:HikariCP'
 
     jbossmodules "io.reactivex.rxjava2:rxjava"
     jbossmodules "org.reactivestreams:reactive-streams"
 
+    jbossmodules 'org.javassist:javassist:3.22.0-GA'
 
+    jbossmodules "org.wildfly:jipijapa-hibernate5:${versions('jipijapa.version')}"
+    jbossmodules "org.hibernate:hibernate-core:${versions('hibernate.version')}"
+    jbossmodules "org.hibernate:hibernate-envers:${versions('hibernate.version')}"
 
     [
             'ignite-core',

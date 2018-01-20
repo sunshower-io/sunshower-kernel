@@ -1,14 +1,18 @@
 buildscript {
     apply from: 'gradle/buildscript.gradle', to: buildscript
+
+    dependencies {
+        classpath "net.ltgt.gradle:gradle-apt-plugin:0.13"
+    }
 }
 apply plugin: 'nebula-aggregate-javadocs'
 
 allprojects {
     apply plugin: 'idea'
     apply plugin: 'java'
+    apply plugin: 'net.ltgt.apt'
     apply plugin: 'maven-publish'
     apply plugin: 'project-report'
-//    apply plugin: 'com.bmuschko.clover'
     apply plugin: 'io.spring.dependency-management'
 
     configurations {
@@ -89,9 +93,12 @@ allprojects {
         }
     }
 
+
     plugins.withType(JavaPlugin) {
 
         dependencies {
+            apt "org.projectlombok:lombok:1.16.20"
+            compileOnly "org.projectlombok:lombok:1.16.20"
             compileOnly 'javax.ws.rs:javax.ws.rs-api'
             compileOnly 'org.eclipse.persistence:org.eclipse.persistence.moxy'
             compileOnly 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api'
