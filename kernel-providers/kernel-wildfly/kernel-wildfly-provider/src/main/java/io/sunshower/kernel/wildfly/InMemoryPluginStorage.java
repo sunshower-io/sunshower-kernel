@@ -7,16 +7,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.ejb.Singleton;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Setter
 @Singleton
 @NoArgsConstructor
 public class InMemoryPluginStorage implements PluginStorage {
 
-  private final Map<ExtensionCoordinate, ExtensionPointDefinition<?>> cache =
-      new ConcurrentHashMap<>();
+  private final Map<ExtensionCoordinate, ExtensionPointDefinition<?>> cache = new LinkedHashMap<>();
 
   @Override
   public void save(ExtensionPointDefinition extensionPoint) {
@@ -27,5 +28,10 @@ public class InMemoryPluginStorage implements PluginStorage {
   @SuppressWarnings("unchecked")
   public <T> ExtensionPointDefinition<T> get(ExtensionCoordinate coordinate) {
     return (ExtensionPointDefinition<T>) cache.get(coordinate);
+  }
+
+  @Override
+  public List<ExtensionPointDefinition<?>> list() {
+    return new ArrayList<>(cache.values());
   }
 }

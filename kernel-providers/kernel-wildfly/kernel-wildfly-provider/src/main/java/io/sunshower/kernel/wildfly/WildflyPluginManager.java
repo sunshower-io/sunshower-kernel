@@ -9,6 +9,7 @@ import javax.ejb.Singleton;
 import javax.enterprise.inject.Default;
 import javax.inject.Inject;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -19,6 +20,12 @@ public class WildflyPluginManager implements PluginManager {
 
   @Inject @Default private PluginStorage pluginStorage;
   private final Map<Class<?>, CoordinateBinding> cache = new HashMap<>();
+  
+ 
+  @Override
+  public List<ExtensionPointDefinition<?>> getExtensionPoints() {
+      return pluginStorage.list();
+  }
 
   @Override
   public <T> T resolve(Class<T> extension) {
