@@ -142,7 +142,7 @@ task overlay(type: Copy) {
 
 task cleanup(type: Delete) {
     delete fileTree("$project.buildDir/dist/wildfly-11.0.0.Final/standalone/deployments/") {
-        include "**/*.war"
+        include "**/*test*.war"
         include "**/*.deployed"
     }
 }
@@ -158,7 +158,7 @@ task assembleAll(dependsOn: ['wildfly11.0.0DistZip', 'createDistribution', 'dist
     
 }
 
-//test.finalizedBy cleanup
+test.finalizedBy cleanup
 
 build.dependsOn 'assembleAll'
 
