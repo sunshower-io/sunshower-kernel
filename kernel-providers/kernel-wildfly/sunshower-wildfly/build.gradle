@@ -110,7 +110,7 @@ task copyWildfly(type: Copy) {
 
 
 task overlayStandalone(type: Copy) {
-    from fileTree("${project.projectDir}/wildfly-dist/resources")
+    from fileTree("${project.projectDir}/src/main/resources")
     into file("${project.buildDir}/dist/wildfly-11.0.0.Final/standalone/configuration")
 }
 
@@ -160,6 +160,7 @@ task assembleAll(dependsOn: ['wildfly11.0.0DistZip', 'createDistribution', 'dist
 
 test.finalizedBy cleanup
 
-build.dependsOn 'assembleAll'
+compileJava.finalizedBy assembleAll
+
 
 defaultTasks 'clean', 'copyWildfly', 'overlay', 'distZip'
