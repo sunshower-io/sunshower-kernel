@@ -1,8 +1,18 @@
 apply plugin: 'war'
 
 
+
 configurations {
     war{}  
+}
+
+publishing {
+	publications {
+		mavenWeb(MavenPublication) {
+			from components.web
+		}
+	}
+
 }
 
 artifacts {
