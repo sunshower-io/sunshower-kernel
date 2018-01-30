@@ -84,7 +84,10 @@ jbossrepos {
 
 
 task distributionZip(type: Zip, dependsOn: 'assembleAll') {
-    from "$project.buildDir/dist/wildfly-11.0.0.Final"
+    from("$project.buildDir/dist/wildfly-11.0.0.Final") {
+        exclude "**/*test*.war"
+        exclude "**/*.deployed"
+    }
 }
 
 publishing {
@@ -140,12 +143,12 @@ task overlay(type: Copy) {
     }
 }
 
-task cleanup(type: Delete) {
-    delete fileTree("$project.buildDir/dist/wildfly-11.0.0.Final/standalone/deployments/") {
-        include "**/*test*.war"
-        include "**/*.deployed"
-    }
-}
+//task cleanup(type: Delete) {
+//    delete fileTree("$project.buildDir/dist/wildfly-11.0.0.Final/standalone/deployments/") {
+//        include "**/*test*.war"
+//        include "**/*.deployed"
+//    }
+//}
 
 
 task createDistribution(type: Zip, dependsOn: ['copyWildfly', 'overlay', 'overlayStandalone']) {
@@ -158,9 +161,8 @@ task assembleAll(dependsOn: ['wildfly11.0.0DistZip', 'createDistribution', 'dist
     
 }
 
-test.finalizedBy cleanup
 
-compileJava.finalizedBy assembleAll
+makeModules.finalizedBy assembleAll
 
 
 defaultTasks 'clean', 'copyWildfly', 'overlay', 'distZip'
