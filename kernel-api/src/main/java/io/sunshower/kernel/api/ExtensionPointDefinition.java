@@ -8,5 +8,6 @@ public interface ExtensionPointDefinition<T> {
     ExtensionCoordinate getCoordinate();
     
     T load(PluginStorage storage);
-    
+
+    ExtensionMetadata getMetadata();
 }

@@ -4,6 +4,7 @@
   <deployment>
     <dependencies>
       <module name="io.sunshower.kernel"/>
+      <module name="javax.servlet.api" />
     </dependencies>
   </deployment>
 </jboss-deployment-structure>

@@ -20,11 +20,10 @@ public class WildflyPluginManager implements PluginManager {
 
   @Inject @Default private PluginStorage pluginStorage;
   private final Map<Class<?>, CoordinateBinding> cache = new HashMap<>();
-  
- 
+
   @Override
   public List<ExtensionPointDefinition<?>> getExtensionPoints() {
-      return pluginStorage.list();
+    return pluginStorage.list();
   }
 
   @Override
@@ -35,16 +34,25 @@ public class WildflyPluginManager implements PluginManager {
 
   @Override
   public <T> void register(Class<T> extensionPoint, T instance) {
-    final ExtensionPointDefinition definition = create(extensionPoint, instance);
+    final ExtensionPointDefinition definition =
+        create(extensionPoint, instance, new EmptyMetadata());
+    pluginStorage.save(definition);
+  }
+
+  @Override
+  public <T> void register(Class<T> extensionPoint, T instance, ExtensionMetadata metadata) {
+    final ExtensionPointDefinition definition =
+        create(extensionPoint, instance, metadata);
     pluginStorage.save(definition);
   }
 
   @SuppressWarnings("unchecked")
-  private <T> ExtensionPointDefinition create(Class<T> extensionPoint, T instance) {
+  private <T> ExtensionPointDefinition create(
+      Class<T> extensionPoint, T instance, ExtensionMetadata metadata) {
     CoordinateBinding coordinate = getCoordinate(extensionPoint);
     InMemoryExtensionPointDefinition<T> definition =
         new InMemoryExtensionPointDefinition<>(
-            (Class<T>) coordinate.type, coordinate.coordinate, t -> instance);
+            metadata, (Class<T>) coordinate.type, coordinate.coordinate, t -> instance);
     pluginStorage.save(definition);
     return definition;
   }

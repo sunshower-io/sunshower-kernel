@@ -12,7 +12,8 @@ modules {
                 "kernel-common-${project.version}.jar"
         ]
         dependencies = [
-                'javax.api'
+                'javax.api',
+                "javax.servlet.api"
         ]
     }
 }
