@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.enterprise.inject.Default;
 import javax.inject.Inject;
@@ -14,8 +15,9 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Setter
-@Singleton
 @NoArgsConstructor
+@Singleton
+@EJB(name = Plugins.DefaultNamespaces.PLUGIN_MANAGER, beanInterface = PluginManager.class)
 public class WildflyPluginManager implements PluginManager {
 
   @Inject @Default private PluginStorage pluginStorage;
@@ -41,8 +43,7 @@ public class WildflyPluginManager implements PluginManager {
 
   @Override
   public <T> void register(Class<T> extensionPoint, T instance, ExtensionMetadata metadata) {
-    final ExtensionPointDefinition definition =
-        create(extensionPoint, instance, metadata);
+    final ExtensionPointDefinition definition = create(extensionPoint, instance, metadata);
     pluginStorage.save(definition);
   }
 

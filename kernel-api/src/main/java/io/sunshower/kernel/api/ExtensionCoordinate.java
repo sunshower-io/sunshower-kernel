@@ -1,10 +1,10 @@
 package io.sunshower.kernel.api;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 @Builder
+@Getter
+@Setter
 @EqualsAndHashCode
 @AllArgsConstructor
 public class ExtensionCoordinate {

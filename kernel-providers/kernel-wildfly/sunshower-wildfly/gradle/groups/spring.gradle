@@ -173,6 +173,7 @@ modules {
                 'javax.websocket.api',
                 'org.springframework.aop',
                 'org.springframework.aop',
+                'org.springframework.expression',
                 'org.springframework.beans',
                 'org.springframework.context',
                 'org.springframework.core',

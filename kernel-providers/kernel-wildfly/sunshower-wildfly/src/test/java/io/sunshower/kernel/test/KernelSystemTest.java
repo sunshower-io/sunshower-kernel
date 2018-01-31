@@ -32,10 +32,11 @@ public class KernelSystemTest {
   )
   private PluginStorage pluginStorage;
 
-  @Resource(
-    name =
-        "java:global/kernel-wildfly-provider-1.0.0-SNAPSHOT/WildflyPluginManager!io.sunshower.kernel.api.PluginManager"
-  )
+//  @Resource(
+//    name =
+////        "java:global/kernel-wildfly-provider-1.0.0-SNAPSHOT/WildflyPluginManager!io.sunshower.kernel.api.PluginManager"
+//  )
+  @Resource(name = "java:global/sunshower/kernel/plugin-manager")
   private PluginManager pluginManager;
 
   @Inject private ServletContext servletContext;
@@ -46,6 +47,10 @@ public class KernelSystemTest {
   )
   private ThemeManager themeManager;
 
+  @Resource(name = "java:global/sunshower/kernel/plugin-manager")
+  private PluginManager globalPluginManager;
+  
+  
   @Deployment
   public static WebArchive webArchive() {
     return ShrinkWrap.create(WebArchive.class, "kernel-test-war3.war")
@@ -53,6 +58,11 @@ public class KernelSystemTest {
         .addAsWebInfResource(file("src/test/webapp/WEB-INF/jboss-deployment-structure.xml"))
         .addClass(KernelSystemTest.class)
         .addClass(TestClasspath.class);
+  }
+
+  @Test
+  public void ensurePluginManagerIsBoundToCorrectName() {
+      assertNotNull(globalPluginManager);
   }
 
   @Test
