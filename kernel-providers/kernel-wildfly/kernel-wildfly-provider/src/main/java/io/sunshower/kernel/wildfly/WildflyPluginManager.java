@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Setter
-@NoArgsConstructor
 @Singleton
+@NoArgsConstructor
 @EJB(name = Plugins.DefaultNamespaces.PLUGIN_MANAGER, beanInterface = PluginManager.class)
 public class WildflyPluginManager implements PluginManager {
 
