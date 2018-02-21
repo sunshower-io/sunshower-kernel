@@ -35,5 +35,7 @@ dependencies {
 
     jbossmodules 'org.aspectj:aspectjweaver'
     jbossmodules 'com.thoughtworks.xstream:xstream'
+    
+    jbossmodules 'io.sunshower.common:core'
 
 }

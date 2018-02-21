@@ -3,6 +3,16 @@ apply from: 'gradle/scripts.gradle'
 
 
 modules {
+    
+    sunshowerCommon {
+        moduleName = "io.sunshower.common"
+        resources = ["core-${versions("sunshower-common.version")}.jar"]
+        dependencies = [
+                'javax.api',
+                "org.eclipse.moxy",
+                "javax.transaction.api"
+        ]
+    }
 
     postgresJdbc {
         moduleName = 'org.postgresql.driver'
@@ -92,7 +102,9 @@ modules {
                 "javax.cache.cache-api",
                 "org.springframework.beans",
                 "com.h2database.h2",
+                "io.sunshower.common",
                 "org.springframework.context",
+                "org.springframework.security",
                 [name: 'sun.jdk', export: true],
         ]
     }
