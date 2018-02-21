@@ -8,7 +8,8 @@ modules {
         moduleName = 'org.postgresql.driver'
         resources = ["postgresql-${versions("postgres.version")}.jar"]
         dependencies = [
-                'javax.api'
+                'javax.api',
+                "javax.transaction.api"
         ]
     }
 

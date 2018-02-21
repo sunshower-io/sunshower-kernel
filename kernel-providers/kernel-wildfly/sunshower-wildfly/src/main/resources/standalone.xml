@@ -59,12 +59,12 @@
         <server-identities>
           <ssl>
             <keystore
-                    path="sunshower.jks"
-                    relative-to="jboss.server.config.dir"
-                    keystore-password="sunshower-test"
-                    alias="sunshower"
-                    key-password="sunshower-test"
-                    generate-self-signed-certificate-host="localhost"
+              path="sunshower.jks"
+              relative-to="jboss.server.config.dir"
+              keystore-password="sunshower-test"
+              alias="sunshower"
+              key-password="sunshower-test"
+              generate-self-signed-certificate-host="localhost"
             />
           </ssl>
         </server-identities>
@@ -184,6 +184,61 @@
     <subsystem xmlns="urn:jboss:domain:bean-validation:1.0"/>
     <subsystem xmlns="urn:jboss:domain:datasources:4.0">
       <datasources>
+
+
+        <datasource jndi-name="java:jboss/datasources/PgDsWildflyDb" pool-name="PgDsWildflyDb" enabled="true"
+                    use-java-context="true">
+          <connection-url>jdbc:postgresql://localhost:5432</connection-url>
+          <driver>postgres</driver>
+          <pool>
+            <min-pool-size>5</min-pool-size>
+            <initial-pool-size>5</initial-pool-size>
+            <max-pool-size>100</max-pool-size>
+            <prefill>true</prefill>
+          </pool>
+          <validation>
+            <valid-connection-checker
+              class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker">
+            </valid-connection-checker>
+            <exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter">
+            </exception-sorter>
+          </validation>
+          <security>
+            <!--<user-name>wildfly</user-name>-->
+            <!--<password>wildfly</password>-->
+            <user-name>${env.SUNSHOWERDB_USERNAME}</user-name>
+            <password>${env.SUNSHOWERDB_PASSWORD}</password>
+          </security>
+        </datasource>
+        <xa-datasource jndi-name="java:jboss/datasources/PgDsXaWildFlyDb" pool-name="PgDsXaWildflyDb" enabled="true"
+                       use-java-context="true">
+          <driver>postgres</driver>
+
+          <xa-datasource-property name="url">${env.SUNSHOWERDB_URL}</xa-datasource-property>
+          <!--<xa-datasource-property name="ServerName">localhost/</xa-datasource-property>-->
+          <!--<xa-datasource-property name="PortNumber">5432</xa-datasource-property>-->
+          <!--<xa-datasource-property name="DatabaseName">sunshower</xa-datasource-property>-->
+          <xa-pool>
+            <min-pool-size>5</min-pool-size>
+            <initial-pool-size>5</initial-pool-size>
+            <max-pool-size>100</max-pool-size>
+            <prefill>true</prefill>
+          </xa-pool>
+          <validation>
+            <valid-connection-checker
+              class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker">
+            </valid-connection-checker>
+            <exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter">
+            </exception-sorter>
+          </validation>
+          <security>
+            <!--<user-name>wildfly</user-name>-->
+            <!--<password>wildfly</password>-->
+            <user-name>${env.SUNSHOWERDB_USERNAME}</user-name>
+            <password>${env.SUNSHOWERDB_PASSWORD}</password>
+          </security>
+        </xa-datasource>
+
         <datasource jndi-name="java:jboss/datasources/SunshowerDS-postgres" pool-name="SunshowerDS-postgres"
                     enabled="true"
                     use-java-context="true">
@@ -208,7 +263,8 @@
 
         <drivers>
           <driver name="postgres" module="org.postgresql.driver">
-            <xa-datasource-class>org.postgresql.Driver</xa-datasource-class>
+            <datasource-class>org.postgresql.ds.PGSimpleDataSource</datasource-class>
+            <xa-datasource-class>org.postgresql.xa.PGXADataSource</xa-datasource-class>
           </driver>
           <driver name="h2" module="com.h2database.h2">
             <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
