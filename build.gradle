@@ -114,28 +114,28 @@ allprojects {
     }
 
 
-    publishing {
-        repositories {
-            maven {
-                url mavenRepositoryUrl
-
-                credentials {
-                    username mavenRepositoryUsername
-                    password mavenRepositoryPassword
-                }
-            }
-        }
-
-        publications {
-            maven(MavenPublication) {
-                from components.java
-
-                artifact sourceJar {
-                    classifier "sources"
-                }
-            }
-        }
-    }
+//    publishing {
+//        repositories {
+//            maven {
+//                url mavenRepositoryUrl
+//
+//                credentials {
+//                    username mavenRepositoryUsername
+//                    password mavenRepositoryPassword
+//                }
+//            }
+//        }
+//
+//        publications {
+//            maven(MavenPublication) {
+//                from components.java
+//
+//                artifact sourceJar {
+//                    classifier "sources"
+//                }
+//            }
+//        }
+//    }
 
 
 }

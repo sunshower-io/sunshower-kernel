@@ -16,7 +16,7 @@ buildscript {
 }
 
 
-apply plugin: 'war'
+//apply plugin: 'war'
 apply plugin: 'maven-publish'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'com.github.zhurlik.jbossmodules'
@@ -92,6 +92,16 @@ task distributionZip(type: Zip, dependsOn: 'assembleAll') {
 }
 
 publishing {
+    repositories {
+        maven {
+            url mavenRepositoryUrl
+
+            credentials {
+                username mavenRepositoryUsername
+                password mavenRepositoryPassword
+            }
+        }
+    }
     publications {
         distribution(MavenPublication) {
             groupId 'io.sunshower.wildfly'

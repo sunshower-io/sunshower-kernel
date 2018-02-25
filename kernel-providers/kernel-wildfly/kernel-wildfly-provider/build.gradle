@@ -3,17 +3,17 @@ apply plugin: 'war'
 
 
 configurations {
-    war{}  
+    war {}
 }
 
-publishing {
-	publications {
-		mavenWeb(MavenPublication) {
-			from components.web
-		}
-	}
-
-}
+//publishing {
+//    publications {
+//        mavenWeb(MavenPublication) {
+//            from components.web
+//        }
+//    }
+//
+//}
 
 artifacts {
     war tasks.war
@@ -25,4 +25,22 @@ dependencies {
     compileOnly project(':kernel-common')
     compileOnly group: 'javax', name: 'javaee-api', version: '7.0'
     compileOnly group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2'
+}
+publishing {
+    repositories {
+        maven {
+            url mavenRepositoryUrl
+
+            credentials {
+                username mavenRepositoryUsername
+                password mavenRepositoryPassword
+            }
+        }
+    }
+
+    publications {
+        mavenWeb(MavenPublication) {
+            from components.web
+        }
+    }
 }
