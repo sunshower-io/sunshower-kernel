@@ -186,7 +186,7 @@
       <datasources>
 
 
-        <datasource jndi-name="java:jboss/datasources/PgDsWildflyDb" pool-name="PgDsWildflyDb" enabled="true"
+        <datasource jndi-name="java:jboss/datasources/PgDsWildflyDb" pool-name="PgDsWildflyDb" enabled="false"
                     use-java-context="true">
           <connection-url>jdbc:postgresql://localhost:5432</connection-url>
           <driver>postgres</driver>
@@ -240,7 +240,7 @@
         </xa-datasource>
 
         <datasource jndi-name="java:jboss/datasources/SunshowerDS-postgres" pool-name="SunshowerDS-postgres"
-                    enabled="true"
+                    enabled="false"
                     use-java-context="true">
           <connection-url>${env.SUNSHOWERDB_URL}</connection-url>
           <driver>postgres</driver>
@@ -298,7 +298,7 @@
         </managed-scheduled-executor-services>
       </concurrent>
       <default-bindings context-service="java:jboss/ee/concurrency/context/default"
-                        datasource="java:jboss/datasources/SunshowerDS-postgres"
+                        datasource="java:jboss/datasources/SunshowerDS-h2"
                         managed-executor-service="java:jboss/ee/concurrency/executor/default"
                         managed-scheduled-executor-service="java:jboss/ee/concurrency/scheduler/default"
                         managed-thread-factory="java:jboss/ee/concurrency/factory/default"/>
