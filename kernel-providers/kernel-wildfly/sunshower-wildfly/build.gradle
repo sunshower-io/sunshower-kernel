@@ -88,6 +88,7 @@ task distributionZip(type: Zip, dependsOn: 'assembleAll') {
     from("$project.buildDir/dist/wildfly-11.0.0.Final") {
         exclude "**/*test*.war"
         exclude "**/*.deployed"
+        exclude "**/logging.properties"
     }
 }
 

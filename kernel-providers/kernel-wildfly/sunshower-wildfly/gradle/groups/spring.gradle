@@ -195,7 +195,7 @@ modules {
                 'org.springframework.tx',
                 'org.springframework.web',
                 'javax.persistence.api',
-                'org.hibernate.latest',
+                'org.hibernate',
                 'javax.api',
                 'org.apache.commons.logging'
         ]
