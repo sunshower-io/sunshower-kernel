@@ -22,7 +22,7 @@
       <xstream.version>1.4.10</xstream.version>
       <hessian.version>4.0.51</hessian.version>
       <jipijapa.version>11.0.0.Final</jipijapa.version>
-      <hibernate.version>5.2.11.Final</hibernate.version>
+      <hibernate.version>5.5.8.Final</hibernate.version>
       <javassist.version>3.22.0-GA</javassist.version>
       <hibernate-commons.version>5.0.1.Final</hibernate-commons.version>
       <cache-api.version>1.1.0</cache-api.version>

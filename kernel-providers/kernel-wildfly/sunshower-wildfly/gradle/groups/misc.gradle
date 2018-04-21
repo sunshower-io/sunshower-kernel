@@ -38,6 +38,7 @@ modules {
         ]
         dependencies = [
                 'javax.api',
+                'javax.json.api',
                 'javax.mail.api',
                 'javax.ws.rs.api',
                 'javax.xml.bind.api',
