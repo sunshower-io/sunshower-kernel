@@ -36,7 +36,7 @@ dependencies {
     /**
      * Wildfly core dependency
      */
-    wildfly group: 'io.sunshower', name: 'wildfly', version: '11.0.0.Final', ext: 'zip'
+    wildfly group: 'io.sunshower', name: 'wildfly', version: '12.0.0.Final', ext: 'zip'
 
     /**
      * Compile dependencies
@@ -71,21 +71,21 @@ task copyModules(type: Copy) {
     dependsOn configurations.kernelModule
 
     from configurations.kernelModule
-    destinationDir = file("$project.buildDir/dist/wildfly-11.0.0.Final/standalone/deployments")
+    destinationDir = file("$project.buildDir/dist/wildfly-12.0.0.Final/standalone/deployments")
 }
 
 test.dependsOn copyModules
 test.mustRunAfter copyModules
 
 jbossrepos {
-    'wildfly11.0.0' {
+    'wildfly12.0.0' {
         version = V_1_3
     }
 }
 
 
 task distributionZip(type: Zip, dependsOn: 'assembleAll') {
-    from("$project.buildDir/dist/wildfly-11.0.0.Final") {
+    from("$project.buildDir/dist/wildfly-12.0.0.Final") {
         exclude "**/*test*.war"
         exclude "**/*.deployed"
         exclude "**/logging.properties"
@@ -126,20 +126,20 @@ task copyWildfly(type: Copy) {
 
 task overlayStandalone(type: Copy) {
     from fileTree("${project.projectDir}/src/main/resources")
-    into file("${project.buildDir}/dist/wildfly-11.0.0.Final/standalone/configuration")
+    into file("${project.buildDir}/dist/wildfly-12.0.0.Final/standalone/configuration")
 }
 
 task overlay(type: Copy) {
 
 
-    from fileTree("${project.buildDir}/install/wildfly11.0.0")
-    into file("${project.buildDir}/dist/wildfly-11.0.0.Final")
+    from fileTree("${project.buildDir}/install/wildfly12.0.0")
+    into file("${project.buildDir}/dist/wildfly-12.0.0.Final")
 
     doLast {
         def slurper = new groovy.util.XmlSlurper(false, false)
 
         def f = file(
-                "${project.buildDir}/dist/wildfly-11.0.0.Final/" +
+                "${project.buildDir}/dist/wildfly-12.0.0.Final/" +
                         "modules/system/layers/base/org/jboss/" +
                         "resteasy/resteasy-validator-provider-11/main/module.xml")
 
@@ -164,12 +164,12 @@ task overlay(type: Copy) {
 
 
 task createDistribution(type: Zip, dependsOn: ['copyWildfly', 'overlay', 'overlayStandalone']) {
-    from "${project.buildDir}/dist/wildfly-11.0.0.Final"
+    from "${project.buildDir}/dist/wildfly-12.0.0.Final"
     into "sunshower-wildfly"
 }
 
 
-task assembleAll(dependsOn: ['wildfly11.0.0DistZip', 'createDistribution', 'distZip']) {
+task assembleAll(dependsOn: ['wildfly12.0.0DistZip', 'createDistribution', 'distZip']) {
     
 }
 
