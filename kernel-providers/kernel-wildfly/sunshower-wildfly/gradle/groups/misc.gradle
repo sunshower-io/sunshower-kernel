@@ -3,7 +3,14 @@ apply from: 'gradle/scripts.gradle'
 
 
 modules {
-    
+
+    guava {
+        moduleName = 'google.guava'
+        resources = ["guava-${versions('google-guava.version')}.jar"]
+        dependencies = [
+                'javax.api'
+        ]
+    }
     sunshowerCommon {
         moduleName = "io.sunshower.common"
         resources = ["core-${versions("sunshower-common.version")}.jar"]
@@ -28,7 +35,7 @@ modules {
         moduleName = 'org.aopalliance'
         resources = ["aopalliance-${versions('aopalliance.version')}.jar"]
     }
-    
+
     moxy {
         moduleName = 'org.eclipse.moxy'
         resources = [
@@ -110,8 +117,6 @@ modules {
         ]
     }
 
-
-
 //    hibernate {
 //        moduleName ='org.hibernate.latest'
 //        resources = [
@@ -140,7 +145,6 @@ modules {
 //        ]
 //
 //    }
-
 
 
     hikariCp {
