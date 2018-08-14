@@ -183,4 +183,4 @@ assemble.dependsOn 'aggregateJavadocs'
 
 //add to default tasks'cloverAggregateReports', 
 
-defaultTasks 'clean', 'build', 'aggregateJavadocs'
+defaultTasks 'clean', 'build', 'aggregateJavadocs', 'pTML'
