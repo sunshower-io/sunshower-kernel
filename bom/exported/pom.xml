@@ -25,6 +25,11 @@
 
       <dependency>
         <groupId>io.sunshower.kernel</groupId>
+        <artifactId>kernel-spring</artifactId>
+        <version>${sunshower-kernel.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.sunshower.kernel</groupId>
         <artifactId>kernel-api</artifactId>
         <version>${sunshower-kernel.version}</version>
       </dependency>
