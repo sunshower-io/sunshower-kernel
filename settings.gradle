@@ -1,6 +1,7 @@
 include(
         'kernel-api',
         'kernel-core',
+        'kernel-spring',
         'kernel-common',
         'kernel-providers:kernel-wildfly',
         'kernel-providers:kernel-wildfly:sunshower-wildfly',

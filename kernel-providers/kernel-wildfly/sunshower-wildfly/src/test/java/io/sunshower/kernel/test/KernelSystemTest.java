@@ -1,8 +1,9 @@
 package io.sunshower.kernel.test;
 
+import io.sunshower.kernel.api.ExtensionCoordinate;
+import io.sunshower.kernel.api.FulfillmentDefinition;
+import io.sunshower.kernel.api.Plugin;
 import io.sunshower.kernel.api.PluginManager;
-import io.sunshower.kernel.api.PluginStorage;
-import io.sunshower.kernel.testplugins.ThemeManager;
 import io.sunshower.test.common.TestClasspath;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -16,8 +17,13 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import java.io.File;
+import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 public class KernelSystemTest {
@@ -25,32 +31,22 @@ public class KernelSystemTest {
   static File file(String path) {
     return new File(TestClasspath.buildDir().getParentFile(), path);
   }
+  //
+  //  @Resource(
+  //    name =
+  //
+  // "java:global/kernel-wildfly-provider-1.0.0-SNAPSHOT/InMemoryPluginStorage!io.sunshower.kernel.api.PluginStorage"
+  //  )
+  //  private PluginStorage pluginStorage;
 
-  @Resource(
-    name =
-        "java:global/kernel-wildfly-provider-1.0.0-SNAPSHOT/InMemoryPluginStorage!io.sunshower.kernel.api.PluginStorage"
-  )
-  private PluginStorage pluginStorage;
-
-//  @Resource(
-//    name =
-////        "java:global/kernel-wildfly-provider-1.0.0-SNAPSHOT/WildflyPluginManager!io.sunshower.kernel.api.PluginManager"
-//  )
   @Resource(name = "java:global/sunshower/kernel/plugin-manager")
   private PluginManager pluginManager;
 
   @Inject private ServletContext servletContext;
 
-  @Resource(
-    name =
-        "java:global/simple-test-1.0.0-SNAPSHOT/DefaultThemeManager!io.sunshower.kernel.testplugins.ThemeManager"
-  )
-  private ThemeManager themeManager;
-
   @Resource(name = "java:global/sunshower/kernel/plugin-manager")
   private PluginManager globalPluginManager;
-  
-  
+
   @Deployment
   public static WebArchive webArchive() {
     return ShrinkWrap.create(WebArchive.class, "kernel-test-war3.war")
@@ -61,38 +57,18 @@ public class KernelSystemTest {
   }
 
   @Test
-  public void ensurePluginManagerIsBoundToCorrectName() {
-      assertNotNull(globalPluginManager);
+  public void ensurePluginsWork() {
+    assertThat(globalPluginManager.getPlugins().size(), is(1));
   }
 
   @Test
-  public void ensurePluginClassIsLoadable() throws ClassNotFoundException {
-    Class.forName("io.sunshower.kernel.api.ExtensionPoint");
-  }
+  public void ensureFulfillmentExists() {
+    final Plugin plugin =
+        globalPluginManager.getPlugin(new ExtensionCoordinate("test", "test", "test", "test"));
 
-  @Test
-  public void ensureServletContextIsInjected() {
-    boolean match =
-        pluginManager.getExtensionPoints().stream().allMatch(t -> t.getMetadata() != null);
-    assertTrue(match);
-  }
-
-  @Test
-  public void ensurePluginStorageIsInjectable() {
-    assertNotNull(pluginStorage);
-  }
-
-  @Test
-  public void ensureWildflyPluginStorageIsAvailableAtJNDILocation() {
-    assertNotNull(themeManager.getActiveTheme());
-  }
-
-  public void setPluginManager(PluginManager pluginManager) {
-    this.pluginManager = pluginManager;
-  }
-
-  @Test
-  public void ensureThemeManagerHasCorrectNumberOfThemes() {
-    assertEquals(pluginManager.resolve(ThemeManager.class).themes().size(), 2);
+    assertTrue(plugin.getExtensionFulfillments().size() > 0);
+    for (FulfillmentDefinition<?> def : plugin.getExtensionFulfillments()) {
+      assertThat(plugin.fulfill(def), is(not(nullValue())));
+    }
   }
 }
