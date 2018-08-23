@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jndi.JndiTemplate;
 
 import javax.naming.NamingException;
-import java.rmi.Naming;
 
 @Configuration
 public class TestPluginConfig {
