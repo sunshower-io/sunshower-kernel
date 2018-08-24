@@ -11,3 +11,25 @@ dependencies {
     testCompile 'org.junit.platform:junit-platform-runner'
     testCompile 'org.springframework:spring-test'
 }
+publishing {
+    repositories {
+        maven {
+            url mavenRepositoryUrl
+
+            credentials {
+                username mavenRepositoryUsername
+                password mavenRepositoryPassword
+            }
+        }
+    }
+
+    publications {
+        maven(MavenPublication) {
+            from components.java
+
+            artifact sourceJar {
+                classifier "sources"
+            }
+        }
+    }
+}
