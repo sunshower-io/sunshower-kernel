@@ -4,6 +4,15 @@ apply from: 'gradle/scripts.gradle'
 
 modules {
 
+
+    yamlResourceBundle {
+        moduleName = 'resource-bundle.yaml'
+        resources = ["yaml-resource-bundle-${versions('yaml-resource-bundle.version')}.jar"]
+        dependencies [
+                'org.yaml.snakeyaml'
+        ]
+    }
+
     guava {
         moduleName = 'google.guava'
         resources = ["guava-${versions('google-guava.version')}.jar"]

@@ -40,10 +40,18 @@
         <google-guava.version>24.1-jre</google-guava.version>
         <sunshower-common.version>1.0.0-SNAPSHOT</sunshower-common.version>
         <sunshower-core.version>1.0.0-SNAPSHOT</sunshower-core.version>
+        <yaml-resource-bundle.version>1.1</yaml-resource-bundle.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>net.rakugakibox.util</groupId>
+                <artifactId>yaml-resource-bundle</artifactId>
+                <version>${yaml-resource-bundle.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>io.sunshower.base</groupId>
                 <artifactId>bom-exported</artifactId>

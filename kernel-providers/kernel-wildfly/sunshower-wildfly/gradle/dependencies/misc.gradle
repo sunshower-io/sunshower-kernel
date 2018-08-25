@@ -7,6 +7,8 @@ dependencies {
 
     jbossmodules "org.flywaydb:flyway-core"
 
+    jbossmodules 'net.rakugakibox.util:yaml-resource-bundle'
+
     jbossmodules 'com.thoughtworks.xstream:xstream'
 
 
