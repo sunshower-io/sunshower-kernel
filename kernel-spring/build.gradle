@@ -1,10 +1,16 @@
-dependencies {
-    compile 'io.sunshower.common:annotations'
-    compile 'javax.inject:javax.inject'
-    compile 'javax.servlet:javax.servlet-api'
-    testCompile 'org.junit.platform:junit-platform-runner'
-}
+apply plugin: 'java'
 
+dependencies {
+    compile 'org.springframework:spring-beans'
+    compile 'org.springframework:spring-core'
+    compile 'org.springframework:spring-context'
+    compile 'org.slf4j:slf4j-api'
+
+    compile project(':kernel-api')
+
+    testCompile 'org.junit.platform:junit-platform-runner'
+    testCompile 'org.springframework:spring-test'
+}
 publishing {
     repositories {
         maven {

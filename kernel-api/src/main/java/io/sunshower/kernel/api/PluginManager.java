@@ -1,17 +1,16 @@
 package io.sunshower.kernel.api;
 
-
 import java.util.List;
 
 public interface PluginManager {
 
+  void register(Plugin plugin);
 
-    List<ExtensionPointDefinition<?>> getExtensionPoints();
+  Plugin getPlugin(ExtensionCoordinate coordinate);
 
-    <T> T resolve(Class<T> extension);
+  List<Plugin> getPlugins();
 
-    <T> void register(Class<T> extensionPoint, T instance);
+  void stopPlugin(ExtensionCoordinate coordinate);
 
-
-    <T> void register(Class<T> extensionPoint, T instance, ExtensionMetadata metadata);
+  void startPlugin(ExtensionCoordinate coordinate);
 }

@@ -7,6 +7,8 @@ dependencies {
 
     jbossmodules "org.flywaydb:flyway-core"
 
+    jbossmodules 'net.rakugakibox.util:yaml-resource-bundle'
+
     jbossmodules 'com.thoughtworks.xstream:xstream'
 
 
@@ -31,13 +33,24 @@ dependencies {
     ].each {
         jbossmodules "org.apache.ignite:$it"
     }
-    
+
     jbossmodules 'org.apache.ignite:ignite-hibernate_5.1'
 
 
     jbossmodules 'org.aspectj:aspectjweaver'
     jbossmodules 'com.thoughtworks.xstream:xstream'
-    
-    jbossmodules 'io.sunshower.common:core'
 
+//    jbossmodules 'io.sunshower.common:core'
+
+    [
+            'annotations',
+            'common-ws',
+            'common-config',
+            'core',
+            'lambda',
+            "lang",
+            "reflect",
+    ].each {
+        jbossmodules "io.sunshower.common:$it"
+    }
 }

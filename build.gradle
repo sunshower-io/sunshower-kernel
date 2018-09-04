@@ -110,6 +110,7 @@ allprojects {
             testCompile('org.junit.platform:junit-platform-commons')
             testCompile('org.junit.jupiter:junit-jupiter-engine')
             testCompile('org.junit.vintage:junit-vintage-engine')
+            testCompile('org.junit.platform:junit-platform-runner')
         }
     }
 
@@ -183,4 +184,4 @@ assemble.dependsOn 'aggregateJavadocs'
 
 //add to default tasks'cloverAggregateReports', 
 
-defaultTasks 'clean', 'build', 'aggregateJavadocs'
+defaultTasks 'clean', 'build', 'aggregateJavadocs', 'pTML'

@@ -177,4 +177,4 @@ task assembleAll(dependsOn: ['wildfly12.0.0DistZip', 'createDistribution', 'dist
 makeModules.finalizedBy assembleAll
 
 
-defaultTasks 'clean', 'copyWildfly', 'overlay', 'distZip'
+defaultTasks 'clean', 'copyWildfly', 'overlay', 'distZip', 'publishToMavenLocal'

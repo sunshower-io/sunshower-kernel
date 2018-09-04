@@ -3,7 +3,11 @@
 
   <deployment>
     <dependencies>
+      <module name="org.slf4j" />
       <module name="io.sunshower.kernel"/>
+      <module name="org.springframework.core"/>
+      <module name="org.springframework.context"/>
+      <module name="org.springframework.beans"/>
       <module name="deployment.simple-test-1.0.0-SNAPSHOT.war" />
       <module name="deployment.kernel-wildfly-provider-1.0.0-SNAPSHOT.war" />
     </dependencies>
