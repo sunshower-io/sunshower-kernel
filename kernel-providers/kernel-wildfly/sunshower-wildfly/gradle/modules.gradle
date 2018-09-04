@@ -9,10 +9,15 @@ modules {
         resources = [
                 "kernel-api-${project.version}.jar",
                 "kernel-core-${project.version}.jar",
+                "kernel-spring-${project.version}.jar",
                 "kernel-common-${project.version}.jar"
         ]
         dependencies = [
                 'javax.api',
+                'org.slf4j',
+                'org.springframework.context',
+                'org.springframework.beans',
+                'org.springframework.core',
                 "javax.servlet.api"
         ]
     }

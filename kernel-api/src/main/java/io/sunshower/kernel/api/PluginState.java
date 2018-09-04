@@ -1,11 +1,10 @@
 package io.sunshower.kernel.api;
 
 public enum PluginState {
-    
-    Active,
-    Loaded,
-    Inactive,
+    Stopping,
+    Starting,
+    Stopped,
+    Started,
     Unloaded,
-    Error
-    
+    Unknown
 }

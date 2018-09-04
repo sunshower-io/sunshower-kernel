@@ -4,6 +4,15 @@ apply from: 'gradle/scripts.gradle'
 
 modules {
 
+
+    yamlResourceBundle {
+        moduleName = 'resource-bundle.yaml'
+        resources = ["yaml-resource-bundle-${versions('yaml-resource-bundle.version')}.jar"]
+        dependencies [
+                'org.yaml.snakeyaml'
+        ]
+    }
+
     guava {
         moduleName = 'google.guava'
         resources = ["guava-${versions('google-guava.version')}.jar"]
@@ -11,11 +20,27 @@ modules {
                 'javax.api'
         ]
     }
+
+
     sunshowerCommon {
         moduleName = "io.sunshower.common"
-        resources = ["core-${versions("sunshower-common.version")}.jar"]
+        resources =
+                [
+                        'annotations',
+                        'common-ws',
+                        'common-config',
+                        'core',
+                        'lambda',
+                        'lang',
+                        'reflect'
+                ].collect { name ->
+                    "$name-${versions("sunshower-common.version")}.jar"
+                }
         dependencies = [
                 'javax.api',
+                'org.slf4j',
+                'javax.xml.bind.api',
+                'javax.ws.rs.api',
                 "org.eclipse.moxy",
                 "javax.transaction.api"
         ]

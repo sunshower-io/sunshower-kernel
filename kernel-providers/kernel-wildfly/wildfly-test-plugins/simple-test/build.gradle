@@ -2,8 +2,12 @@ apply plugin: 'war'
 
 dependencies {
     compileOnly project(':kernel-api')
+    compileOnly project(':kernel-spring')
+
     compileOnly group: 'javax', name: 'javaee-api', version: '7.0'
     compileOnly group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2'
+
+    compileOnly 'org.springframework:spring-context'
 }
 
 configurations {
