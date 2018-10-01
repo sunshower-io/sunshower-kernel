@@ -1,15 +1,12 @@
 package io.sunshower.kernel.spring;
 
 import io.sunshower.kernel.api.*;
+import javax.naming.NamingException;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jndi.JndiTemplate;
-
-import javax.naming.NamingException;
 
 @Getter
 @Setter

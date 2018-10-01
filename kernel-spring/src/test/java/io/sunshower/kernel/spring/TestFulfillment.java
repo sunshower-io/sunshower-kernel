@@ -1,4 +1,3 @@
 package io.sunshower.kernel.spring;
 
-public interface TestFulfillment {
-}
+public interface TestFulfillment {}

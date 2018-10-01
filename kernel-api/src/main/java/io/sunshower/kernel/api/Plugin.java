@@ -1,14 +1,13 @@
 package io.sunshower.kernel.api;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Order;
-import javax.annotation.Ordered;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Order;
+import javax.annotation.Ordered;
 
 public interface Plugin extends Serializable {
 

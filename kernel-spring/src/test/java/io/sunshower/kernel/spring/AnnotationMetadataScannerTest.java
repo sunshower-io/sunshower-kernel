@@ -1,13 +1,20 @@
 package io.sunshower.kernel.spring;
 
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import io.sunshower.kernel.api.*;
-import org.junit.jupiter.api.BeforeEach;
+import javax.inject.Inject;
+import javax.naming.NamingException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,19 +22,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jndi.JndiTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import javax.inject.Inject;
-import javax.naming.NamingException;
-
-import java.util.List;
-import java.util.Map;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 @RunWith(JUnitPlatform.class)
 @ExtendWith(SpringExtension.class)
@@ -111,7 +105,10 @@ class AnnotationMetadataScannerTest {
     public SpringPlugin testPlugin(
         ApplicationContext context, NamingStrategy strategy, PluginExporter exporter) {
       return new SpringPlugin(
-          new ExtensionCoordinate("group", "namespace", "name", "1.0.0-snapshot"), context, strategy, exporter);
+          new ExtensionCoordinate("group", "namespace", "name", "1.0.0-snapshot"),
+          context,
+          strategy,
+          exporter);
     }
 
     @Bean

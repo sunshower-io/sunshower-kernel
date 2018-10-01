@@ -1,7 +1,6 @@
 package io.sunshower.kernel.spring;
 
 import io.sunshower.kernel.api.*;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 
 public class SpringExtensionPointDefinition<T> implements ExtensionPointDefinition<T> {

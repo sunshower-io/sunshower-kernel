@@ -1,6 +1,7 @@
 package io.sunshower.kernel.spring;
 
 import io.sunshower.kernel.api.*;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -9,8 +10,6 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
-
-import java.util.*;
 
 public class AnnotationMetadataScanner {
 

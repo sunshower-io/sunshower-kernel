@@ -4,12 +4,11 @@ import io.sunshower.kernel.api.*;
 import io.sunshower.kernel.spring.JNDINamingStrategy;
 import io.sunshower.kernel.spring.JNDIPluginExporter;
 import io.sunshower.kernel.spring.SpringPlugin;
+import javax.naming.NamingException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jndi.JndiTemplate;
-
-import javax.naming.NamingException;
 
 @Configuration
 public class TestPluginConfig {
@@ -54,5 +53,4 @@ public class TestPluginConfig {
   public TestFulfillment testFulfillment() {
     return new DefaultTestFulfillment();
   }
-
 }

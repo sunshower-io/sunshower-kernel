@@ -1,12 +1,12 @@
 package io.sunshower.kernel.spring;
 
-import io.sunshower.kernel.api.ExtensionCoordinate;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+
+import io.sunshower.kernel.api.ExtensionCoordinate;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class JNDINamingStrategyTest {
 

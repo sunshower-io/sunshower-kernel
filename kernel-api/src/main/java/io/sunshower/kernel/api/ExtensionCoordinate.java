@@ -8,10 +8,9 @@ import lombok.*;
 @EqualsAndHashCode
 @AllArgsConstructor
 public class ExtensionCoordinate {
-    
-    private final String group;
-    private final String namespace;
-    private final String name;
-    private final String version;
-    
+
+  private final String group;
+  private final String namespace;
+  private final String name;
+  private final String version;
 }

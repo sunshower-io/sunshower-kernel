@@ -2,7 +2,6 @@ package io.sunshower.kernel.spring;
 
 import io.sunshower.kernel.api.NamingStrategy;
 import io.sunshower.kernel.api.Plugin;
-
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

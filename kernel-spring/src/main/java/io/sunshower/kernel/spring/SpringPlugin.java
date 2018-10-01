@@ -2,13 +2,6 @@ package io.sunshower.kernel.spring;
 
 import io.sunshower.kernel.api.*;
 import io.sunshower.kernel.api.PluginExporter;
-import org.springframework.context.ApplicationContext;
-import org.springframework.jndi.JndiTemplate;
-
-import javax.annotation.Nonnull;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -17,6 +10,10 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import org.springframework.context.ApplicationContext;
 
 public class SpringPlugin implements Plugin {
 

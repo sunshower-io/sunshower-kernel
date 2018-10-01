@@ -3,19 +3,16 @@ package io.sunshower.kernel.wildfly;
 import io.sunshower.kernel.api.ExtensionCoordinate;
 import io.sunshower.kernel.api.Plugin;
 import io.sunshower.kernel.api.PluginManager;
-
-import javax.ejb.EJB;
-import javax.ejb.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.ejb.EJB;
+import javax.ejb.Singleton;
 
 @Singleton
 @EJB(name = "java:global/sunshower/kernel/plugin-manager", beanInterface = PluginManager.class)
 public class SunshowerKernelPluginManager implements PluginManager {
-
-
 
   private final Map<ExtensionCoordinate, Plugin> plugins = new ConcurrentHashMap<>();
 

@@ -2,8 +2,6 @@ package io.sunshower.kernel.spring;
 
 import io.sunshower.kernel.api.ExtensionCoordinate;
 import io.sunshower.kernel.api.FulfillmentDefinition;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.jndi.JndiTemplate;
 
 public class SpringFulfillmentDefinition<T> implements FulfillmentDefinition<T> {
   final String mappedName;
