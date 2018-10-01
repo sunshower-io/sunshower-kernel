@@ -96,7 +96,11 @@ allprojects {
 
     dependencyManagement {
         imports {
-            mavenBom("io.sunshower.kernel:bom-imported:1.0.8.Final")
+            mavenBom("io.sunshower.kernel:bom-imported:${version}") {
+                bomProperties([
+                        'env.version': '1.0.8.Final'
+                ])
+            }
         }
     }
 
