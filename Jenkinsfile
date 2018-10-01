@@ -107,7 +107,7 @@ pipeline {
 
 
                 sh """
-                    gradle clean build publish sA -i \
+                    gradle clean build publish -i \
                     -PmavenRepositoryUrl=http://artifacts.sunshower.io/repository/sunshower-snapshots \
                     -PmavenRepositoryUsername=${MVN_REPO_USR} \
                     -PmavenRepositoryPassword=${MVN_REPO_PSW} \
