@@ -10,6 +10,7 @@ repositories {
 
 dependencies {
     classpath 'com.bmuschko:gradle-clover-plugin:2.1.3'
+    classpath "com.diffplug.spotless:spotless-plugin-gradle:3.8.0"
     classpath "io.spring.gradle:dependency-management-plugin:1.0.4.RELEASE"
     classpath "com.netflix.nebula:gradle-extra-configurations-plugin:3.0.3"
     classpath 'com.netflix.nebula:gradle-aggregate-javadocs-plugin:2.2.+'

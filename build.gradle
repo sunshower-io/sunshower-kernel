@@ -20,7 +20,13 @@ allprojects {
         plugin
         testPlugin
     }
-    
+
+    spotless {
+        java {
+            googleJavaFormat('1.5')
+        }
+    }
+
     task archiveTests(type: Jar) {
         classifier = 'tests'
         from sourceSets.test.output
