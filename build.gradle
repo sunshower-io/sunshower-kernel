@@ -12,6 +12,7 @@ allprojects {
     apply plugin: 'java'
     apply plugin: 'net.ltgt.apt'
     apply plugin: 'maven-publish'
+    apply plugin: "com.diffplug.gradle.spotless"
     apply plugin: 'project-report'
     apply plugin: 'io.spring.dependency-management'
 
