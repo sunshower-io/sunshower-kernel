@@ -27,7 +27,7 @@
         <hibernate-commons.version>5.0.1.Final</hibernate-commons.version>
         <cache-api.version>1.1.0</cache-api.version>
         <xstream.version>1.4.10</xstream.version>
-        <ignite.version>2.3.2</ignite.version>
+        <ignite.version>2.5.2</ignite.version>
         <hikari-cp.version>2.7.6</hikari-cp.version>
         <aspectj.version>1.8.9</aspectj.version>
         <rxjava.version>2.1.8</rxjava.version>
@@ -36,7 +36,7 @@
         <aopalliance.version>1.0</aopalliance.version>
         <spring.version>5.0.2.RELEASE</spring.version>
         <spring-security.version>5.0.0.RELEASE</spring-security.version>
-        <ignite-hibernate-51.version>2.3.2</ignite-hibernate-51.version>
+        <ignite-hibernate-51.version>2.5.2</ignite-hibernate-51.version>
         <google-guava.version>24.1-jre</google-guava.version>
         <sunshower-common.version>1.0.0-SNAPSHOT</sunshower-common.version>
         <sunshower-core.version>1.0.0-SNAPSHOT</sunshower-core.version>
