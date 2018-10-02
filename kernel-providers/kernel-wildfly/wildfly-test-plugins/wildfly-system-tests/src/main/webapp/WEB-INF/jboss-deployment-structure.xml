@@ -8,8 +8,8 @@
       <module name="org.springframework.core"/>
       <module name="org.springframework.context"/>
       <module name="org.springframework.beans"/>
-      <module name="deployment.simple-test-1.0.2-SNAPSHOT.war" />
-      <module name="deployment.kernel-wildfly-provider-1.0.2-SNAPSHOT.war" />
+      <module name="deployment.simple-test-1.0.3-SNAPSHOT.war" />
+      <module name="deployment.kernel-wildfly-provider-1.0.3-SNAPSHOT.war" />
     </dependencies>
   </deployment>
 </jboss-deployment-structure>
