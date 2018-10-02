@@ -28,7 +28,7 @@ pipeline {
         stage('Build and Deploy Artifact Snapshots') {
             steps {
                 sh """
-                    gradle clean build publish sA -x test -i \
+                    gradle clean build publish sA -i \
                     -PmavenRepositoryUrl=http://artifacts.sunshower.io/repository/sunshower-snapshots \
                     -PmavenRepositoryUsername=${MVN_REPO_USR} \
                     -PmavenRepositoryPassword=${MVN_REPO_PSW} \
@@ -86,7 +86,7 @@ pipeline {
                 sh "find . -path '*/test/*/jboss-deployment-structure.xml' | xargs sed -i 's/${env.CURRENT_VERSION}/${env.NEXT_VERSION}/g'"
 
                 sh """
-                    gradle clean build publish sA -i --stacktrace -x test \
+                    gradle clean build publish sA -i --stacktrace \
                     -PmavenRepositoryUrl=http://artifacts.sunshower.io/repository/sunshower-releases \
                     -PmavenRepositoryUsername=${MVN_REPO_USR} \
                     -PmavenRepositoryPassword=${MVN_REPO_PSW} \
@@ -110,9 +110,10 @@ pipeline {
 
                 sh "find . -name gradle.properties | xargs sed -i  's/^version=${env.NEXT_VERSION}\$/version=${env.NEXT_SNAPSHOT}/g'"
 
+                sh "find . -path '*/test/*/jboss-deployment-structure.xml' | xargs sed -i 's/${env.NEXT_VERSION}/${env.NEXT_SNAPSHOT}/g'"
 
                 sh """
-                    gradle clean build publish sA -i -x test \
+                    gradle clean build publish sA -i \
                     -PmavenRepositoryUrl=http://artifacts.sunshower.io/repository/sunshower-snapshots \
                     -PmavenRepositoryUsername=${MVN_REPO_USR} \
                     -PmavenRepositoryPassword=${MVN_REPO_PSW} \
