@@ -83,7 +83,7 @@ pipeline {
                 /**
                  * Update test versions
                  */
-                sh "find . -path '*/test/*/jboss-deployment-structure.xml' | xargs sed -i 's/${env.CURRENT_VERSION}/${env.NEXT_VERSION}/g'"
+                sh "find . -name 'jboss-deployment-structure.xml' | xargs sed -i 's/${env.CURRENT_VERSION}/${env.NEXT_VERSION}/g'"
 
                 sh """
                     gradle clean build publish sA -i --stacktrace \
@@ -110,7 +110,7 @@ pipeline {
 
                 sh "find . -name gradle.properties | xargs sed -i  's/^version=${env.NEXT_VERSION}\$/version=${env.NEXT_SNAPSHOT}/g'"
 
-                sh "find . -path '*/test/*/jboss-deployment-structure.xml' | xargs sed -i 's/${env.NEXT_VERSION}/${env.NEXT_SNAPSHOT}/g'"
+                sh "find . -name 'jboss-deployment-structure.xml' | xargs sed -i 's/${env.NEXT_VERSION}/${env.NEXT_SNAPSHOT}/g'"
 
                 sh """
                     gradle clean build publish sA -i \
