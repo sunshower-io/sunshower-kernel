@@ -29,13 +29,6 @@ public class KernelSystemTest {
   static File file(String path) {
     return new File(TestClasspath.buildDir().getParentFile(), path);
   }
-  //
-  //  @Resource(
-  //    name =
-  //
-  // "java:global/kernel-wildfly-provider-1.0.0-SNAPSHOT/InMemoryPluginStorage!io.sunshower.kernel.api.PluginStorage"
-  //  )
-  //  private PluginStorage pluginStorage;
 
   @Resource(name = "java:global/sunshower/kernel/plugin-manager")
   private PluginManager pluginManager;

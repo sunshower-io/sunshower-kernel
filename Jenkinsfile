@@ -80,6 +80,11 @@ pipeline {
 
                 sh "find . -name gradle.properties | xargs sed -i  's/^version=${env.CURRENT_VERSION}\$/version=${env.NEXT_VERSION}/g'"
 
+                /**
+                 * Update test versions
+                 */
+                sh "find . -path '*/test/*/jboss-deployment-structure.xml' | xargs sed -i 's/${env.CURRENT_VERSION}/${env.NEXT_VERSION}/g'"
+
                 sh """
                     gradle clean build publish sA -i --stacktrace -x test \
                     -PmavenRepositoryUrl=http://artifacts.sunshower.io/repository/sunshower-releases \
