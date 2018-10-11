@@ -38,8 +38,8 @@
         <spring-security.version>5.0.0.RELEASE</spring-security.version>
         <ignite-hibernate-51.version>2.5.2</ignite-hibernate-51.version>
         <google-guava.version>24.1-jre</google-guava.version>
-        <sunshower-common.version>1.0.0-SNAPSHOT</sunshower-common.version>
-        <sunshower-core.version>1.0.0-SNAPSHOT</sunshower-core.version>
+        <sunshower-common.version>1.0.2.Final</sunshower-common.version>
+        <sunshower-core.version>1.0.3.Final</sunshower-core.version>
         <yaml-resource-bundle.version>1.1</yaml-resource-bundle.version>
     </properties>
 
