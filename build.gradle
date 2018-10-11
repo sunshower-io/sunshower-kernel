@@ -2,7 +2,7 @@ buildscript {
     apply from: 'gradle/buildscript.gradle', to: buildscript
 
     dependencies {
-        classpath "net.ltgt.gradle:gradle-apt-plugin:0.13"
+        classpath "net.ltgt.gradle:gradle-apt-plugin:0.18"
     }
 }
 apply plugin: 'nebula-aggregate-javadocs'
@@ -50,7 +50,8 @@ allprojects {
 
 
     def repos = [
-            'https://mymavenrepo.com/repo/Bwb7CZ1J9Ud5KCkBvnhI',
+            'http://artifacts.sunshower.io/repository/sunshower-releases',
+            'http://artifacts.sunshower.io/repository/sunshower-snapshots',
             "http://oss.sonatype.org/content/repositories/snapshots",
             "http://www.gridgainsystems.com/nexus/content/repositories/external"
     ]
@@ -108,8 +109,9 @@ allprojects {
     plugins.withType(JavaPlugin) {
 
         dependencies {
-            apt "org.projectlombok:lombok:1.16.20"
-            compileOnly "org.projectlombok:lombok:1.16.20"
+            annotationProcessor "org.projectlombok:lombok:1.18.2"
+            compileOnly "org.projectlombok:lombok:1.18.2"
+            testCompileOnly "org.projectlombok:lombok:1.18.2"
             compileOnly 'javax.ws.rs:javax.ws.rs-api'
             compileOnly 'org.eclipse.persistence:org.eclipse.persistence.moxy'
             compileOnly 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api'

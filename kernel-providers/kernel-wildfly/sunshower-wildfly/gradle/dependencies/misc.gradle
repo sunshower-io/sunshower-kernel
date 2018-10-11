@@ -51,6 +51,6 @@ dependencies {
             "lang",
             "reflect",
     ].each {
-        jbossmodules "io.sunshower.common:$it"
+        jbossmodules "io.sunshower.common:$it:${versions('sunshower-common.version')}"
     }
 }
