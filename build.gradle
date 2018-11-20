@@ -99,7 +99,7 @@ allprojects {
         imports {
             mavenBom("io.sunshower.kernel:bom-imported:${version}") {
                 bomProperties([
-                        'env.version': '1.0.8.Final'
+                        'env.version': '1.0.11.Final'
                 ])
             }
         }
