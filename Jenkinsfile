@@ -55,6 +55,7 @@ pipeline {
                  */
 
                 sh 'mvn versions:set -DnewVersion=$NEXT_VERSION -f bom/pom.xml -P sunshower'
+                sh 'mvn versions:set-property -Dproperty=sunshower-kernel.version -f bom  -DnewVersion=$NEXT_VERSION'
 
                 /**
                  * Git config
