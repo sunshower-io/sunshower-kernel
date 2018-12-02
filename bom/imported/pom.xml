@@ -39,7 +39,7 @@
         <ignite-hibernate-51.version>2.5.2</ignite-hibernate-51.version>
         <google-guava.version>24.1-jre</google-guava.version>
         <sunshower-common.version>1.0.5.Final</sunshower-common.version>
-        <sunshower-core.version>1.0.6.Final</sunshower-core.version>
+        <sunshower-core.version>1.0.7.Final</sunshower-core.version>
         <yaml-resource-bundle.version>1.1</yaml-resource-bundle.version>
     </properties>
 
