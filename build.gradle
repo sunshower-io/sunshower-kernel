@@ -50,10 +50,7 @@ allprojects {
 
 
     def repos = [
-            'http://artifacts.sunshower.io/repository/sunshower-releases',
-            'http://artifacts.sunshower.io/repository/sunshower-snapshots',
-            "http://oss.sonatype.org/content/repositories/snapshots",
-            "http://www.gridgainsystems.com/nexus/content/repositories/external"
+            'http://artifacts.sunshower.io/repository/sunshower-cache'
     ]
 
 
@@ -71,8 +68,6 @@ allprojects {
 
     repositories {
         mavenLocal()
-        mavenCentral()
-        jcenter()
 
 
         ivy {
@@ -82,14 +77,6 @@ allprojects {
             }
         }
 
-        maven {
-            url mavenRepositoryUrl
-
-            credentials {
-                username mavenRepositoryUsername
-                password mavenRepositoryPassword
-            }
-        }
         repos.each { repo ->
             maven { url "$repo" }
         }
@@ -189,7 +176,7 @@ publishing {
 
 
 //assemble.dependsOn cloverAggregateReports
-assemble.dependsOn 'aggregateJavadocs'
+//assemble.dependsOn 'aggregateJavadocs'
 
 //assemble.dependsOn archiveReports
 //archiveReports.mustRunAfter cloverAggregateReports
@@ -197,4 +184,4 @@ assemble.dependsOn 'aggregateJavadocs'
 
 //add to default tasks'cloverAggregateReports', 
 
-defaultTasks 'clean', 'build', 'aggregateJavadocs', 'pTML'
+defaultTasks 'clean', 'build', 'pTML'
