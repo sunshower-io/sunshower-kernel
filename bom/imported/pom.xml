@@ -44,8 +44,8 @@
 
 
 
-        <sunshower-core.version>1.0.6-SNAPSHOT</sunshower-core.version>
-        <sunshower-common.version>1.0.6-SNAPSHOT</sunshower-common.version>
+        <sunshower-core.version>1.0.8.Final</sunshower-core.version>
+        <sunshower-common.version>1.0.6.Final</sunshower-common.version>
     </properties>
 
     <dependencyManagement>
