@@ -17,7 +17,7 @@ allprojects {
     apply plugin: 'io.spring.dependency-management'
 
     configurations {
-        tests 
+        tests
         plugin
         testPlugin
     }
@@ -54,8 +54,6 @@ allprojects {
     ]
 
 
-
-
     task sourceJar(type: Jar, dependsOn: classes) {
         classifier = 'sources'
         from sourceSets.main.allSource
@@ -78,17 +76,19 @@ allprojects {
         }
 
         repos.each { repo ->
-            maven { url "$repo" }
+            maven {
+                url "$repo"
+                credentials {
+                    username mavenRepositoryUsername
+                    password mavenRepositoryPassword
+                }
+            }
         }
     }
 
     dependencyManagement {
         imports {
-            mavenBom("io.sunshower.kernel:bom-imported:${version}") {
-                bomProperties([
-                        'env.version': '1.0.11.Final'
-                ])
-            }
+            mavenBom("io.sunshower.kernel:bom-imported:${version}")
         }
     }
 
@@ -115,33 +115,7 @@ allprojects {
     }
 
 
-//    publishing {
-//        repositories {
-//            maven {
-//                url mavenRepositoryUrl
-//
-//                credentials {
-//                    username mavenRepositoryUsername
-//                    password mavenRepositoryPassword
-//                }
-//            }
-//        }
-//
-//        publications {
-//            maven(MavenPublication) {
-//                from components.java
-//
-//                artifact sourceJar {
-//                    classifier "sources"
-//                }
-//            }
-//        }
-//    }
-
-
 }
-
-
 
 
 publishing {
@@ -156,32 +130,7 @@ publishing {
         }
     }
 
-//    publications {
-//        maven(MavenPublication) {
-//            artifact archiveReports {
-//                classifier 'reports'
-//            }
-//        }
-//    }
 }
 
-//task archiveReports(type: Zip) {
-//    from "$buildDir/docs"
-//    include "/**/*"
-//
-//    from "$buildDir/reports/clover"
-//
-//    archiveName 'reports.zip'
-//}
-
-
-//assemble.dependsOn cloverAggregateReports
-//assemble.dependsOn 'aggregateJavadocs'
-
-//assemble.dependsOn archiveReports
-//archiveReports.mustRunAfter cloverAggregateReports
-//archiveReports.mustRunAfter 'aggregateJavadocs'
-
-//add to default tasks'cloverAggregateReports', 
 
 defaultTasks 'clean', 'build', 'pTML'
