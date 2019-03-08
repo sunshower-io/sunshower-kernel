@@ -109,7 +109,6 @@ allprojects {
             testCompile('org.junit.platform:junit-platform-launcher')
             testCompile('org.junit.platform:junit-platform-commons')
             testCompile('org.junit.jupiter:junit-jupiter-engine')
-            testCompile('org.junit.vintage:junit-vintage-engine')
             testCompile('org.junit.platform:junit-platform-runner')
         }
     }
