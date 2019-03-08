@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.sunshower.env</groupId>
     <artifactId>parent</artifactId>
-    <version>1.0.16-SNAPSHOT</version>
+    <version>1.0.16.Final</version>
   </parent>
   <groupId>io.sunshower.kernel</groupId>
   <artifactId>bom</artifactId>
@@ -16,7 +16,7 @@
   <url>http://maven.apache.org</url>
 
   <properties>
-    <env.version>1.0.16-SNAPSHOT</env.version>
+    <env.version>1.0.16.Final</env.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <modules>
