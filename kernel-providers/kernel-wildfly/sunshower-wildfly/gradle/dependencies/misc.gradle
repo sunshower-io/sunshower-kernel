@@ -10,6 +10,7 @@ dependencies {
     jbossmodules 'net.rakugakibox.util:yaml-resource-bundle'
 
     jbossmodules 'com.thoughtworks.xstream:xstream'
+    jbossmodules 'org.infinispan:infinispan-spring5-embedded'
 
 
     jbossmodules 'com.caucho:hessian'

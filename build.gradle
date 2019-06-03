@@ -89,6 +89,7 @@ allprojects {
     dependencyManagement {
         imports {
             mavenBom("io.sunshower.kernel:bom-imported:${version}")
+            mavenBom('org.jboss.arquillian:arquillian-bom:1.4.1.Final')
         }
     }
 
