@@ -17,8 +17,8 @@
 
 
     <properties>
-        <moxy.version>2.7.1</moxy.version>
-        <flyway.version>5.0.5</flyway.version>
+        <moxy.version>2.7.4</moxy.version>
+        <flyway.version>5.2.4</flyway.version>
         <xstream.version>1.4.10</xstream.version>
         <hessian.version>4.0.51</hessian.version>
         <jipijapa.version>11.0.0.Final</jipijapa.version>
@@ -28,14 +28,15 @@
         <cache-api.version>1.1.0</cache-api.version>
         <xstream.version>1.4.10</xstream.version>
         <ignite.version>2.5.2</ignite.version>
-        <hikari-cp.version>2.7.6</hikari-cp.version>
+        <hikari-cp.version>3.3.1</hikari-cp.version>
+        <infinispan-spring.version>9.4.8.Final</infinispan-spring.version>
         <aspectj.version>1.8.9</aspectj.version>
         <rxjava.version>2.1.8</rxjava.version>
         <reactive-streams.version>1.0.2</reactive-streams.version>
         <postgres.version>42.1.4</postgres.version>
         <aopalliance.version>1.0</aopalliance.version>
-        <spring.version>5.1.2.RELEASE</spring.version>
-        <spring-security.version>5.1.1.RELEASE</spring-security.version>
+        <spring.version>5.1.7.RELEASE</spring.version>
+        <spring-security.version>5.1.5.RELEASE</spring-security.version>
         <ignite-hibernate-51.version>2.5.2</ignite-hibernate-51.version>
         <google-guava.version>24.1-jre</google-guava.version>
         <!--<sunshower-common.version>1.0.5.Final</sunshower-common.version>-->
@@ -44,14 +45,20 @@
 
 
 
-        <sunshower-core.version>1.0.14.Final</sunshower-core.version>
-        <sunshower-common.version>1.0.10.Final</sunshower-common.version>
+        <sunshower-core.version>1.0.15.Final</sunshower-core.version>
+        <sunshower-common.version>1.0.11.Final</sunshower-common.version>
 
 
     </properties>
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>org.infinispan</groupId>
+                <artifactId>infinispan-spring5-embedded</artifactId>
+                <version>${infinispan-spring.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>net.rakugakibox.util</groupId>

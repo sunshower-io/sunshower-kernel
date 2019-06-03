@@ -24,7 +24,7 @@ dependencies {
     compileOnly project(':kernel-core')
     compileOnly project(':kernel-common')
     compileOnly project(':kernel-spring')
-    compileOnly group: 'javax', name: 'javaee-api', version: '7.0'
+    compileOnly group: 'javax', name: 'javaee-api', version: '8.0'
     compileOnly group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2'
 }
 publishing {

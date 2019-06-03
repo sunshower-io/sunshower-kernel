@@ -61,6 +61,19 @@ modules {
         resources = ["aopalliance-${versions('aopalliance.version')}.jar"]
     }
 
+    infinispan {
+        moduleName = 'org.infinispan.spring'
+        resources = ["infinispan-spring5-embedded-${versions('infinispan-spring.version')}.jar"]
+        dependencies = [
+                'org.infinispan',
+                'org.hibernate',
+                'org.infinispan.commons',
+                'org.springframework.core',
+                'org.springframework.beans',
+                'org.springframework.context'
+        ]
+    }
+
     moxy {
         moduleName = 'org.eclipse.moxy'
         resources = [
@@ -119,28 +132,28 @@ modules {
     }
 
 
-    ignite {
-        moduleName = 'org.apache.ignite'
-        resources = [
-                "ignite-core-${versions('ignite.version')}.jar",
-                "ignite-spring-${versions('ignite.version')}.jar",
-                "ignite-indexing-${versions('ignite.version')}.jar",
-                "ignite-hibernate-core-${versions('ignite.version')}.jar",
-                "ignite-hibernate_5.1-${versions('ignite-hibernate-51.version')}.jar"
-        ]
-        dependencies = [
-                "javax.api",
-                "org.hibernate",
-                "javax.management.j2ee.api",
-                "javax.cache.cache-api",
-                "org.springframework.beans",
-                "com.h2database.h2",
-                "io.sunshower.common",
-                "org.springframework.context",
-                "org.springframework.security",
-                [name: 'sun.jdk', export: true],
-        ]
-    }
+//    ignite {
+//        moduleName = 'org.apache.ignite'
+//        resources = [
+//                "ignite-core-${versions('ignite.version')}.jar",
+//                "ignite-spring-${versions('ignite.version')}.jar",
+//                "ignite-indexing-${versions('ignite.version')}.jar",
+//                "ignite-hibernate-core-${versions('ignite.version')}.jar",
+//                "ignite-hibernate_5.1-${versions('ignite-hibernate-51.version')}.jar"
+//        ]
+//        dependencies = [
+//                "javax.api",
+//                "org.hibernate",
+//                "javax.management.j2ee.api",
+//                "javax.cache.cache-api",
+//                "org.springframework.beans",
+//                "com.h2database.h2",
+//                "io.sunshower.common",
+//                "org.springframework.context",
+//                "org.springframework.security",
+//                [name: 'sun.jdk', export: true],
+//        ]
+//    }
 
 //    hibernate {
 //        moduleName ='org.hibernate.latest'
