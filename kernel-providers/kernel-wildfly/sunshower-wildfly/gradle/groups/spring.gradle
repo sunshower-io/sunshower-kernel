@@ -1,18 +1,5 @@
 apply from: 'gradle/scripts.gradle'
 modules {
-    springContext {
-        moduleName = 'org.springframework.context'
-        resources = ["spring-context-${versions('spring.version')}.jar"]
-        dependencies = [
-                'org.springframework.beans',
-                'org.springframework.core',
-                'org.springframework.aop',
-                'org.springframework.expression',
-                'org.apache.commons.logging',
-                'javax.api',
-                'javaee.api'
-        ]
-    }
 
 
     springContext {
@@ -121,6 +108,7 @@ modules {
         ]
     }
 
+
     springJdbc {
         moduleName = 'org.springframework.jdbc'
         resources = ["spring-jdbc-${versions('spring.version')}.jar"]
@@ -185,7 +173,10 @@ modules {
 
     springOrm {
         moduleName = 'org.springframework.orm'
-        resources = ["spring-orm-${versions('spring.version')}.jar"]
+        resources = [
+                "spring-orm-${versions('spring.version')}.jar",
+                "spring-data-jpa-${versions('spring-data.version')}.jar"
+        ]
         dependencies = [
                 'org.springframework.aop',
                 'org.springframework.beans',

@@ -20,6 +20,7 @@ dependencies {
         jbossmodules "org.springframework:spring-${it}:${versions("spring.version")}"
     }
 
+    jbossmodules "org.springframework.data:spring-data-jpa:${versions("spring-data.version")}"
 
     [
             'core',

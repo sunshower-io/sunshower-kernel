@@ -48,6 +48,7 @@
         <sunshower-core.version>1.0.15.Final</sunshower-core.version>
         <sunshower-common.version>1.0.11.Final</sunshower-common.version>
 
+        <spring-data.version>2.1.8.RELEASE</spring-data.version>
 
     </properties>
 
