@@ -37,6 +37,10 @@ repositories() {
 }
 
 dependencies {
+    compileOnly "org.projectlombok:lombok"
+    testCompileOnly "org.projectlombok:lombok"
+    testAnnotationProcessor "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
 
     compileOnly group: 'javax', name: 'javaee-api', version: '8.0'
     testCompileOnly group: 'javax', name: 'javaee-api', version: '8.0'
@@ -52,10 +56,12 @@ dependencies {
     compile project(":kernel-core")
     compile project(":kernel-common")
     testCompileOnly 'javax.servlet:javax.servlet-api'
+    testCompile 'org.jboss.resteasy:resteasy-client'
 
 
     compileOnly group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2'
     compileOnly project(':kernel-providers:kernel-wildfly:kernel-wildfly-provider')
+    testImplementation project(':kernel-providers:kernel-wildfly:kernel-wildfly-provider')
 
     /**
      * Test compile modules
@@ -135,7 +141,7 @@ task overlayStandalone(type: Copy) {
     into file("${project.buildDir}/dist/wildfly-16.0.0.Final/standalone/configuration")
 }
 
-task overlay(type: Copy) {
+task overlay(type: Copy, dependsOn: 'overlayStandalone') {
 
 
     from fileTree("${project.buildDir}/install/wildfly16.0.0")
@@ -178,6 +184,8 @@ task createDistribution(type: Zip, dependsOn: ['copyWildfly', 'overlay', 'overla
 task assembleAll(dependsOn: ['wildfly16.0.0DistZip', 'createDistribution', 'distZip']) {
 
 }
+
+test.mustRunAfter overlay, overlayStandalone, copyWildfly
 
 
 makeModules.finalizedBy assembleAll

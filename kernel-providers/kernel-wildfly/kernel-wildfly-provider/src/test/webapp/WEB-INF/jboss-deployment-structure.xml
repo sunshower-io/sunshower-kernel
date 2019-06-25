@@ -1,0 +1,8 @@
+<jboss-deployment-structure>
+
+
+    <deployment>
+        <dependencies>
+        </dependencies>
+    </deployment>
+</jboss-deployment-structure>

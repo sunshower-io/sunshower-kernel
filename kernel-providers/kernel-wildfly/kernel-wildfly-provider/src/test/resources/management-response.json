@@ -23,7 +23,7 @@
   "deployment": {
     "kernel-wildfly-provider-1.0.14.Final.war": null,
     "sunshower-web-1.0.15-SNAPSHOT.war": null,
-    "adsfasdfasdf": null
+    "adsfasdfasdf-1.0.final.war": null
   },
   "deployment-overlay": null,
   "extension": {

@@ -1,32 +1,51 @@
+
+plugins {
+    id 'net.ltgt.apt-idea'
+}
+
+apply plugin: "net.ltgt.apt"
 apply plugin: 'war'
 apply plugin: 'java'
 
-
-
 configurations {
     war {}
+    wildfly
 }
 
-//publishing {
-//    publications {
-//        mavenWeb(MavenPublication) {
-//            from components.web
-//        }
-//    }
-//
-//}
+
 
 artifacts {
     war tasks.war
 }
 
 dependencies {
+    wildfly group: 'io.sunshower', name: 'wildfly', version: '16.0.0.Final', ext: 'zip'
+
+    implementation 'org.jboss.resteasy:resteasy-client'
+    compileOnly "org.projectlombok:lombok"
+    testCompileOnly "org.projectlombok:lombok"
+    testAnnotationProcessor "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
+    testImplementation 'io.sunshower.test:test-common'
+
+    implementation 'io.sunshower.common:core'
+
+    testImplementation 'javax.json:javax.json-api'
+    testImplementation 'org.glassfish:javax.json'
+
     compileOnly project(':kernel-api')
+    testImplementation project(':kernel-api')
     compileOnly project(':kernel-core')
     compileOnly project(':kernel-common')
     compileOnly project(':kernel-spring')
     compileOnly group: 'javax', name: 'javaee-api', version: '8.0'
     compileOnly group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2'
+
+
+
+    testCompile group: 'org.jboss.arquillian.junit', name: 'arquillian-junit-container', version:'1.4.1.Final'
+    testCompile group: 'org.wildfly.arquillian', name: 'wildfly-arquillian-container-managed', version:'2.2.0.Final'
+    testCompile project(':kernel-providers:kernel-wildfly:wildfly-test-plugins:simple-test')
 }
 publishing {
     repositories {
@@ -45,4 +64,14 @@ publishing {
             from components.web
         }
     }
+}
+
+
+task unpackWildfly(type: Copy) {
+    dependsOn configurations.wildfly
+    configurations.wildfly.each {
+        from(zipTree(it))
+    }
+    into file("${project.buildDir}/dist")
+
 }
