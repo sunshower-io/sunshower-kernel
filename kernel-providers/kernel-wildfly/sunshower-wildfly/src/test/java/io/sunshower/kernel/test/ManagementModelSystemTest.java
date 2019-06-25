@@ -14,8 +14,6 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,12 +25,8 @@ public class ManagementModelSystemTest {
   private KernelManagementConsole managementConsole;
 
   @Deployment
-  public static WebArchive webArchive() {
-    return ShrinkWrap.create(WebArchive.class, "kernel-test-war3.war")
-        .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-        .addAsWebInfResource(file("src/test/webapp/WEB-INF/jboss-deployment-structure.xml"))
-        .addClass(ManagementModelSystemTest.class)
-        .addClass(TestClasspath.class);
+  public static WebArchive deployment() {
+    return Deployments.baseDeployment();
   }
 
   static File file(String path) {

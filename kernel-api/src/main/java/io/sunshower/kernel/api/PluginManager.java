@@ -1,9 +1,8 @@
 package io.sunshower.kernel.api;
 
 
-import java.io.File;
-import java.nio.file.Path;
 import java.util.List;
+import java.nio.file.Path;
 
 public interface PluginManager {
 
@@ -59,4 +58,9 @@ public interface PluginManager {
      * @return
      */
     Path getPluginDirectory(Plugin.Coordinate coordinate);
+
+    /**
+     * Trigger rescan for plugin
+     */
+    void rescan();
 }

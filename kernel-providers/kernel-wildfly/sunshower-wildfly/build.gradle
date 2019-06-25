@@ -141,7 +141,7 @@ task overlayStandalone(type: Copy) {
     into file("${project.buildDir}/dist/wildfly-16.0.0.Final/standalone/configuration")
 }
 
-task overlay(type: Copy, dependsOn: 'overlayStandalone') {
+task overlay(type: Copy, dependsOn: ['overlayStandalone', 'copyWildfly']) {
 
 
     from fileTree("${project.buildDir}/install/wildfly16.0.0")
@@ -185,10 +185,12 @@ task assembleAll(dependsOn: ['wildfly16.0.0DistZip', 'createDistribution', 'dist
 
 }
 
-test.mustRunAfter overlay, overlayStandalone, copyWildfly
 
+
+
+test.dependsOn assembleAll
 
 makeModules.finalizedBy assembleAll
 
 
-defaultTasks 'clean', 'copyWildfly', 'overlay', 'distZip', 'publishToMavenLocal'
+defaultTasks 'clean', 'copyWildfly', 'overlay', 'build', 'distZip', 'publishToMavenLocal'

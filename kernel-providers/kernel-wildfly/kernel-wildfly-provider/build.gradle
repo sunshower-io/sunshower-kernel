@@ -66,12 +66,3 @@ publishing {
     }
 }
 
-
-task unpackWildfly(type: Copy) {
-    dependsOn configurations.wildfly
-    configurations.wildfly.each {
-        from(zipTree(it))
-    }
-    into file("${project.buildDir}/dist")
-
-}

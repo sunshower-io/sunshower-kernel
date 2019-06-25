@@ -5,19 +5,23 @@ import io.sunshower.kernel.api.Plugin;
 import io.sunshower.kernel.api.PluginManager;
 import io.sunshower.kernel.api.PluginNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
-import java.io.File;
+import javax.management.MBeanServer;
+import javax.management.MBeanServerFactory;
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.List;
 
 @Slf4j
 @Singleton
-@EJB(name = "java:global/sunshower/kernel/plugin-manager", beanInterface = PluginManager.class)
+@EJB(name = SunshowerKernelPluginManager.Name, beanInterface = PluginManager.class)
 public class SunshowerKernelPluginManager implements PluginManager, Serializable {
+
+    public static final String Name = "java:global/sunshower/kernel/plugin-manager";
 
 
     @Override
@@ -54,17 +58,26 @@ public class SunshowerKernelPluginManager implements PluginManager, Serializable
     }
 
     @Override
-    public File getPluginDirectory() {
+    public Path getPluginDirectory() {
         return Path.of(System.getProperty("jboss.server.home.dir"), "deploy");
     }
 
     @Override
-    public File getPluginDirectory(Plugin.Coordinate coordinate) {
+    public Path getPluginDirectory(Plugin.Coordinate coordinate) {
         return null;
     }
 
-    @PostConstruct
-    void loadInitialPlugins() {
+    @Override
+    public void rescan() {
+        val managementServer = resolveManagementServer();
+    }
 
+    @PostConstruct
+    public void loadInitialPlugins() {
+        rescan();
+    }
+
+    private MBeanServer resolveManagementServer() {
+        return MBeanServerFactory.findMBeanServer(null).get(0);
     }
 }
