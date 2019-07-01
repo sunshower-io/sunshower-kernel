@@ -4,11 +4,18 @@ apply from: 'gradle/scripts.gradle'
 
 modules {
 
+    classGraph {
+        moduleName = 'classgraph'
+        resources = ["classgraph-${versions('classgraph.version')}.jar"]
+        dependencies = [
+                'javax.api'
+        ]
+    }
 
     yamlResourceBundle {
         moduleName = 'resource-bundle.yaml'
         resources = ["yaml-resource-bundle-${versions('yaml-resource-bundle.version')}.jar"]
-        dependencies [
+        dependencies = [
                 'org.yaml.snakeyaml'
         ]
     }

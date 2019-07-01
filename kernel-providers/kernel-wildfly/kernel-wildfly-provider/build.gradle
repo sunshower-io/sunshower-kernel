@@ -21,14 +21,14 @@ artifacts {
 dependencies {
     wildfly group: 'io.sunshower', name: 'wildfly', version: '16.0.0.Final', ext: 'zip'
 
-    implementation 'org.jboss.resteasy:resteasy-client'
+    providedCompile 'org.jboss.resteasy:resteasy-client'
     compileOnly "org.projectlombok:lombok"
     testCompileOnly "org.projectlombok:lombok"
     testAnnotationProcessor "org.projectlombok:lombok"
     annotationProcessor "org.projectlombok:lombok"
     testImplementation 'io.sunshower.test:test-common'
 
-    implementation 'io.sunshower.common:core'
+    providedCompile 'io.sunshower.common:core'
 
     testImplementation 'javax.json:javax.json-api'
     testImplementation 'org.glassfish:javax.json'

@@ -13,6 +13,7 @@ modules {
                 "kernel-common-${project.version}.jar"
         ]
         dependencies = [
+                'classgraph',
                 'javax.api',
                 'org.slf4j',
                 'org.springframework.context',

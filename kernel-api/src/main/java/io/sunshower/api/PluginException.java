@@ -11,6 +11,10 @@ public class PluginException extends KernelException {
     this.source = coordinate;
   }
 
+  public PluginException(String message) {
+    super(message);
+  }
+
   public PluginException(String message, Throwable cause) {
     super(message, cause);
   }

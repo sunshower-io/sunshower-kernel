@@ -1,13 +1,18 @@
 apply plugin: 'java'
 
 dependencies {
-    compile 'org.springframework:spring-beans'
-    compile 'org.springframework:spring-core'
-    compile 'org.springframework:spring-context'
-    compile 'org.slf4j:slf4j-api'
+    api 'org.springframework:spring-aop'
+    api 'org.springframework:spring-beans'
+    api 'org.springframework:spring-core'
+    api 'org.springframework:spring-context'
+    api 'org.slf4j:slf4j-api'
+    api 'org.aspectj:aspectjweaver:1.9.3'
+    api 'io.github.classgraph:classgraph'
 
-    compile project(':kernel-api')
-    compile 'javax:javaee-api'
+    api project(':kernel-api')
+    api 'javax:javaee-api'
+
+    api 'org.springframework:spring-web'
 
     testCompile 'org.junit.platform:junit-platform-runner'
     testCompile 'org.springframework:spring-test'

@@ -17,6 +17,7 @@
 
 
     <properties>
+        <classgraph.version>4.8.43</classgraph.version>
         <moxy.version>2.7.4</moxy.version>
         <flyway.version>5.2.4</flyway.version>
         <xstream.version>1.4.10</xstream.version>
@@ -54,6 +55,12 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>io.github.classgraph</groupId>
+                <artifactId>classgraph</artifactId>
+                <version>${classgraph.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.infinispan</groupId>

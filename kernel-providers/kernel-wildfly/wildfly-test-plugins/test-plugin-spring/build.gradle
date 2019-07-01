@@ -1,13 +1,21 @@
 apply plugin: 'war'
 
+
+configurations {
+    libraries {
+        transitive = false
+    }
+}
+
 dependencies {
-    compileOnly project(':kernel-api')
-    compileOnly project(':kernel-spring')
+    providedCompile project(':kernel-api')
+    libraries project(':kernel-spring')
+    providedCompile project(':kernel-spring')
 
-    compileOnly group: 'javax', name: 'javaee-api', version: '7.0'
-    compileOnly group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2'
+    providedCompile group: 'javax', name: 'javaee-api', version: '8.0'
+    providedCompile group: 'javax.ejb', name: 'javax.ejb-api', version: '3.2'
 
-    compileOnly 'org.springframework:spring-context'
+    providedCompile 'org.springframework:spring-context'
 }
 
 configurations {
@@ -16,4 +24,8 @@ configurations {
 
 artifacts {
     war tasks.war
+}
+
+war {
+    classpath configurations.libraries
 }

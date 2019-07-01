@@ -4,6 +4,7 @@ dependencies {
     jbossmodules "aopalliance:aopalliance"
     jbossmodules "org.postgresql:postgresql"
 
+    jbossmodules 'io.github.classgraph:classgraph'
 
     jbossmodules "org.flywaydb:flyway-core"
 
