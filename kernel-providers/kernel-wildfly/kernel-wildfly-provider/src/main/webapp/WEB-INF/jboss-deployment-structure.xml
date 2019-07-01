@@ -3,8 +3,9 @@
 
   <deployment>
     <dependencies>
-      <module name="io.sunshower.kernel"/>
+      <module name="io.sunshower.kernel" services="import"/>
       <module name="javax.servlet.api" />
+      <module name="org.jboss.modules" />
     </dependencies>
   </deployment>
 </jboss-deployment-structure>

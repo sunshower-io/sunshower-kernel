@@ -8,7 +8,7 @@
       <module name="org.springframework.core"/>
       <module name="org.springframework.context"/>
       <module name="org.springframework.beans"/>
-      <module name="deployment.simple-test-1.0.14-SNAPSHOT.war" />
+      <module name="deployment.test-plugin-spring-1.0.14-SNAPSHOT.war" />
       <module name="deployment.kernel-wildfly-provider-1.0.14-SNAPSHOT.war" />
     </dependencies>
   </deployment>

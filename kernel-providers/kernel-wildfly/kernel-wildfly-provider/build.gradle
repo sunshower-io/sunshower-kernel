@@ -33,6 +33,7 @@ dependencies {
     testImplementation 'javax.json:javax.json-api'
     testImplementation 'org.glassfish:javax.json'
 
+    compileOnly 'org.jboss.modules:jboss-modules:1.9.1.Final'
     compileOnly project(':kernel-api')
     testImplementation project(':kernel-api')
     compileOnly project(':kernel-core')
@@ -45,7 +46,7 @@ dependencies {
 
     testCompile group: 'org.jboss.arquillian.junit', name: 'arquillian-junit-container', version:'1.4.1.Final'
     testCompile group: 'org.wildfly.arquillian', name: 'wildfly-arquillian-container-managed', version:'2.2.0.Final'
-    testCompile project(':kernel-providers:kernel-wildfly:wildfly-test-plugins:simple-test')
+    testCompile project(':kernel-providers:kernel-wildfly:wildfly-test-plugins:test-plugin-spring')
 }
 publishing {
     repositories {

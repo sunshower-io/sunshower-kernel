@@ -5,11 +5,16 @@ buildscript {
         classpath "net.ltgt.gradle:gradle-apt-plugin:0.18"
     }
 }
+
+plugins {
+    id 'java-library'
+}
 apply plugin: 'nebula-aggregate-javadocs'
 
 allprojects {
     apply plugin: 'idea'
     apply plugin: 'java'
+    apply plugin: 'java-library'
     apply plugin: 'net.ltgt.apt'
     apply plugin: 'maven-publish'
     apply plugin: "com.diffplug.gradle.spotless"

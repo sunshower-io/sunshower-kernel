@@ -17,11 +17,12 @@
   <container qualifier="widlfly-managed" default="true">
     <configuration>
       <property name="jbossHome">${jbossHome:./build/dist/wildfly-16.0.0.Final}</property>
+      <property name="jboss.server.home.dir">${jbossHome:./build/dist/wildfly-16.0.0.Final}</property>
       <!--<property name="javaVmArguments">-Xmx512m -XX:MaxPermSize=128m-->
            <!-- -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y-->
       <!--</property>-->
       <property name="javaVmArguments">
-        -server -Xms64m -Xmx512m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true  --add-exports=java.base/sun.nio.ch=ALL-UNNAMED --add-exports=jdk.unsupported/sun.misc=ALL-UNNAMED --add-exports=jdk.unsupported/sun.reflect=ALL-UNNAMED --add-modules=java.se
+        -server -Xms64m -Xmx512m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true  --add-exports=java.base/sun.nio.ch=ALL-UNNAMED --add-exports=jdk.unsupported/sun.misc=ALL-UNNAMED --add-exports=jdk.unsupported/sun.reflect=ALL-UNNAMED --add-modules=java.se -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       </property>
     </configuration>
   </container>

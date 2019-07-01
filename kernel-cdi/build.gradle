@@ -1,12 +1,17 @@
+apply plugin: 'java'
+
 dependencies {
-    api 'io.sunshower.common:annotations'
-    api 'javax.inject:javax.inject'
-    api 'javax.servlet:javax.servlet-api'
+    compile 'org.springframework:spring-beans'
+    compile 'org.springframework:spring-core'
+    compile 'org.springframework:spring-context'
+    compile 'org.slf4j:slf4j-api'
 
-    api 'javax:javaee-api'
+    compile project(':kernel-api')
+    compile 'javax:javaee-api'
+
     testCompile 'org.junit.platform:junit-platform-runner'
+    testCompile 'org.springframework:spring-test'
 }
-
 publishing {
     repositories {
         maven {
