@@ -14,6 +14,8 @@ dependencies {
 
     api 'org.springframework:spring-web'
 
+    implementation project(':kernel-core')
+
     testImplementation 'org.springframework:spring-test'
     testImplementation 'org.junit.platform:junit-platform-runner'
     testRuntime 'org.junit.jupiter:junit-jupiter-engine'

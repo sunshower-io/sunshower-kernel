@@ -8,6 +8,7 @@ modules {
         moduleName = 'io.sunshower.kernel'
         resources = [
                 "kernel-api-${project.version}.jar",
+                "kernel-spring-${project.version}.jar",
                 "kernel-core-${project.version}.jar",
                 "kernel-common-${project.version}.jar"
         ]
@@ -17,6 +18,7 @@ modules {
                 'javax.api',
                 'org.slf4j',
                 'org.springframework.aop',
+                'org.springframework.web',
                 'org.springframework.context',
                 'org.springframework.beans',
                 'org.springframework.core',

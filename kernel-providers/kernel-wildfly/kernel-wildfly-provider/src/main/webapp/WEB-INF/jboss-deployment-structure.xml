@@ -6,6 +6,7 @@
       <module name="io.sunshower.kernel" services="import" export="true"/>
       <module name="javax.servlet.api" />
       <module name="org.jboss.modules" />
+      <module name="io.sunshower.spring" services="import"/>
       <module name="org.eclipse.moxy" export="true"/>
       <module name="io.sunshower.common" export="true"/>
     </dependencies>

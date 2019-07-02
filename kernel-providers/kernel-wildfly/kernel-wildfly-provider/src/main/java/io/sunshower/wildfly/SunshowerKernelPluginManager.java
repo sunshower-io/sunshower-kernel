@@ -1,10 +1,10 @@
 package io.sunshower.wildfly;
 
-import io.sunshower.api.Event;
-import io.sunshower.api.Plugin;
-import io.sunshower.api.PluginManager;
-import io.sunshower.api.PluginNotFoundException;
-import io.sunshower.spi.PluginLoader;
+import static java.lang.String.format;
+
+import io.sunshower.EntryPoint;
+import io.sunshower.api.*;
+import io.sunshower.spi.PluginRegistrar;
 import java.io.Serializable;
 import java.lang.management.ManagementFactory;
 import java.nio.file.Path;
@@ -14,17 +14,19 @@ import javax.ejb.Singleton;
 import javax.management.*;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.jboss.modules.Module;
+import org.springframework.context.annotation.Configuration;
 
 @Slf4j
+@EntryPoint
 @Singleton
+@Configuration
 @EJB(name = SunshowerKernelPluginManager.Name, beanInterface = PluginManager.class)
 public class SunshowerKernelPluginManager implements PluginManager, Serializable {
 
   public static final String Name = "java:global/sunshower/kernel/plugin-manager";
 
   @Override
-  public Plugin lookup(Plugin.Coordinate coordinate) {
+  public Plugin lookup(PluginCoordinate coordinate) {
     return null;
   }
 
@@ -36,11 +38,11 @@ public class SunshowerKernelPluginManager implements PluginManager, Serializable
   }
 
   @Override
-  public <T> void dispatch(Event<T> event, Event.Mode mode, Plugin.Coordinate... targets) {
+  public <T> void dispatch(Event<T> event, Event.Mode mode, PluginCoordinate... targets) {
     if (targets == null || targets.length == 0) {
       log.warn("Attempting to dispatch an event to the empty set.  Not doing anything");
     }
-    for (Plugin.Coordinate coordinate : targets) {
+    for (PluginCoordinate coordinate : targets) {
       lookup(coordinate).dispatch(event, mode);
     }
   }
@@ -97,80 +99,83 @@ public class SunshowerKernelPluginManager implements PluginManager, Serializable
   }
 
   private void showLoaders(MBeanServer server) {
-    val m = Module.forClassLoader(getClass().getClassLoader().getParent(), true);
-    System.out.println("GOT" + m);
-
-    ////        for(ModuleLoader m = Module.getCallerModuleLoader(); m !=
-    // Module.getBootModuleLoader();) {
-    ////        val m = Module.getBootModuleLoader();
-    //            System.out.println("Loading module: " + m);
-    //            try {
-    ////                m.loadModule("deployment.kernel-test-war3.war");
+    //    val m = Module.forClassLoader(getClass().getClassLoader().getParent(), true);
+    //    System.out.println("GOT" + m);
     //
-    ////                val mods = m.iterateModules("deployment", true);
-    ////                while(mods.hasNext()) {
-    ////                    System.out.println(mods.next());
-    ////                }
-    //            } catch(Exception ex) {
-    //                ex.printStackTrace();
+    //    ////        for(ModuleLoader m = Module.getCallerModuleLoader(); m !=
+    //    // Module.getBootModuleLoader();) {
+    //    ////        val m = Module.getBootModuleLoader();
+    //    //            System.out.println("Loading module: " + m);
+    //    //            try {
+    //    ////                m.loadModule("deployment.kernel-test-war3.war");
+    //    //
+    //    ////                val mods = m.iterateModules("deployment", true);
+    //    ////                while(mods.hasNext()) {
+    //    ////                    System.out.println(mods.next());
+    //    ////                }
+    //    //            } catch(Exception ex) {
+    //    //                ex.printStackTrace();
+    //    //
+    //    //            }
     //
-    //            }
-
-    //        }
-    //        try {
-    //            val names = new ObjectName("jboss.modules:type=ModuleLoader,name=*");
-    //            val objs  = server.queryMBeans(names, null);
-    //            for (val ob : objs) {
-    //                val obj = server.getMBeanInfo(ob.getObjectName());
-    //                System.out.println(ob.getObjectName());
-    ////                if (ob.getObjectName().getCanonicalName().contains("ServiceModuleLoader")) {
-    //                if(true) {
-    ////
-    ////                    for (val attrs : obj.getAttributes()) {
-    ////                        System.out.format("\t%s -> %s\n", attrs.getName(), attrs.getType());
-    ////                    }
-    ////                    for (val attrs : obj.getOperations()) {
-    ////                        System.out.format("\t%s -> %s\n", attrs.getName(),
-    // attrs.getReturnType());
-    ////                    }
-    //
-    //                    val moduleNames = (String[]) server.invoke(ob.getObjectName(),
-    // "queryLoadedModuleNames", null, null);
-    //                    for (val mname : moduleNames) {
-    //                        System.out.println("\t\t" + mname);
-    //                    }
-    //                }
-    ////                System.out.println(ob.getObjectName());
-    ////                val moduleNames = (String[]) server.invoke(ob.getObjectName(),
-    // "queryLoadedModuleNames", null, null);
-    ////                for(val mname : moduleNames) {
-    ////                    System.out.println(mname);
-    ////                }
-    ////                for (val attrs : obj.getAttributes()) {
-    ////                    System.out.format("\t%s -> %s\n", attrs.getName(), attrs.getType());
-    ////                }
-    ////                for (val attrs : obj.getOperations()) {
-    ////                    System.out.format("\t%s -> %s\n", attrs.getName(),
-    // attrs.getReturnType());
-    ////                }
-    ////
-    ////                val loaders = (CompositeData[]) server.invoke(ob.getObjectName(),
-    // "getResourceLoaders", null, null);
-    ////                for(val loader : loaders) {
-    ////                    System.out.println(loader);
-    ////                }
-    //
-    //
-    //            }
-    //
-    //        } catch (Exception ex) {
-    //            ex.printStackTrace();
-    //            ;
-    //        }
+    //    //        }
+    //    //        try {
+    //    //            val names = new ObjectName("jboss.modules:type=ModuleLoader,name=*");
+    //    //            val objs  = server.queryMBeans(names, null);
+    //    //            for (val ob : objs) {
+    //    //                val obj = server.getMBeanInfo(ob.getObjectName());
+    //    //                System.out.println(ob.getObjectName());
+    //    ////                if
+    // (ob.getObjectName().getCanonicalName().contains("ServiceModuleLoader")) {
+    //    //                if(true) {
+    //    ////
+    //    ////                    for (val attrs : obj.getAttributes()) {
+    //    ////                        System.out.format("\t%s -> %s\n", attrs.getName(),
+    // attrs.getType());
+    //    ////                    }
+    //    ////                    for (val attrs : obj.getOperations()) {
+    //    ////                        System.out.format("\t%s -> %s\n", attrs.getName(),
+    //    // attrs.getReturnType());
+    //    ////                    }
+    //    //
+    //    //                    val moduleNames = (String[]) server.invoke(ob.getObjectName(),
+    //    // "queryLoadedModuleNames", null, null);
+    //    //                    for (val mname : moduleNames) {
+    //    //                        System.out.println("\t\t" + mname);
+    //    //                    }
+    //    //                }
+    //    ////                System.out.println(ob.getObjectName());
+    //    ////                val moduleNames = (String[]) server.invoke(ob.getObjectName(),
+    //    // "queryLoadedModuleNames", null, null);
+    //    ////                for(val mname : moduleNames) {
+    //    ////                    System.out.println(mname);
+    //    ////                }
+    //    ////                for (val attrs : obj.getAttributes()) {
+    //    ////                    System.out.format("\t%s -> %s\n", attrs.getName(),
+    // attrs.getType());
+    //    ////                }
+    //    ////                for (val attrs : obj.getOperations()) {
+    //    ////                    System.out.format("\t%s -> %s\n", attrs.getName(),
+    //    // attrs.getReturnType());
+    //    ////                }
+    //    ////
+    //    ////                val loaders = (CompositeData[]) server.invoke(ob.getObjectName(),
+    //    // "getResourceLoaders", null, null);
+    //    ////                for(val loader : loaders) {
+    //    ////                    System.out.println(loader);
+    //    ////                }
+    //    //
+    //    //
+    //    //            }
+    //    //
+    //    //        } catch (Exception ex) {
+    //    //            ex.printStackTrace();
+    //    //            ;
+    //    //        }
   }
 
   @Override
-  public List<Plugin> list(List<Plugin.Coordinate> items) throws PluginNotFoundException {
+  public List<Plugin> list(List<PluginCoordinate> items) throws PluginNotFoundException {
     return null;
   }
 
@@ -185,7 +190,7 @@ public class SunshowerKernelPluginManager implements PluginManager, Serializable
   }
 
   @Override
-  public Path getPluginDirectory(Plugin.Coordinate coordinate) {
+  public Path getPluginDirectory(PluginCoordinate coordinate) {
     return null;
   }
 
@@ -202,27 +207,43 @@ public class SunshowerKernelPluginManager implements PluginManager, Serializable
   }
 
   @Override
-  public void start(Class<?> type) {
-    System.out.println("Starting!" + type);
-    System.out.println("Starting!" + type.getClassLoader());
+  public void register(Plugin plugin) {
+    check(plugin);
   }
-  //
-  //  @PostConstruct
-  //  public void loadInitialPlugins() {
-  //    rescan();
-  //  }
+
+  private void check(Plugin plugin) {
+    log.info("Enforcing deployer checks for plugin: {}", plugin.getCoordinate());
+    //    verifyKnownRegistrars(plugin.getRegistrar(), plugin.getCoordinate());
+  }
+
+  private void verifyKnownRegistrars(PluginRegistrar registrar, PluginCoordinate coordinate) {
+    log.info("Verifying plugin registrar {} against known registrars...");
+    val registrars = ServiceLoader.load(PluginRegistrar.class);
+    val itr = registrars.iterator();
+    while (itr.hasNext()) {
+      val knownRegistrar = itr.next();
+      log.info("Checking registrar: {}", knownRegistrar);
+      if (knownRegistrar.getClass().equals(registrar.getClass())) {
+        log.info("Found registrar match: {}.  Checking protection domain...", knownRegistrar);
+        val kernelProtectionDomain = knownRegistrar.getClass().getProtectionDomain();
+        val pluginProtectionDomain = registrar.getClass().getProtectionDomain();
+        if (!kernelProtectionDomain.equals(pluginProtectionDomain)) {
+          log.warn("Plugin registrar matched, but protection domain did not.  Will not install");
+        } else {
+          log.info("Plugin passed load-time registration checks");
+          return;
+        }
+      }
+    }
+    throw new PluginException(
+        format(
+            "Will not deploy plugin %s.  Reason: no appropriar plugin registrars installed.  "
+                + "Please have your administrator install an appropriate kernel module",
+            coordinate));
+  }
 
   private MBeanServer resolveManagementServer() {
     return ManagementFactory.getPlatformMBeanServer();
     //        return MBeanServerFactory.findMBeanServer(null).get(0);
-  }
-
-  private Map<String, PluginLoader<?>> getLoaders() {
-    val pluginLoaders = ServiceLoader.load(PluginLoader.class);
-    val result = new HashMap<String, PluginLoader<?>>();
-    for (val loader : pluginLoaders) {
-      result.put(loader.getKey(), loader);
-    }
-    return result;
   }
 }

@@ -2,10 +2,14 @@ package io.sunshower.spring.initializers;
 
 import io.github.classgraph.ClassGraph;
 import io.sunshower.EntryPoint;
+import io.sunshower.api.PluginCoordinate;
 import io.sunshower.api.PluginException;
 import io.sunshower.api.PluginManager;
+import io.sunshower.kernel.core.PluginScanner;
 import io.sunshower.spring.processors.SpringPluginLifecycle;
+import java.io.IOException;
 import java.util.Set;
+import java.util.jar.Manifest;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletContainerInitializer;
@@ -18,6 +22,8 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 
 @Slf4j
 public class SunshowerSpringPluginInitializer implements ServletContainerInitializer {
+
+  static final String ROOT_APPLICATION_CONTEXT = "sunshower::root::application::context";
 
   @Override
   public void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException {
@@ -39,13 +45,28 @@ public class SunshowerSpringPluginInitializer implements ServletContainerInitial
         SpringPluginLifecycle.setEntryPoint(entryPoint);
         SpringPluginLifecycle.setPluginManager(pluginManager);
         SpringPluginLifecycle.setPluginClassloader(ctx.getClassLoader());
-
+        SpringPluginLifecycle.setCoordinate(scan(classloader, entryPoint));
+        if (ctx.getAttribute("test") == null) {
+          ctx.setAttribute("test", new Object());
+          ctx.addListener(new ContextLoaderListener(context));
+        }
         context.register(entryPoint);
-        ctx.addListener(new ContextLoaderListener(context));
+
       } catch (Exception e) {
         e.printStackTrace();
       }
     }
+  }
+
+  private PluginCoordinate scan(ClassLoader classloader, Class<?> entryPoint) {
+    val coordinate =
+        PluginScanner.getDefaultChain()
+            .scan(new PluginScanner.PluginContext(entryPoint, classloader));
+    if (coordinate.isPresent()) {
+      return coordinate.get();
+    }
+    log.warn("Failed to locate plugin coordinate.");
+    throw new PluginException("Failed to locate plugin coordinate");
   }
 
   private PluginManager getPluginManager() {
@@ -57,11 +78,18 @@ public class SunshowerSpringPluginInitializer implements ServletContainerInitial
   }
 
   private Class<?> scan(ClassLoader classLoader) {
+    Class<?> result = checkManifest(classLoader);
+    if (result != null) {
+      return result;
+    }
+
     val annotatedClasses =
         new ClassGraph()
             .enableClassInfo()
             .enableAnnotationInfo()
             .overrideClassLoaders(classLoader)
+            .ignoreParentClassLoaders()
+            .ignoreParentModuleLayers()
             .removeTemporaryFilesAfterScan()
             .scan()
             .getClassesWithAnnotation(EntryPoint.class.getCanonicalName());
@@ -87,8 +115,32 @@ public class SunshowerSpringPluginInitializer implements ServletContainerInitial
       log.error(msg);
       throw new PluginException(msg);
     }
-    val result = annotatedClasses.get(0).loadClass();
+    result = annotatedClasses.get(0).loadClass();
     log.info("Successfully loaded plugin entrypoint: {}", result);
     return result;
+  }
+
+  private Class<?> checkManifest(ClassLoader classLoader) {
+    log.info("Scanning plugin manifest for entry-point...");
+    try {
+      val manifests = classLoader.getResources("META-INF/MANIFEST.MF");
+      while (manifests.hasMoreElements()) {
+        try (val stream = manifests.nextElement().openStream()) {
+          val manifest = new Manifest(stream);
+          val attrs = manifest.getMainAttributes();
+          if (attrs.containsKey("entry-point")) {
+            val entryPoint = attrs.getValue("entry-point");
+            log.info("Found entry-point: {}", entryPoint);
+            return Class.forName(entryPoint, true, classLoader);
+          }
+        } catch (ClassNotFoundException e) {
+          log.warn("Error: entry-point in manifest was not found");
+        }
+      }
+    } catch (IOException e) {
+      log.warn("Failed to read manifests.  Reason: {}", e.getMessage());
+    }
+    log.info("No plugin manifests found.");
+    return null;
   }
 }

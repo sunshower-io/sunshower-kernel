@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public class PluginException extends KernelException {
-  private Plugin.Coordinate source;
+  private PluginCoordinate source;
 
-  public PluginException(String message, Throwable cause, Plugin.Coordinate coordinate) {
+  public PluginException(String message, Throwable cause, PluginCoordinate coordinate) {
     super(message, cause);
     this.source = coordinate;
   }

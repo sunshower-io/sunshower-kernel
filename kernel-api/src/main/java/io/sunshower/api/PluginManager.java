@@ -11,7 +11,7 @@ public interface PluginManager {
    * @param coordinate
    * @return
    */
-  Plugin lookup(Plugin.Coordinate coordinate) throws PluginNotFoundException;
+  Plugin lookup(PluginCoordinate coordinate) throws PluginNotFoundException;
 
   /**
    * @param event
@@ -26,7 +26,7 @@ public interface PluginManager {
    * @param targets
    * @param <T>
    */
-  <T> void dispatch(Event<T> event, Event.Mode mode, Plugin.Coordinate... targets);
+  <T> void dispatch(Event<T> event, Event.Mode mode, PluginCoordinate... targets);
 
   /** @return */
   List<Plugin> list();
@@ -35,7 +35,7 @@ public interface PluginManager {
    * @param items
    * @return
    */
-  List<Plugin> list(List<Plugin.Coordinate> items) throws PluginNotFoundException;
+  List<Plugin> list(List<PluginCoordinate> items) throws PluginNotFoundException;
 
   /** @return */
   Path getPluginDirectory();
@@ -44,11 +44,10 @@ public interface PluginManager {
    * @param coordinate
    * @return
    */
-  Path getPluginDirectory(Plugin.Coordinate coordinate);
+  Path getPluginDirectory(PluginCoordinate coordinate);
 
   /** Trigger rescan for plugin */
   void rescan();
 
-  /** @param type */
-  void start(Class<?> type);
+  void register(Plugin plugin);
 }

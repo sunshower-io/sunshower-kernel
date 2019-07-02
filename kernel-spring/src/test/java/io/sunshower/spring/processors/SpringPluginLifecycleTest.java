@@ -5,6 +5,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
+import io.sunshower.api.PluginCoordinate;
 import io.sunshower.api.PluginException;
 import io.sunshower.api.PluginManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +22,7 @@ class SpringPluginLifecycleTest {
     SpringPluginLifecycle.setPluginManager(mock(PluginManager.class));
     SpringPluginLifecycle.setEntryPoint(getClass());
     SpringPluginLifecycle.setPluginClassloader(ClassLoader.getSystemClassLoader());
+    SpringPluginLifecycle.setCoordinate(new PluginCoordinate("1", "2", "3", "4"));
   }
 
   @Test

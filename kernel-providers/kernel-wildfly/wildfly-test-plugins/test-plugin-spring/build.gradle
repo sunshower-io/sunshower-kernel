@@ -1,3 +1,9 @@
+
+plugins {
+    id 'net.nemerosa.versioning' version '2.6.1'
+}
+
+
 apply plugin: 'war'
 
 
@@ -27,5 +33,15 @@ artifacts {
 }
 
 war {
+    manifest {
+        attributes(
+                'group': project.group,
+                'name': project.name,
+                'version': project.version,
+                'hash': versioning.info.commit
+        )
+    }
     classpath configurations.libraries
 }
+
+

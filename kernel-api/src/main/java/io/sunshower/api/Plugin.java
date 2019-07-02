@@ -1,11 +1,17 @@
 package io.sunshower.api;
 
+import io.sunshower.spi.PluginRegistrar;
 import java.nio.file.Path;
+import java.security.ProtectionDomain;
 import java.util.List;
-import lombok.Getter;
-import lombok.Setter;
 
 public interface Plugin {
+
+  /** @return the plugin registrar */
+  PluginRegistrar getRegistrar();
+
+  /** @return the protection domain for this plugin */
+  ProtectionDomain getProtectionDomain();
 
   /**
    * Stop a plugin. This shouldn't be called directly
@@ -25,9 +31,6 @@ public interface Plugin {
 
   /** @return the state of this plugin */
   State getState();
-
-  /** @return the globally-unique coordinate of this plugin */
-  Coordinate getCoordinate();
 
   /** Coordinates must be universally unique */
 
@@ -110,14 +113,7 @@ public interface Plugin {
 
   void dispatch(Event event, Event.Mode mode);
 
-  @Getter
-  @Setter
-  class Coordinate {
-
-    private String name;
-    private String group;
-    private String version;
-  }
+  PluginCoordinate getCoordinate();
 
   /** The plugin state */
   enum State {

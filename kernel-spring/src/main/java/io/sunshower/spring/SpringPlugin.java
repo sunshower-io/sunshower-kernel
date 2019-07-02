@@ -1,29 +1,47 @@
 package io.sunshower.spring;
 
-import io.sunshower.api.ConfigurationSet;
-import io.sunshower.api.Event;
-import io.sunshower.api.Plugin;
+import io.sunshower.api.*;
+import io.sunshower.spi.PluginRegistrar;
 import java.nio.file.Path;
+import java.security.ProtectionDomain;
 import java.util.List;
 
 public class SpringPlugin implements Plugin {
 
-  final Object lock = new Object();
+  private final ClassLoader classLoader;
+  private final PluginRegistrar registrar;
+  private final PluginCoordinate coordinate;
+  private final ProtectionDomain protectionDomain;
+  private final LifecycleManager applicationContext;
 
-  private ClassLoader classLoader;
-  private Object applicationContext;
+  public SpringPlugin(
+      ClassLoader classLoader,
+      PluginCoordinate coordinate,
+      PluginRegistrar pluginRegistrar,
+      ProtectionDomain protectionDomain,
+      LifecycleManager applicationContext) {
+    this.classLoader = classLoader;
+    this.coordinate = coordinate;
+    this.registrar = pluginRegistrar;
+    this.protectionDomain = protectionDomain;
+    this.applicationContext = applicationContext;
+  }
+
+  @Override
+  public PluginRegistrar getRegistrar() {
+    return registrar;
+  }
+
+  @Override
+  public ProtectionDomain getProtectionDomain() {
+    return protectionDomain;
+  }
 
   @Override
   public void stop(Object applicationContext) {}
 
   @Override
-  public void start(Object applicationContext) {
-    synchronized (lock) {
-      this.applicationContext = applicationContext;
-      this.classLoader = applicationContext.getClass().getClassLoader();
-    }
-    System.out.println("Starting..." + classLoader);
-  }
+  public void start(Object applicationContext) {}
 
   @Override
   public String getNativeId() {
@@ -36,8 +54,8 @@ public class SpringPlugin implements Plugin {
   }
 
   @Override
-  public Coordinate getCoordinate() {
-    return null;
+  public PluginCoordinate getCoordinate() {
+    return coordinate;
   }
 
   @Override
