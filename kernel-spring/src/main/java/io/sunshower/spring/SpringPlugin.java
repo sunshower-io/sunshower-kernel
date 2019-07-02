@@ -96,12 +96,12 @@ public class SpringPlugin implements Plugin {
 
   @Override
   public <T> T getExtensionPoint(Class<T> type) {
-    return null;
+    return applicationContext.unwrap(ApplicationContext.class).getBean(type);
   }
 
   @Override
   public <T> boolean exportsExtensionPoint(Class<T> type) {
-    return false;
+    return !applicationContext.unwrap(ApplicationContext.class).getBeansOfType(type).isEmpty();
   }
 
   @Override

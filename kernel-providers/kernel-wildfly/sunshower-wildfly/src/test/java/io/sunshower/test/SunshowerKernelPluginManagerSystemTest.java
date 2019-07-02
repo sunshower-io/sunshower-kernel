@@ -13,6 +13,7 @@ import lombok.val;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -23,6 +24,14 @@ public class SunshowerKernelPluginManagerSystemTest {
   public static WebArchive deployment() {
     return Deployments.baseDeployment();
   }
+  @Before
+  public void waitForDeployment() throws InterruptedException {
+    while(pluginManager.list().isEmpty()) {
+      Thread.sleep(100);
+    }
+  }
+
+
 
   @Resource(name = SunshowerKernelPluginManager.Name)
   private PluginManager pluginManager;
@@ -77,5 +86,11 @@ public class SunshowerKernelPluginManagerSystemTest {
     val plugin = pluginManager.list().get(0);
     assertThat(plugin.getNativeId().contains(".war"), is(true));
     assertThat(plugin.getNativeId(), is(pluginManager.getNativeId(plugin.getCoordinate())));
+  }
+
+  @Test
+  public void ensurePluginContainsExtensionPoint() {
+    val plugin = pluginManager.list().get(0);
+    assertThat(plugin.exportsExtensionPoint(AuthenticationExtension.class), is(true));
   }
 }
