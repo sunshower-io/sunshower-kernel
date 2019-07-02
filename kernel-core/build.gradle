@@ -1,6 +1,11 @@
 dependencies {
-    
-    compile 'io.sunshower.common:core'
-    compile project(':kernel-api')
+
+    implementation 'org.slf4j:slf4j-api'
+    implementation 'io.sunshower.common:core'
+    implementation project(':kernel-api')
     testCompile 'org.junit.platform:junit-platform-runner'
+}
+
+test {
+    useJUnitPlatform()
 }

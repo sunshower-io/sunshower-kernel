@@ -105,6 +105,7 @@ allprojects {
             compileOnly "org.projectlombok:lombok:1.18.2"
             testCompileOnly "org.projectlombok:lombok:1.18.2"
             annotationProcessor "org.projectlombok:lombok:1.18.2"
+            testAnnotationProcessor "org.projectlombok:lombok:1.18.2"
             compileOnly 'javax.ws.rs:javax.ws.rs-api'
             compileOnly 'org.eclipse.persistence:org.eclipse.persistence.moxy'
             compileOnly 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api'

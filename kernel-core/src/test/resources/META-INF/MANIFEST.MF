@@ -1,0 +1,4 @@
+group: io.sunshower.test
+name: sunshower-test-core
+version: 1.0-SNAPSHOT
+hash: 8341234141234
