@@ -42,18 +42,22 @@ public class SunshowerSpringPluginInitializer implements ServletContainerInitial
         log.info("Located entry point: {}...attempting to start", entryPoint);
         val context = new AnnotationConfigWebApplicationContext();
 
+        SpringPluginLifecycle.setServletContext(ctx);
         SpringPluginLifecycle.setEntryPoint(entryPoint);
         SpringPluginLifecycle.setPluginManager(pluginManager);
         SpringPluginLifecycle.setPluginClassloader(ctx.getClassLoader());
         SpringPluginLifecycle.setCoordinate(scan(classloader, entryPoint));
-        if (ctx.getAttribute("test") == null) {
-          ctx.setAttribute("test", new Object());
+        if (ctx.getAttribute(ROOT_APPLICATION_CONTEXT) == null) {
+          log.info("No root application found.  Registering...");
+          ctx.setAttribute(ROOT_APPLICATION_CONTEXT, new Object());
           ctx.addListener(new ContextLoaderListener(context));
+          log.info("Successfully registered root application context");
         }
+        log.info("Registering entry point: {}", entryPoint);
         context.register(entryPoint);
 
       } catch (Exception e) {
-        e.printStackTrace();
+        log.error("Encountered exception {} while attempting to register plugin", e.getMessage());
       }
     }
   }

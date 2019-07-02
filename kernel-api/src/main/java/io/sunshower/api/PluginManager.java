@@ -5,6 +5,12 @@ import java.util.List;
 
 public interface PluginManager {
 
+  /** Wait until all pending deployments have been deployed */
+  void waitForStartup();
+
+  /** @return the number of plugins waiting to be deployed */
+  int pendingDeploymentCount();
+
   /**
    * Retrieve the plugin at the given coordinate
    *
@@ -40,6 +46,15 @@ public interface PluginManager {
   /** @return */
   Path getPluginDirectory();
 
+  /** @return the data directory for sunshower::kernel */
+  Path getDataDirectory();
+
+  /**
+   * @param coordinate the plugin to retrieve the data directory from
+   * @return the data directory for the given plugin
+   */
+  Path getDataDirectory(PluginCoordinate coordinate);
+
   /**
    * @param coordinate
    * @return
@@ -50,4 +65,8 @@ public interface PluginManager {
   void rescan();
 
   void register(Plugin plugin);
+
+  String getNativeId(PluginCoordinate coordinate);
+
+  Plugin.State getState(PluginCoordinate coordinate);
 }

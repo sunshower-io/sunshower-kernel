@@ -13,20 +13,6 @@ public interface Plugin {
   /** @return the protection domain for this plugin */
   ProtectionDomain getProtectionDomain();
 
-  /**
-   * Stop a plugin. This shouldn't be called directly
-   *
-   * @param applicationContext
-   */
-  void stop(Object applicationContext);
-
-  /**
-   * Start a plugin to register its context. This shouldn't be called directly
-   *
-   * @param applicationContext
-   */
-  void start(Object applicationContext);
-
   String getNativeId();
 
   /** @return the state of this plugin */
@@ -117,6 +103,7 @@ public interface Plugin {
 
   /** The plugin state */
   enum State {
+    Unknown,
     Running,
     Stopped,
     Failed

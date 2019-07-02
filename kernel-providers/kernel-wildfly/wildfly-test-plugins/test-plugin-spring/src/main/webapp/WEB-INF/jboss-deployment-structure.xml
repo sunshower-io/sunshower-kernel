@@ -3,7 +3,7 @@
 
   <deployment>
     <dependencies>
-      <module name="io.sunshower.spring" />
+      <module name="io.sunshower.spring" services="import" />
       <!--<module name="io.sunshower.kernel"/>-->
       <!--<module name="org.springframework.web"/>-->
       <!--<module name="deployment.kernel-wildfly-provider-1.0.14-SNAPSHOT.war" />-->

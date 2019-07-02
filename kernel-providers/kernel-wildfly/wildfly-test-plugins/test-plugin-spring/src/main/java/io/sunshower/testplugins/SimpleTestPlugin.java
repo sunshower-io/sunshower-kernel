@@ -8,6 +8,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SimpleTestPlugin {
 
+  @Bean
+  public TestExtensionPoint testExtensionPoint() {
+    return new SampleExtensionPoint();
+  }
+
   //  @Inject private PluginManager pluginManager;
 
   public SimpleTestPlugin() {

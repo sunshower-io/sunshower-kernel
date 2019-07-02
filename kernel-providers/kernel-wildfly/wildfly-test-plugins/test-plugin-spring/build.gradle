@@ -15,7 +15,7 @@ configurations {
 
 dependencies {
     providedCompile project(':kernel-api')
-    libraries project(':kernel-spring')
+    providedCompile project(':kernel-spring')
     providedCompile project(':kernel-spring')
 
     providedCompile group: 'javax', name: 'javaee-api', version: '8.0'

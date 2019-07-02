@@ -2,26 +2,41 @@ package io.sunshower.spring;
 
 import io.sunshower.api.*;
 import io.sunshower.spi.PluginRegistrar;
+import java.io.File;
 import java.nio.file.Path;
 import java.security.ProtectionDomain;
+import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.ServletContext;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.type.StandardMethodMetadata;
 
+@Slf4j
 public class SpringPlugin implements Plugin {
 
   private final ClassLoader classLoader;
   private final PluginRegistrar registrar;
+  private final PluginManager pluginManager;
   private final PluginCoordinate coordinate;
+  private final ServletContext servetContext;
   private final ProtectionDomain protectionDomain;
   private final LifecycleManager applicationContext;
 
   public SpringPlugin(
+      ServletContext servletContext,
+      PluginManager pluginManager,
       ClassLoader classLoader,
       PluginCoordinate coordinate,
       PluginRegistrar pluginRegistrar,
       ProtectionDomain protectionDomain,
       LifecycleManager applicationContext) {
+    this.servetContext = servletContext;
     this.classLoader = classLoader;
     this.coordinate = coordinate;
+    this.pluginManager = pluginManager;
     this.registrar = pluginRegistrar;
     this.protectionDomain = protectionDomain;
     this.applicationContext = applicationContext;
@@ -38,19 +53,13 @@ public class SpringPlugin implements Plugin {
   }
 
   @Override
-  public void stop(Object applicationContext) {}
-
-  @Override
-  public void start(Object applicationContext) {}
-
-  @Override
   public String getNativeId() {
-    return null;
+    return ((File) servetContext.getAttribute("javax.servlet.context.tempdir")).getName();
   }
 
   @Override
   public State getState() {
-    return null;
+    return pluginManager.getState(coordinate);
   }
 
   @Override
@@ -60,7 +69,29 @@ public class SpringPlugin implements Plugin {
 
   @Override
   public List<Class<?>> getExportedExtensionPoints() {
-    return null;
+    val ctx = (ConfigurableApplicationContext) applicationContext.unwrap(ApplicationContext.class);
+    val factory = ctx.getBeanFactory();
+    val types = new ArrayList<Class<?>>();
+    for (val name : factory.getBeanDefinitionNames()) {
+      val definition = factory.getBeanDefinition(name);
+      if (definition.getSource() instanceof StandardMethodMetadata) {
+        val metadata = (StandardMethodMetadata) definition.getSource();
+        val sourceType = metadata.getReturnTypeName();
+        try {
+          val type = Class.forName(sourceType, true, classLoader);
+          if (type.isAnnotationPresent(ExtensionPoint.class)) {
+            types.add(type);
+          }
+        } catch (ClassNotFoundException e) {
+          log.warn(
+              "Failed to instantiate extension-point {} of plugin {}.  Reason: {}",
+              definition.getBeanClassName(),
+              coordinate,
+              e.getCause());
+        }
+      }
+    }
+    return types;
   }
 
   @Override
@@ -75,12 +106,12 @@ public class SpringPlugin implements Plugin {
 
   @Override
   public ClassLoader getClassLoader() {
-    return null;
+    return classLoader;
   }
 
   @Override
   public Path getPluginDirectory() {
-    return null;
+    return pluginManager.getDataDirectory(coordinate);
   }
 
   @Override
@@ -103,7 +134,7 @@ public class SpringPlugin implements Plugin {
 
   @Override
   public Type getType() {
-    return null;
+    return Type.Root;
   }
 
   @Override

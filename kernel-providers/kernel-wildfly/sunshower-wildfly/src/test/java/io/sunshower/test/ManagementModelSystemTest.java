@@ -54,7 +54,6 @@ public class ManagementModelSystemTest {
 
   @Test
   public void ensureCurrentPluginIsDeployed() {
-    managementConsole.getKernelDescription().getDeployments().forEach(System.out::println);
     val cplugin =
         managementConsole
             .getKernelDescription()

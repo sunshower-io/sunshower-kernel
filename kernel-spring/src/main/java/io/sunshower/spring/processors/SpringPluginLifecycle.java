@@ -5,6 +5,7 @@ import static java.lang.String.format;
 import io.sunshower.api.*;
 import io.sunshower.spi.PluginRegistrar;
 import io.sunshower.spring.SpringPlugin;
+import javax.servlet.ServletContext;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -19,6 +20,7 @@ public class SpringPluginLifecycle
   /** Static fields */
   @Setter private static Class<?> entryPoint;
 
+  @Setter private static ServletContext servletContext;
   @Setter private static PluginCoordinate coordinate;
   @Setter private static PluginManager pluginManager;
   @Setter private static ClassLoader pluginClassloader;
@@ -42,12 +44,23 @@ public class SpringPluginLifecycle
   }
 
   @Override
+  @SuppressWarnings("unchecked")
+  public <T> T unwrap(Class<T> type) {
+    if (!ApplicationContext.class.isAssignableFrom(type)) {
+      throw new IllegalArgumentException("Can't unwrap " + type);
+    }
+    return (T) context;
+  }
+
+  @Override
   public boolean isRunning() {
     return running;
   }
 
   private Plugin createPlugin() {
     return new SpringPlugin(
+        servletContext,
+        pluginManager,
         pluginClassloader,
         coordinate,
         this,
