@@ -3,7 +3,11 @@ package io.sunshower.spring.initializers;
 import io.github.classgraph.ClassGraph;
 import io.sunshower.EntryPoint;
 import io.sunshower.api.PluginException;
+import io.sunshower.api.PluginManager;
+import io.sunshower.spring.processors.SpringPluginLifecycle;
 import java.util.Set;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -14,6 +18,7 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 
 @Slf4j
 public class SunshowerSpringPluginInitializer implements ServletContainerInitializer {
+
   @Override
   public void onStartup(Set<Class<?>> c, ServletContext ctx) throws ServletException {
     log.info("Sunshower Kernel is attempting to start plugin: {}", ctx.getClassLoader());
@@ -21,14 +26,33 @@ public class SunshowerSpringPluginInitializer implements ServletContainerInitial
   }
 
   private void doStart(ServletContext ctx) {
+
+    val pluginManager = getPluginManager();
     log.info("Attempting to locate plugin entry point...");
     val classloader = ctx.getClassLoader();
     val entryPoint = scan(classloader);
     if (entryPoint != null) {
-      log.info("Located entry point: {}...attempting to start", entryPoint);
-      val context = new AnnotationConfigWebApplicationContext();
-      context.register(entryPoint);
-      ctx.addListener(new ContextLoaderListener(context));
+      try {
+        log.info("Located entry point: {}...attempting to start", entryPoint);
+        val context = new AnnotationConfigWebApplicationContext();
+
+        SpringPluginLifecycle.setEntryPoint(entryPoint);
+        SpringPluginLifecycle.setPluginManager(pluginManager);
+        SpringPluginLifecycle.setPluginClassloader(ctx.getClassLoader());
+
+        context.register(entryPoint);
+        ctx.addListener(new ContextLoaderListener(context));
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  private PluginManager getPluginManager() {
+    try {
+      return InitialContext.doLookup("java:global/sunshower/kernel/plugin-manager");
+    } catch (NamingException e) {
+      throw new PluginException("Failed to look up plugin manager. ", e);
     }
   }
 

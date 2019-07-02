@@ -9,17 +9,30 @@ modules {
         resources = [
                 "kernel-api-${project.version}.jar",
                 "kernel-core-${project.version}.jar",
-                "kernel-spring-${project.version}.jar",
                 "kernel-common-${project.version}.jar"
         ]
         dependencies = [
+                'javax.inject.api',
                 'classgraph',
                 'javax.api',
                 'org.slf4j',
+                'org.springframework.aop',
                 'org.springframework.context',
                 'org.springframework.beans',
                 'org.springframework.core',
                 "javax.servlet.api"
+        ].collect { t -> [name: t, export: true]}
+    }
+
+    sunshowerSpring {
+        moduleName = 'io.sunshower.spring'
+        resources = [
+                "kernel-spring-${project.version}.jar"
         ]
+        dependencies = [
+                'javax.inject.api',
+                "io.sunshower.kernel",
+                "org.springframework.web"
+        ].collect {t -> [name: t, export: true]}
     }
 }

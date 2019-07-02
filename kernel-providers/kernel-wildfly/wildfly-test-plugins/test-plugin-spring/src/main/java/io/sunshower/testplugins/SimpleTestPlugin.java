@@ -1,24 +1,27 @@
 package io.sunshower.testplugins;
 
 import io.sunshower.EntryPoint;
-import io.sunshower.api.PluginManager;
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @EntryPoint
+@Configuration
 public class SimpleTestPlugin {
 
-  @Resource(name = "java:global/sunshower/kernel/plugin-manager")
-  private PluginManager pluginManager;
+  //  @Inject private PluginManager pluginManager;
 
-  @PostConstruct
-  public void start() {
-    System.out.println("START");
-    try {
-      pluginManager.start(SimpleTestPlugin.class);
-      System.out.println("DONE");
-    } catch (Exception ex) {
-      System.out.println("done");
+  public SimpleTestPlugin() {
+    System.out.println("GOT ONE");
+  }
+
+  @Bean
+  public Test test() {
+    return new Test();
+  }
+
+  public static class Test {
+    public void whatever() {
+      System.out.println("Whatevs!2");
     }
   }
 }
