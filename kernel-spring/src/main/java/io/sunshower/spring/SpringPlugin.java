@@ -123,7 +123,9 @@ public class SpringPlugin implements Plugin {
 
   @Override
   public <T> boolean exportsExtensionPoint(Class<T> type) {
-    return !applicationContext.unwrap(ApplicationContext.class).getBeansOfType(type).isEmpty();
+    return false;
+    //    val types = applicationContext.unwrap(ApplicationContext.class).getBeansOfType(type);
+    //    return types.values().stream().anyMatch(t -> t.getClass().equals(type));
   }
 
   @Override

@@ -49,7 +49,7 @@ public class ManagementModelSystemTest {
   @Test
   public void ensureCorrectNumberOfPluginsAreDeployed() {
     val deployments = managementConsole.getKernelDescription().getDeployments();
-    assertThat(deployments.size(), is(4));
+    assertThat(deployments.size(), is(3));
   }
 
   @Test

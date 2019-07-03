@@ -76,7 +76,7 @@ dependencies {
      */
     kernelModule project(path: ':kernel-providers:kernel-wildfly:kernel-wildfly-provider', configuration: 'war')
     kernelModule project(path: ':kernel-providers:kernel-wildfly:wildfly-test-plugins:test-plugin-spring', configuration: 'war')
-    kernelModule project(path: ':kernel-providers:kernel-wildfly:wildfly-test-plugins:wildfly-system-tests', configuration: 'war')
+//    kernelModule project(path: ':kernel-providers:kernel-wildfly:wildfly-test-plugins:wildfly-system-tests', configuration: 'war')
 }
 
 

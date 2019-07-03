@@ -13,6 +13,7 @@ dependencies {
     api 'javax:javaee-api'
 
     api 'org.springframework:spring-web'
+    api 'org.springframework:spring-webmvc'
 
     implementation project(':kernel-core')
 

@@ -2,10 +2,12 @@ package io.sunshower.spring.initializers;
 
 import io.github.classgraph.ClassGraph;
 import io.sunshower.EntryPoint;
+import io.sunshower.api.PluginConfiguration;
 import io.sunshower.api.PluginCoordinate;
 import io.sunshower.api.PluginException;
 import io.sunshower.api.PluginManager;
 import io.sunshower.kernel.core.PluginScanner;
+import io.sunshower.spring.LifecycleAwareSpringAnnotationConfigWebApplicationContext;
 import io.sunshower.spring.processors.SpringPluginLifecycle;
 import java.io.IOException;
 import java.util.Set;
@@ -19,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
 
 @Slf4j
 public class SunshowerSpringPluginInitializer implements ServletContainerInitializer {
@@ -40,25 +43,65 @@ public class SunshowerSpringPluginInitializer implements ServletContainerInitial
     if (entryPoint != null) {
       try {
         log.info("Located entry point: {}...attempting to start", entryPoint);
-        val context = new AnnotationConfigWebApplicationContext();
+
+        val coordinate = scan(classloader, entryPoint);
+        val lifecycle =
+            new SpringPluginLifecycle(entryPoint, ctx, coordinate, pluginManager, classloader);
+        val context = new LifecycleAwareSpringAnnotationConfigWebApplicationContext(lifecycle);
         context.setClassLoader(ctx.getClassLoader());
-        SpringPluginLifecycle.setServletContext(ctx);
-        SpringPluginLifecycle.setEntryPoint(entryPoint);
-        SpringPluginLifecycle.setPluginManager(pluginManager);
-        SpringPluginLifecycle.setPluginClassloader(ctx.getClassLoader());
-        SpringPluginLifecycle.setCoordinate(scan(classloader, entryPoint));
-        if (ctx.getAttribute(ROOT_APPLICATION_CONTEXT) == null) {
-          log.info("No root application found.  Registering...");
-          ctx.setAttribute(ROOT_APPLICATION_CONTEXT, new Object());
-          ctx.addListener(new ContextLoaderListener(context));
-          log.info("Successfully registered root application context");
-        }
-        log.info("Registering entry point: {}", entryPoint);
-        context.register(entryPoint);
+        registerRootContext(ctx, entryPoint, context);
+        registerDispatcherContext(entryPoint, ctx, coordinate);
 
       } catch (Exception e) {
         log.error("Encountered exception {} while attempting to register plugin", e.getMessage());
       }
+    } else {
+      log.warn("No plugin entry point--plugin manager will not attempt to load");
+    }
+  }
+
+  private void registerDispatcherContext(
+      Class<?> entryPoint, ServletContext ctx, PluginCoordinate coordinate) {
+    log.info("Attempting to resolve web configuration from entry point {}", entryPoint);
+    val cfg = entryPoint.getAnnotation(PluginConfiguration.class);
+    if (cfg != null) {
+      log.info("Resolved plugin configuration");
+      switch (cfg.type()) {
+        case Extension:
+          log.info("Plugin is an extension--not attempting to register dispatcher context");
+          break;
+        case Root:
+          log.info("Plugin is a root plugin--configuring dispatcher");
+          val type = cfg.configurationClass();
+          if (!(type == void.class)) {
+            log.info("Found configuration class: {}", type);
+            val dispatcherContext = new AnnotationConfigWebApplicationContext();
+            dispatcherContext.register(type);
+            val dispatcher = ctx.addServlet("dispatcher", new DispatcherServlet(dispatcherContext));
+            dispatcher.setLoadOnStartup(1);
+            val path = cfg.path();
+            if ("$$default$$".equals(path)) {
+              log.info("Using default path: {}", coordinate.getName());
+              dispatcher.addMapping(coordinate.getName());
+            } else {
+              log.info("Overriding path: {} with {}", coordinate.getName(), path);
+              dispatcher.addMapping(path);
+            }
+          }
+          break;
+      }
+    }
+  }
+
+  private void registerRootContext(
+      ServletContext ctx, Class<?> entryPoint, AnnotationConfigWebApplicationContext context) {
+    if (ctx.getAttribute(ROOT_APPLICATION_CONTEXT) == null) {
+      log.info("No root application found.  Registering...");
+      ctx.setAttribute(ROOT_APPLICATION_CONTEXT, new Object());
+      ctx.addListener(new ContextLoaderListener(context));
+      log.info("Successfully registered root application context");
+      log.info("Registering entry point: {}", entryPoint);
+      context.register(entryPoint);
     }
   }
 

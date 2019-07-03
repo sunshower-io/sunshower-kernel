@@ -18,12 +18,28 @@ import org.springframework.context.SmartLifecycle;
 public class SpringPluginLifecycle
     implements SmartLifecycle, ApplicationContextAware, LifecycleManager, PluginRegistrar {
   /** Static fields */
-  @Setter private static Class<?> entryPoint;
+  @Setter private Class<?> entryPoint;
 
-  @Setter private static ServletContext servletContext;
-  @Setter private static PluginCoordinate coordinate;
-  @Setter private static PluginManager pluginManager;
-  @Setter private static ClassLoader pluginClassloader;
+  @Setter private ServletContext servletContext;
+  @Setter private PluginCoordinate coordinate;
+  @Setter private PluginManager pluginManager;
+  @Setter private ClassLoader pluginClassloader;
+
+  // Don't use this--for java ServiceLoader
+  public SpringPluginLifecycle() {}
+
+  public SpringPluginLifecycle(
+      Class<?> entryPoint,
+      ServletContext servletContext,
+      PluginCoordinate coordinate,
+      PluginManager pluginManager,
+      ClassLoader pluginClassloader) {
+    this.entryPoint = entryPoint;
+    this.servletContext = servletContext;
+    this.coordinate = coordinate;
+    this.pluginManager = pluginManager;
+    this.pluginClassloader = pluginClassloader;
+  }
 
   /** Members (non-injected) */
   private ApplicationContext context;
@@ -69,10 +85,10 @@ public class SpringPluginLifecycle
   }
 
   private void checkConfiguration() {
-    require(SpringPluginLifecycle.entryPoint, "entry-point");
-    require(SpringPluginLifecycle.pluginManager, "plugin manager");
-    require(SpringPluginLifecycle.pluginClassloader, "plugin classloader");
-    require(SpringPluginLifecycle.coordinate, "plugin coordinate");
+    require(entryPoint, "entry-point");
+    require(pluginManager, "plugin manager");
+    require(pluginClassloader, "plugin classloader");
+    require(coordinate, "plugin coordinate");
   }
 
   private void require(Object o, String type) {
