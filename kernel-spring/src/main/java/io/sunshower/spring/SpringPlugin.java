@@ -115,11 +115,18 @@ public class SpringPlugin implements Plugin {
   }
 
   @Override
-  public void setConfiguration(Class<?> type, Object configuration) {}
+  public void setConfiguration(Class<?> type, Object configuration) {
+    applicationContext
+        .unwrap(ApplicationContext.class)
+        .publishEvent(new ConfigurationChangedEvent(configuration, type));
+  }
 
   @Override
   public Object getConfiguration(Class<?> type) {
-    return null;
+    return applicationContext
+        .unwrap(ApplicationContext.class)
+        .getBean(ConfigurationManager.class)
+        .getConfiguration(type);
   }
 
   @Override

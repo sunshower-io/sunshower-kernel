@@ -11,5 +11,4 @@ public class SunshowerKernelConfiguration {
   public AuthenticationExtension extension() {
     return new AuthenticationExtension() {};
   }
-
 }
