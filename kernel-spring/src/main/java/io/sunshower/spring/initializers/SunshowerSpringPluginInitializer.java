@@ -41,7 +41,7 @@ public class SunshowerSpringPluginInitializer implements ServletContainerInitial
       try {
         log.info("Located entry point: {}...attempting to start", entryPoint);
         val context = new AnnotationConfigWebApplicationContext();
-
+        context.setClassLoader(ctx.getClassLoader());
         SpringPluginLifecycle.setServletContext(ctx);
         SpringPluginLifecycle.setEntryPoint(entryPoint);
         SpringPluginLifecycle.setPluginManager(pluginManager);

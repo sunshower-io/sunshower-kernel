@@ -5,8 +5,9 @@ import java.nio.file.Path;
 import java.security.ProtectionDomain;
 import java.util.List;
 
-public interface Plugin {
+public interface Plugin extends ResourceLoader {
 
+  Icon getIcon();
   /** @return the plugin registrar */
   PluginRegistrar getRegistrar();
 

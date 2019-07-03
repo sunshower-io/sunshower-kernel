@@ -2,6 +2,7 @@ package io.sunshower.spring;
 
 import io.sunshower.api.*;
 import io.sunshower.spi.PluginRegistrar;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.file.Path;
 import java.security.ProtectionDomain;
@@ -40,6 +41,27 @@ public class SpringPlugin implements Plugin {
     this.registrar = pluginRegistrar;
     this.protectionDomain = protectionDomain;
     this.applicationContext = applicationContext;
+  }
+
+  @Override
+  public Icon getIcon() {
+    try {
+
+      val resources = classLoader.getResources("assets/plugin-icon.svg");
+      while (resources.hasMoreElements()) {
+        try (val iconStream = resources.nextElement().openStream()) {
+          val bos = new ByteArrayOutputStream();
+          val buffer = new byte[1024];
+          while (iconStream.read(buffer) != -1) {
+            bos.writeBytes(buffer);
+          }
+          return new Icon(bos.toByteArray(), "svg");
+        }
+      }
+    } catch (Exception e) {
+      log.warn("Error loading icon: {}", e.getMessage());
+    }
+    return null;
   }
 
   @Override
@@ -151,4 +173,14 @@ public class SpringPlugin implements Plugin {
 
   @Override
   public void dispatch(Event event, Event.Mode mode) {}
+
+  @Override
+  public Resource getResource() {
+    return null;
+  }
+
+  @Override
+  public ClassLoader getClassloader() {
+    return null;
+  }
 }

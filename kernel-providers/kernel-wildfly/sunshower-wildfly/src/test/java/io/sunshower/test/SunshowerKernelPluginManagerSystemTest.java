@@ -51,6 +51,12 @@ public class SunshowerKernelPluginManagerSystemTest {
   }
 
   @Test
+  public void ensureIconCanBeRead() {
+    val plugin = pluginManager().list().get(0);
+    assertThat(plugin.getIcon(), is(not(nullValue())));
+  }
+
+  @Test
   public void ensureDataDirectoryExists() {
     assertThat(pluginManager().getDataDirectory().toFile().exists(), is(true));
   }
