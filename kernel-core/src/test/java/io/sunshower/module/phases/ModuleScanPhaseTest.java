@@ -2,12 +2,12 @@ package io.sunshower.module.phases;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import io.sunshower.kernel.Module.Type;
 import io.sunshower.kernel.core.ModuleDescriptor;
 import io.sunshower.kernel.core.SemanticVersion;
 import io.sunshower.kernel.process.KernelProcessContext;
 import io.sunshower.kernel.process.KernelProcessEvent;
 import io.sunshower.kernel.process.Phase;
-import java.io.IOException;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,9 +22,10 @@ class ModuleScanPhaseTest extends AbstractModulePhaseTestCase {
 
   @Override
   @BeforeEach
-  void setUp() throws IOException {
+  void setUp() throws Exception {
     super.setUp();
     phase = new ModuleScanPhase();
+    val pluginFile = install("test-plugin-2").getPluginFile();
     context.setContextValue(ModuleDownloadPhase.DOWNLOADED_FILE, pluginFile);
   }
 
@@ -33,6 +34,7 @@ class ModuleScanPhaseTest extends AbstractModulePhaseTestCase {
     phase.execute(null, context);
     ModuleDescriptor descriptor = context.getContextValue(ModuleScanPhase.MODULE_DESCRIPTOR);
     val coord = descriptor.getCoordinate();
+    assertEquals(descriptor.getType(), Type.Plugin);
     assertEquals(coord.getGroup(), "sunshower.io", "must have correct group");
     assertEquals(coord.getName(), "test-plugin-2", "must have correct name");
     assertEquals(coord.getVersion(), new SemanticVersion("1.0.0-SNAPSHOT"));
