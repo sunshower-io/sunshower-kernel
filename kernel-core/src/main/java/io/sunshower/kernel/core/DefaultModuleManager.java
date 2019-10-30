@@ -1,44 +1,42 @@
 package io.sunshower.kernel.core;
 
-import static java.util.Collections.singleton;
-
-import io.sunshower.common.Collections;
-import io.sunshower.kernel.DefaultModule;
-import io.sunshower.kernel.Lifecycle;
+import io.sunshower.kernel.*;
 import io.sunshower.kernel.Module;
-import io.sunshower.kernel.core.actions.StartLifecycleAction;
-import io.sunshower.kernel.core.actions.VisitingActionTree;
 import io.sunshower.kernel.dependencies.DependencyGraph;
 import io.sunshower.kernel.dependencies.ModuleCycleDetector;
-import io.sunshower.kernel.dependencies.UnsatisfiedDependencyException;
+import io.sunshower.kernel.log.Logger;
 import io.sunshower.kernel.log.Logging;
 import io.sunshower.kernel.status.Status;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.inject.Inject;
 import lombok.NonNull;
 import lombok.val;
 
 public class DefaultModuleManager implements ModuleManager {
 
-  static final Logger log = Logging.get(DefaultModuleManager.class);
+  private static final Logger log = Logging.get(DefaultModuleManager.class);
 
   private final DefaultModuleContext context;
   private final Object moduleLoaderLock = new Object();
+  private final ModuleClasspathManager classpathManager;
 
   /** these must be in lock-step, protected by <i>DefaultModuleManager.lock</i> */
-  @SuppressWarnings("PMD.AvoidUsingVolatile")
-  private volatile DependencyGraph dependencyGraph;
-
-  @SuppressWarnings("PMD.AvoidUsingVolatile")
-  private volatile KernelModuleLoader moduleLoader;
+  private final DependencyGraph dependencyGraph;
 
   private final Map<Module.Type, List<Module>> modules;
 
   @Inject
-  public DefaultModuleManager(@NonNull DefaultModuleContext context) {
+  public DefaultModuleManager(
+      @NonNull final DefaultModuleContext context,
+      @NonNull final ModuleClasspathManager classpathManager,
+      @NonNull final DependencyGraph graph) {
     this.context = context;
+    this.dependencyGraph = graph;
+    this.classpathManager = classpathManager;
     modules = new EnumMap<>(Module.Type.class);
   }
 
@@ -47,7 +45,7 @@ public class DefaultModuleManager implements ModuleManager {
 
   @Override
   public List<Module> getModules(Module.Type type) {
-    return modules.computeIfAbsent(type, Collections::newList);
+    return modules.computeIfAbsent(type, DefaultModuleManager::newList);
   }
 
   @Override
@@ -61,9 +59,9 @@ public class DefaultModuleManager implements ModuleManager {
     log.log(Level.INFO, "module.state.attempting.resolve", coordinate);
 
     checkDependencies(module);
-    moduleLoader.install(module);
+    classpathManager.install(module);
 
-    val mod = ((DefaultModule) module).getModule();
+    val mod = ((DefaultModule) module).getModuleClasspath();
     if (mod == null) {
       throw new IllegalStateException(
           "Something weird happened--kernel didn't install module correctly or it's been unloaded or something");
@@ -98,45 +96,27 @@ public class DefaultModuleManager implements ModuleManager {
     }
     synchronized (moduleLoaderLock) {
       lifecycle.setState(Lifecycle.State.Installed);
-      modules.computeIfAbsent(module.getType(), Collections::newList).add(module);
+      dependencyGraph.add(module);
+      modules.computeIfAbsent(module.getType(), DefaultModuleManager::newList).add(module);
     }
   }
 
   @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
   private void checkDependencies(Module module) {
-    DependencyGraph prospective;
-    try {
-      val current = getDependencyGraph(module);
-      prospective = current.add(module);
-    } catch (UnsatisfiedDependencyException ex) {
-      log.log(Level.WARNING, "module.dependency.unsatisfied", ex.getMessage());
+    val current = dependencyGraph;
+    val unresolved = current.getUnresolvedDependencies(module);
+    if (!unresolved.isEmpty()) {
+      log.log(Level.WARNING, "module.dependency.unsatisfied", unresolved);
       module.getLifecycle().setState(Lifecycle.State.Failed);
-      throw ex;
+      throw new UnsatisfiedDependencyException(module, unresolved);
     }
 
-    val components = ModuleCycleDetector.newDetector(prospective).compute();
+    val components = ModuleCycleDetector.newDetector(current).compute();
 
     if (components.hasCycle()) {
+      module.getLifecycle().setState(Lifecycle.State.Failed);
       throw new CyclicModuleDependencyException(module, components);
     }
-    synchronized (moduleLoaderLock) {
-      dependencyGraph = prospective;
-      moduleLoader.updateDependencies(dependencyGraph);
-    }
-  }
-
-  private DependencyGraph getDependencyGraph(Module module) {
-    DependencyGraph local = dependencyGraph;
-    if (local == null) {
-      synchronized (moduleLoaderLock) {
-        local = dependencyGraph;
-        if (local == null) {
-          dependencyGraph = local = DependencyGraph.create(singleton(module));
-          moduleLoader = new KernelModuleLoader(dependencyGraph);
-        }
-      }
-    }
-    return local;
   }
 
   @SuppressWarnings("PMD.UnusedPrivateMethod")
@@ -146,5 +126,10 @@ public class DefaultModuleManager implements ModuleManager {
       return false;
     }
     return state.isAtLeast(installed);
+  }
+
+  @SuppressWarnings("PMD.UnusedFormalParameter")
+  private static <K, T> List<T> newList(K a) {
+    return new ArrayList<>();
   }
 }

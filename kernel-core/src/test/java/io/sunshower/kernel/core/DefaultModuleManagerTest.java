@@ -1,12 +1,10 @@
 package io.sunshower.kernel.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.sunshower.kernel.Lifecycle;
-import io.sunshower.kernel.ModuleLifecycle;
-import io.sunshower.kernel.dependencies.UnsatisfiedDependencyException;
+import io.sunshower.kernel.UnsatisfiedDependencyException;
 import io.sunshower.module.phases.AbstractModulePhaseTestCase;
 import lombok.val;
 import org.junit.jupiter.api.DisplayName;
@@ -95,7 +93,6 @@ class DefaultModuleManagerTest extends AbstractModulePhaseTestCase {
         kernel.getModuleManager().resolve(dependent);
         fail("should have not been able to resolve module");
       } catch (UnsatisfiedDependencyException ex) {
-
       }
 
       kernel.getModuleManager().install(dependency);
@@ -139,6 +136,30 @@ class DefaultModuleManagerTest extends AbstractModulePhaseTestCase {
     } finally {
       first.getFileSystem().close();
       dependent.getFileSystem().close();
+    }
+  }
+
+  @Test
+  void ensureLoadingServiceFromFirstPluginWorks() throws Exception {
+    val first = resolve("test-plugin-1").getInstalledModule();
+    kernel.getModuleManager().install(first);
+    kernel.getModuleManager().resolve(first);
+    val activator = first.resolveServiceLoader(ModuleActivator.class);
+    val fst = activator.findFirst();
+    assertTrue("service must be present", fst.isPresent());
+
+    try {
+      fst.get()
+          .onLifecycleChanged(
+              new ModuleContext() {
+                @Override
+                public void addModuleLifecycleListener(ModuleLifecycleListener l) {}
+
+                @Override
+                public void removeModuleLifecycleListener(ModuleLifecycleListener listener) {}
+              });
+    } finally {
+      first.getFileSystem().close();
     }
   }
 }

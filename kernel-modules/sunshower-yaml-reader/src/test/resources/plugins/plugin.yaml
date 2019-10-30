@@ -2,6 +2,7 @@ plugin:
   name: io.sunshower.yaml
   group: io.sunshower
   version: 1.0.0
+  type: kernel-module
   description: Enables kernel modules and plugins to implement their plugin configurations in YAML
   dependencies:
     - dependency:

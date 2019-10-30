@@ -6,6 +6,7 @@ import io.sunshower.kernel.Module;
 import io.sunshower.kernel.core.DaggerSunshowerKernelConfiguration;
 import io.sunshower.kernel.core.SunshowerKernel;
 import io.sunshower.kernel.core.SunshowerKernelInjectionModule;
+import io.sunshower.kernel.dependencies.DependencyGraph;
 import io.sunshower.kernel.launch.KernelOptions;
 import io.sunshower.kernel.process.KernelProcess;
 import io.sunshower.kernel.process.KernelProcessContext;
@@ -31,6 +32,7 @@ public abstract class AbstractModulePhaseTestCase {
   protected SunshowerKernel kernel;
   protected KernelProcessContext context;
   protected FileSystem kernelFileSystem;
+  protected DependencyGraph dependencyGraph;
 
   @Getter
   public static class InstallationContext {
@@ -54,10 +56,12 @@ public abstract class AbstractModulePhaseTestCase {
 
     val injectionModule =
         DaggerSunshowerKernelConfiguration.builder()
-            .sunshowerKernelInjectionModule(new SunshowerKernelInjectionModule(options))
+            .sunshowerKernelInjectionModule(
+                new SunshowerKernelInjectionModule(options, ClassLoader.getSystemClassLoader()))
             .build();
 
     kernel = (SunshowerKernel) injectionModule.kernel();
+    dependencyGraph = injectionModule.dependencyGraph();
     context = new KernelProcessContext(kernel);
 
     SunshowerKernel.setKernelOptions(options);

@@ -15,7 +15,7 @@ public final class ModuleCycleDetector {
   private final DependencyGraph modules;
 
   public static ModuleCycleDetector newDetector(Collection<Module> asList) {
-    return newDetector(DependencyGraph.create(asList));
+    return newDetector(DefaultDependencyGraph.create(asList));
   }
 
   public static ModuleCycleDetector newDetector(DependencyGraph prospective) {
@@ -23,7 +23,7 @@ public final class ModuleCycleDetector {
   }
 
   @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
-  public Components compute() {
+  public io.sunshower.kernel.dependencies.Components compute() {
     val stack = new Stack<Link>();
     val results = new ArrayList<Component>();
     val links = new HashMap<Coordinate, Link>();
@@ -79,7 +79,7 @@ public final class ModuleCycleDetector {
   }
 
   @SuppressWarnings("PMD.AvoidFieldNameMatchingTypeName")
-  public static final class Components {
+  static final class Components implements io.sunshower.kernel.dependencies.Components {
     final List<Component> components;
 
     Components(List<Component> components) {
@@ -101,16 +101,19 @@ public final class ModuleCycleDetector {
       components.add(component);
     }
 
+    @Override
     public boolean hasCycle() {
       return components.stream().anyMatch(Component::isCyclic);
     }
 
-    public List<Component> getCycles() {
+    @Override
+    public List<io.sunshower.kernel.dependencies.Component> getCycles() {
       return components.stream().filter(Component::isCyclic).collect(Collectors.toList());
     }
   }
 
-  public static final class Component {
+  static final class Component implements io.sunshower.kernel.dependencies.Component {
+
     @Getter private final Module root;
     @Getter private final List<Module> members = new ArrayList<>();
 
@@ -118,10 +121,12 @@ public final class ModuleCycleDetector {
       this.root = root;
     }
 
+    @Override
     public boolean isCyclic() {
       return size() > 1;
     }
 
+    @Override
     public int size() {
       return members.size();
     }
