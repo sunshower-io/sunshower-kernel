@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.sunshower.kernel.Lifecycle;
+import io.sunshower.kernel.Module;
 import io.sunshower.kernel.UnsatisfiedDependencyException;
 import io.sunshower.module.phases.AbstractModulePhaseTestCase;
 import lombok.val;
@@ -140,6 +141,15 @@ class DefaultModuleManagerTest extends AbstractModulePhaseTestCase {
   }
 
   @Test
+  void ensurePluginClassIsNotAvailableOnCurrentClassloader() {
+    assertThrows(
+        ClassNotFoundException.class,
+        () -> {
+          Class.forName("plugin1.Test");
+        });
+  }
+
+  @Test
   void ensureLoadingServiceFromFirstPluginWorks() throws Exception {
     val first = resolve("test-plugin-1").getInstalledModule();
     kernel.getModuleManager().install(first);
@@ -160,6 +170,30 @@ class DefaultModuleManagerTest extends AbstractModulePhaseTestCase {
               });
     } finally {
       first.getFileSystem().close();
+    }
+  }
+
+  @Test
+  void ensureResolvedPluginHasCorrectModuleType() throws Exception {
+    val module = resolve("test-plugin-1").getInstalledModule();
+    try {
+      kernel.getModuleManager().install(module);
+      kernel.getModuleManager().resolve(module);
+      assertEquals(module.getType(), Module.Type.Plugin);
+    } finally {
+      module.getFileSystem().close();
+    }
+  }
+
+  @Test
+  void ensureResolvedModuleHasCorrectModuleType() throws Exception {
+    val module = resolveModule("kernel-lib").getInstalledModule();
+    try {
+      kernel.getModuleManager().install(module);
+      kernel.getModuleManager().resolve(module);
+      assertEquals(module.getType(), Module.Type.KernelModule);
+    } finally {
+      module.getFileSystem().close();
     }
   }
 }
