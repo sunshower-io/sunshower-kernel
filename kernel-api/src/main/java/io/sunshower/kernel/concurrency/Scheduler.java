@@ -21,4 +21,8 @@ public interface Scheduler {
   void unregisterHandler(Processor processor);
 
   boolean scheduleTask(ConcurrentProcess action);
+
+  void await(String channel);
+
+  void synchronize();
 }
