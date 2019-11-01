@@ -1,12 +1,24 @@
+apply plugin: 'pmd'
 apply plugin: 'war'
 apply plugin: 'java'
-dependencies {
-    implementation 'javax.inject:javax.inject'
-    implementation project(':kernel-api')
-    implementation 'org.jboss.modules:jboss-modules'
-    implementation group: 'com.github.zafarkhaja', name: 'java-semver', version: '0.9.0'
+apply plugin: 'java-library'
+apply plugin: 'com.github.spotbugs'
 
-    testImplementation project (':kernel-tests:kernel-test')
+
+dependencies {
+
+    /**
+     * Implementation dependencies
+     */
+    implementation project(':kernel-api')
+    implementation 'javax.inject:javax.inject'
+    implementation 'org.jboss.modules:jboss-modules'
+    implementation 'com.github.zafarkhaja:java-semver'
+
+    /**
+     * Test Implementation Dependencies
+     */
+    testImplementation project(':kernel-tests:kernel-test')
 }
 
 war {
