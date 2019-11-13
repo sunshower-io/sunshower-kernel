@@ -1,27 +1,24 @@
 package io.sunshower.spring;
 
-import io.sunshower.kernel.core.ModuleActivator;
-import io.sunshower.kernel.core.ModuleContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
+import io.sunshower.PluginActivator;
+import io.sunshower.PluginContext;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class TestPlugin implements ModuleActivator {
+public class TestPlugin implements PluginActivator {
 
-  @Bean
-  public String sayHello() {
-    return "Hello!";
-  }
-
-  public static void main(String[] args) {}
+  private ConfigurableApplicationContext context;
 
   @Override
-  public void onLifecycleChanged(ModuleContext context) {
-    AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
-    ctx.register(TestPlugin.class);
-    ctx.refresh();
-    String s = (String) ctx.getBean("sayHello");
-    System.out.println(s);
+  public void start(PluginContext context) {
+    this.context = SpringApplication.run(TestPlugin.class);
+  }
+
+  @Override
+  public void stop(PluginContext context) {
+    System.out.println("Stopping plugin-spring");
+    this.context.stop();
   }
 }

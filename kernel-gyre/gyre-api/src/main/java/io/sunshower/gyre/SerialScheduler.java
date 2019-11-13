@@ -1,10 +1,9 @@
 package io.sunshower.gyre;
 
-import lombok.AllArgsConstructor;
-import lombok.val;
-
 import java.util.Collections;
 import java.util.function.Predicate;
+import lombok.AllArgsConstructor;
+import lombok.val;
 
 @AllArgsConstructor
 public class SerialScheduler<E, V> implements Transformation<E, V, Schedule<E, V>> {
@@ -34,8 +33,8 @@ public class SerialScheduler<E, V> implements Transformation<E, V, Schedule<E, V
       for (val el : component.getElements()) {
 
         val taskSet =
-            new ParallelScheduler.MutableTaskSet<E, V>(
-                new ParallelScheduler.LabeledTask<>(el.snd, Collections.singleton(el.fst)));
+            new MutableTaskSet<E, V>(
+                new LabeledTask<>(el.snd, Collections.singleton(el.fst), Collections.emptySet()));
         schedule.tasks.add(taskSet);
       }
     }

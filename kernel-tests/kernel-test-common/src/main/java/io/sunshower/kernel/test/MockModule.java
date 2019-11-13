@@ -1,7 +1,9 @@
 package io.sunshower.kernel.test;
 
+import io.sunshower.PluginActivator;
 import io.sunshower.kernel.*;
 import io.sunshower.kernel.Module;
+import io.sunshower.kernel.core.ModuleClasspath;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.HashSet;
@@ -18,6 +20,11 @@ public class MockModule implements Module {
 
   public void addDependency(Dependency dependency) {
     dependencies.add(dependency);
+  }
+
+  @Override
+  public ModuleClasspath getModuleClasspath() {
+    return null;
   }
 
   @Override
@@ -52,6 +59,11 @@ public class MockModule implements Module {
 
   @Override
   public Lifecycle getLifecycle() {
+    return null;
+  }
+
+  @Override
+  public PluginActivator getActivator() {
     return null;
   }
 

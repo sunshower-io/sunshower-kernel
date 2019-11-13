@@ -1,19 +1,16 @@
 package plugin1;
 
-import io.sunshower.kernel.core.ModuleActivator;
-import io.sunshower.kernel.core.ModuleContext;
-import lombok.val;
+import io.sunshower.PluginActivator;
+import io.sunshower.PluginContext;
 
-public class Test implements ModuleActivator {
-  public Test() {
-    val text = getClass().getResource("/test.txt");
-    if (text == null) {
-      throw new IllegalStateException();
-    }
+public class Test implements PluginActivator {
+  @Override
+  public void start(PluginContext context) {
+    System.out.println("Plugin1 starting...");
   }
 
   @Override
-  public void onLifecycleChanged(ModuleContext context) {
-    System.out.println("LIFECYCLE CHANGED HOMESLICE!");
+  public void stop(PluginContext context) {
+    System.out.println("Plugin1 stopping...");
   }
 }

@@ -1,7 +1,9 @@
 package io.sunshower.kernel.test;
 
-import io.sunshower.kernel.concurrency.MultichannelCapableScheduler;
+import io.sunshower.kernel.concurrency.ExecutorWorkerPool;
+import io.sunshower.kernel.concurrency.KernelScheduler;
 import io.sunshower.kernel.concurrency.Scheduler;
+import io.sunshower.kernel.concurrency.WorkerPool;
 import io.sunshower.kernel.core.*;
 import io.sunshower.kernel.dependencies.DefaultDependencyGraph;
 import io.sunshower.kernel.dependencies.DependencyGraph;
@@ -41,16 +43,9 @@ public class KernelTestConfiguration {
   }
 
   @Bean
-  public ModuleContext moduleContext() {
-    return new DefaultModuleContext();
-  }
-
-  @Bean
-  public ModuleManager moduleManager(
-      ModuleContext moduleContext,
-      ModuleClasspathManager moduleClasspathManager,
-      DependencyGraph dependencyGraph) {
-    return new DefaultModuleManager(moduleContext, moduleClasspathManager, dependencyGraph);
+  public ModuleManager moduleManager(DependencyGraph dependencyGraph) {
+    return new DefaultModuleManager(dependencyGraph);
+    //    return new DefaultModuleManager(moduleContext, moduleClasspathManager, dependencyGraph);
   }
 
   @Bean
@@ -64,13 +59,23 @@ public class KernelTestConfiguration {
   }
 
   @Bean
-  public Scheduler scheduler(ExecutorService executorService) {
-    return new MultichannelCapableScheduler(executorService);
+  public WorkerPool workerPool() {
+    return new ExecutorWorkerPool(Executors.newFixedThreadPool(2));
+  }
+
+  @Bean
+  public Scheduler<String> scheduler(WorkerPool pool) {
+    return new KernelScheduler<>(pool);
   }
 
   @Bean
   public Kernel kernel(
-      ModuleManager moduleManager, Scheduler scheduler, ExecutorService executorService) {
-    return new SunshowerKernel(moduleManager, scheduler, executorService);
+      ModuleManager moduleManager,
+      Scheduler scheduler,
+      ModuleClasspathManager moduleClasspathManager) {
+
+    val result = new SunshowerKernel(moduleClasspathManager, moduleManager, scheduler);
+    moduleManager.initialize(result);
+    return result;
   }
 }

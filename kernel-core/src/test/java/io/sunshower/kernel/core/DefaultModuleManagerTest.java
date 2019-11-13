@@ -1,206 +1,314 @@
 package io.sunshower.kernel.core;
 
-import static io.sunshower.kernel.Tests.resolve;
-import static io.sunshower.kernel.Tests.resolveModule;
 import static org.junit.jupiter.api.Assertions.*;
 
 import io.sunshower.kernel.Lifecycle;
-import io.sunshower.kernel.Module;
-import io.sunshower.kernel.UnsatisfiedDependencyException;
-import io.sunshower.module.phases.AbstractModulePhaseTestCase;
-import java.net.URI;
-import java.nio.file.FileSystems;
-import java.util.Collections;
+import io.sunshower.kernel.concurrency.Scheduler;
+import io.sunshower.kernel.launch.KernelOptions;
+import io.sunshower.kernel.module.*;
+import io.sunshower.test.common.Tests;
+import java.io.File;
+import java.util.concurrent.ExecutionException;
+import lombok.SneakyThrows;
 import lombok.val;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings({
-  "PMD.EmptyCatchBlock",
-  "PMD.JUnitUseExpected",
-  "PMD.AvoidDuplicateLiterals",
-  "PMD.UseProperClassLoader",
-  "PMD.JUnitTestContainsTooManyAsserts",
+  "PMD.JUnitTestsShouldIncludeAssert",
+  "PMD.DataflowAnomalyAnalysis",
   "PMD.JUnitAssertionsShouldIncludeMessage",
+  "PMD.JUnitTestContainsTooManyAsserts"
 })
-class DefaultModuleManagerTest extends AbstractModulePhaseTestCase {
-  @Test
-  void ensureInstallingAndResolvingModuleWithNoDependenciesWorks() throws Exception {
-    val ctx = resolve("test-plugin-1", context);
-    val mod = ctx.getInstalledModule();
-    try {
+class DefaultModuleManagerTest {
 
-      assertEquals(
-          mod.getLifecycle().getState(),
-          ModuleLifecycle.State.Installed,
-          "Module must be installed");
+  Kernel kernel;
+  ModuleManager manager;
+  Scheduler<String> scheduler;
+  SunshowerKernelConfiguration cfg;
 
-      kernel.getModuleManager().install(mod);
-      kernel.getModuleManager().resolve(mod);
+  File plugin1;
+  File plugin2;
+  ModuleInstallationRequest req2;
+  ModuleInstallationRequest req1;
 
-      assertEquals(
-          mod.getLifecycle().getState(), ModuleLifecycle.State.Resolved, "Module must be resolved");
-    } finally {
-      mod.getFileSystem().close();
-    }
+  @BeforeEach
+  void setUp() throws Exception {
+
+    val options = new KernelOptions();
+    val tempfile = configureFiles();
+    options.setHomeDirectory(tempfile);
+
+    SunshowerKernel.setKernelOptions(options);
+
+    cfg =
+        DaggerSunshowerKernelConfiguration.builder()
+            .sunshowerKernelInjectionModule(
+                new SunshowerKernelInjectionModule(options, ClassLoader.getSystemClassLoader()))
+            .build();
+    kernel = cfg.kernel();
+    manager = kernel.getModuleManager();
+    manager.initialize(kernel);
+    scheduler = kernel.getScheduler();
+    kernel.start();
+
+    plugin1 =
+        Tests.relativeToProjectBuild("kernel-tests:test-plugins:test-plugin-1", "war", "libs");
+    plugin2 =
+        Tests.relativeToProjectBuild("kernel-tests:test-plugins:test-plugin-2", "war", "libs");
+
+    req1 = new ModuleInstallationRequest();
+    req1.setLifecycleActions(ModuleLifecycle.Actions.Install);
+    req1.setLocation(plugin1.toURI().toURL());
+
+    req2 = new ModuleInstallationRequest();
+    req2.setLifecycleActions(ModuleLifecycle.Actions.Activate);
+    req2.setLocation(plugin2.toURI().toURL());
+  }
+
+  @AfterEach
+  void tearDown() {
+    kernel.stop();
   }
 
   @Test
-  @DisplayName("modules must be installable but not resolvable")
-  void ensureInstallingModuleWithoutDependencySucceeds() throws Exception {
-    val ctx = resolve("test-plugin-2", context);
-    val mod = ctx.getInstalledModule();
-    try {
-      assertEquals(
-          mod.getLifecycle().getState(),
-          ModuleLifecycle.State.Installed,
-          "Module must be installed");
+  @Disabled
+  void ensureSavingKernelModuleWorks() throws Exception {
 
-      kernel.getModuleManager().install(mod);
-    } finally {
-      mod.getFileSystem().close();
-    }
+    assertThrows(
+        ClassNotFoundException.class,
+        () -> {
+          Class.forName(
+              "io.sunshower.kernel.ext.scanner.YamlPluginDescriptorScanner",
+              true,
+              kernel.getClassLoader());
+          fail("should not have been able to create a class");
+        },
+        "must not find class");
+
+    val module =
+        Tests.relativeToProjectBuild("kernel-modules:sunshower-yaml-reader", "war", "libs");
+
+    val req1 = new ModuleInstallationRequest();
+    req1.setLifecycleActions(ModuleLifecycle.Actions.Install);
+    req1.setLocation(module.toURI().toURL());
+
+    val grp = new ModuleInstallationGroup(req1);
+
+    val prepped = manager.prepare(grp);
+    scheduler.submit(prepped.getProcess()).get();
+
+    assertThrows(
+        ClassNotFoundException.class,
+        () -> {
+          Class.forName(
+              "io.sunshower.kernel.ext.scanner.YamlPluginDescriptorScanner",
+              true,
+              kernel.getClassLoader());
+        },
+        "still must not be able to find class");
+
+    kernel.stop();
+    kernel.start();
+    val cl =
+        Class.forName(
+            "io.sunshower.kernel.ext.scanner.YamlPluginDescriptorScanner",
+            true,
+            kernel.getClassLoader());
+    assertNotNull(cl.getConstructor().newInstance(), "must be able to create");
   }
 
   @Test
-  void ensureResolvingModuleWithoutDependencyFails() throws Exception {
-    val ctx = resolve("test-plugin-2", context);
-    val mod = ctx.getInstalledModule();
-    try {
-      assertEquals(
-          mod.getLifecycle().getState(),
-          ModuleLifecycle.State.Installed,
-          "Module must be installed");
+  void ensureDownloadingAndInstallingModuleWorksCorrectly()
+      throws ExecutionException, InterruptedException {
+    val grp = new ModuleInstallationGroup(req1, req2);
 
-      kernel.getModuleManager().install(mod);
-      assertThrows(
-          UnsatisfiedDependencyException.class,
-          () -> kernel.getModuleManager().resolve(mod),
-          "must not allow module with unsatisified dependencies to be resolved");
+    val prepped = manager.prepare(grp);
+    scheduler.submit(prepped.getProcess()).get();
 
-      assertEquals(mod.getLifecycle().getState(), Lifecycle.State.Failed);
-    } finally {
-      mod.getFileSystem().close();
-    }
+    val resolved = manager.getModules(Lifecycle.State.Resolved);
+    assertEquals(resolved.size(), 2);
+  }
+
+  @Test
+  void ensureStartingPlugin1Works() throws ExecutionException, InterruptedException {
+    val grp = new ModuleInstallationGroup(req1);
+    val prepped = manager.prepare(grp);
+    prepped.commit().toCompletableFuture().get();
+    assertEquals(
+        manager.getModules(Lifecycle.State.Resolved).size(), 1, "must be 2 active plugins");
+  }
+
+  @Test
+  void ensureIsntallingPluginsResultsInPluginsPlacedInResolvedState()
+      throws ExecutionException, InterruptedException {
+
+    val grp = new ModuleInstallationGroup(req2, req1);
+    val prepped = manager.prepare(grp);
+    prepped.commit().toCompletableFuture().get();
+    val active = manager.getModules(Lifecycle.State.Resolved);
+    assertEquals(active.size(), 2, "must have 2 resolved plugins");
+  }
+
+  @Test
+  void ensureStartingAndStoppingPluginsWorks() throws Exception {
+    val grp = new ModuleInstallationGroup(req1);
+    val prepped = manager.prepare(grp);
+    prepped.commit().toCompletableFuture().get();
+    val activeModule = manager.getModules(Lifecycle.State.Resolved).get(0);
+    start(activeModule.getCoordinate().getName());
+
+    val req1action =
+        new ModuleLifecycleChangeRequest(
+            activeModule.getCoordinate(), ModuleLifecycle.Actions.Stop);
+    val lgrp = new ModuleLifecycleChangeGroup(req1action);
+    manager.prepare(lgrp).commit().toCompletableFuture().get();
+
+    assertEquals(
+        manager.getModules(ModuleLifecycle.State.Resolved).size(), 1, "must be one stopped module");
+  }
+
+  @Test
+  void ensureStartingDependentPluginStartsBothPlugins() throws Exception {
+    val grp = new ModuleInstallationGroup(req1, req2);
+    val prepped = manager.prepare(grp);
+    prepped.commit().toCompletableFuture().get();
+    start("plugin-2");
+    assertEquals(
+        manager.getModules(ModuleLifecycle.State.Active).size(), 2, "must be two started modules");
+  }
+
+  @Test
+  void ensureStartingDependentPluginStartsDependency() throws Exception {
+
+    val grp = new ModuleInstallationGroup(req1, req2);
+    val prepped = manager.prepare(grp);
+    prepped.commit().toCompletableFuture().get();
+    start("plugin-1");
+
+    assertEquals(manager.getModules(Lifecycle.State.Active).size(), 1, "modules are equivalent");
+  }
+
+  @Test
+  void ensureStartingAndStoppingInitiatorModuleWorks() throws Exception {
+    val grp = new ModuleInstallationGroup(req1, req2);
+    val prepped = manager.prepare(grp);
+    prepped.commit().toCompletableFuture().get();
+
+    start("plugin-1");
+    val p2 =
+        manager
+            .getModules(Lifecycle.State.Active)
+            .stream()
+            .filter(t -> t.getCoordinate().getName().contains("plugin-1"))
+            .findFirst()
+            .get();
+
+    val req1action =
+        new ModuleLifecycleChangeRequest(p2.getCoordinate(), ModuleLifecycle.Actions.Stop);
+    val lgrp = new ModuleLifecycleChangeGroup(req1action);
+    manager.prepare(lgrp).commit().toCompletableFuture().get();
+
+    assertEquals(manager.getModules(Lifecycle.State.Active).size(), 0);
+    assertEquals(manager.getModules(Lifecycle.State.Resolved).size(), 2);
+  }
+
+  @Test
+  void ensureStartingAndStoppingMultipleModulesWorks() throws Exception {
+    val grp = new ModuleInstallationGroup(req1, req2);
+    val prepped = manager.prepare(grp);
+    prepped.commit().toCompletableFuture().get();
+    val p2 =
+        manager
+            .getModules(Lifecycle.State.Resolved)
+            .stream()
+            .filter(t -> t.getCoordinate().getName().contains("plugin-2"))
+            .findFirst()
+            .get();
+    start("plugin-2");
+
+    val req1action =
+        new ModuleLifecycleChangeRequest(p2.getCoordinate(), ModuleLifecycle.Actions.Stop);
+    val lgrp = new ModuleLifecycleChangeGroup(req1action);
+    manager.prepare(lgrp).commit().toCompletableFuture().get();
+
+    assertEquals(manager.getModules(Lifecycle.State.Active).size(), 1);
+    assertEquals(manager.getModules(Lifecycle.State.Resolved).size(), 1);
+  }
+
+  @Test
+  void ensureInstallingSingleModuleResultsInModuleClasspathBeingConfiguredCorrectly()
+      throws Exception {
+    val grp = new ModuleInstallationGroup(req1);
+    val prepped = manager.prepare(grp);
+    scheduler.submit(prepped.getProcess()).get();
+
+    val module = manager.getModules(Lifecycle.State.Resolved).get(0);
+    val result = Class.forName("plugin1.Test", true, module.getClassLoader());
+    val t = result.getConstructor().newInstance();
+    assertNotNull(t);
   }
 
   @Test
   void
-      ensureInstallingModuleWithMissingDependencyThenInstallingDependencyThenResolvingOriginalWorks()
+      ensureInstallingSingleModuleResultsInModuleClasspathBeingConfiguredCorrectlyWithoutDependantClassesAppearing()
           throws Exception {
-    val dependent = resolve("test-plugin-2", context).getInstalledModule();
-    val dependency = resolve("test-plugin-1", context).getInstalledModule();
+    val grp = new ModuleInstallationGroup(req1);
+    val prepped = manager.prepare(grp);
+    scheduler.submit(prepped.getProcess()).get();
 
-    try {
-      kernel.getModuleManager().install(dependent);
-
-      try {
-        kernel.getModuleManager().resolve(dependent);
-        fail("should have not been able to resolve module");
-      } catch (UnsatisfiedDependencyException ex) {
-      }
-
-      kernel.getModuleManager().install(dependency);
-      kernel.getModuleManager().resolve(dependency);
-      kernel.getModuleManager().resolve(dependent);
-    } finally {
-      dependency.getFileSystem().close();
-      dependent.getFileSystem().close();
-    }
-  }
-
-  @Test
-  void ensureActionTreeIsCorrectForIndependentModule() throws Exception {
-    val dependent = resolve("test-plugin-1", context).getInstalledModule();
-    try {
-      kernel.getModuleManager().install(dependent);
-      kernel.getModuleManager().resolve(dependent);
-
-      val action = kernel.getModuleManager().prepareFor(Lifecycle.State.Starting, dependent);
-      assertEquals(action.getActionTree().size(), 1, "Action tree must have at least one element");
-      assertEquals(action.getActionTree().height(), 1, "Action tree height must be one");
-    } finally {
-      dependent.getFileSystem().close();
-    }
-  }
-
-  @Test
-  void ensureActionTreeIsCorrectForDependentModule() throws Exception {
-    val first = resolve("test-plugin-1", context).getInstalledModule();
-
-    val dependent = resolve("test-plugin-2", context).getInstalledModule();
-    try {
-      kernel.getModuleManager().install(first);
-      kernel.getModuleManager().install(dependent);
-      kernel.getModuleManager().resolve(first);
-      kernel.getModuleManager().resolve(dependent);
-
-      val action = kernel.getModuleManager().prepareFor(Lifecycle.State.Starting, dependent);
-      assertEquals(action.getActionTree().size(), 2, "Action tree must have at least one element");
-      assertEquals(action.getActionTree().height(), 2, "Action tree height must be one");
-    } finally {
-      first.getFileSystem().close();
-      dependent.getFileSystem().close();
-    }
-  }
-
-  @Test
-  void ensurePluginClassIsNotAvailableOnCurrentClassloader() {
+    val module = manager.getModules(Lifecycle.State.Resolved).get(0);
     assertThrows(
         ClassNotFoundException.class,
-        () -> {
-          Class.forName("plugin1.Test");
-        });
+        () -> Class.forName("testproject2.Test", true, module.getClassLoader()),
+        "shouldn't be able to find dependent class in this classloader");
   }
 
   @Test
-  void ensureLoadingServiceFromFirstPluginWorks() throws Exception {
-    val first = resolve("test-plugin-1", context).getInstalledModule();
-    kernel.getModuleManager().install(first);
-    kernel.getModuleManager().resolve(first);
-    val activator = first.resolveServiceLoader(ModuleActivator.class);
-    val fst = activator.findFirst();
-    assertTrue(fst.isPresent(), "service must be present");
+  void ensureInstallingModuleWithDependentResultsInModuleClasspathBeingConfiguredCorrectly()
+      throws Exception {
 
-    try {
-      fst.get()
-          .onLifecycleChanged(
-              new ModuleContext() {
-                @Override
-                public void addModuleLifecycleListener(ModuleLifecycleListener l) {}
+    val grp = new ModuleInstallationGroup(req2, req1);
+    val prepped = manager.prepare(grp);
+    scheduler.submit(prepped.getProcess()).get();
 
-                @Override
-                public void removeModuleLifecycleListener(ModuleLifecycleListener listener) {}
-              });
-    } finally {
-      first.getFileSystem().close();
-    }
+    val module =
+        manager
+            .getModules(Lifecycle.State.Resolved)
+            .stream()
+            .filter(t -> t.getCoordinate().getName().equals("test-plugin-2"))
+            .findAny()
+            .get();
+    val result = Class.forName("testproject2.Test", true, module.getClassLoader());
+    val t = result.getConstructor().newInstance();
+    assertNotNull(t);
   }
 
-  @Test
-  void ensureResolvedPluginHasCorrectModuleType() throws Exception {
-    val module = resolve("test-plugin-1", context).getInstalledModule();
-    try {
-      kernel.getModuleManager().install(module);
-      kernel.getModuleManager().resolve(module);
-      assertEquals(module.getType(), Module.Type.Plugin);
-    } finally {
-      module.getFileSystem().close();
-    }
+  private File configureFiles() {
+    val tempfile = Tests.createTemp();
+    return tempfile;
   }
 
-  @Test
-  void ensureResolvedModuleHasCorrectModuleType() throws Exception {
+  @SneakyThrows
+  private void start(String s) {
+    request(s, ModuleLifecycle.Actions.Activate);
+  }
 
-    val fs = FileSystems.newFileSystem(URI.create("droplet://kernel"), Collections.emptyMap());
-    val module = resolveModule("kernel-lib", context).getInstalledModule();
-    try {
-      kernel.getModuleManager().install(module);
-      kernel.getModuleManager().resolve(module);
-      assertEquals(module.getType(), Module.Type.KernelModule);
-    } finally {
-      fs.close();
-      module.getFileSystem().close();
-    }
+  @SneakyThrows
+  private void request(String pluginName, ModuleLifecycle.Actions action) {
+
+    val plugin =
+        manager
+            .getModules()
+            .stream()
+            .filter(t -> t.getCoordinate().getName().contains(pluginName))
+            .findFirst()
+            .get();
+
+    val lifecycleRequest = new ModuleLifecycleChangeRequest(plugin.getCoordinate(), action);
+    val grp = new ModuleLifecycleChangeGroup(lifecycleRequest);
+    manager.prepare(grp).commit().toCompletableFuture().get();
   }
 }

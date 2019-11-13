@@ -1,17 +1,28 @@
 package io.sunshower.kernel.core;
 
+import io.sunshower.kernel.Coordinate;
 import io.sunshower.kernel.Lifecycle;
 import io.sunshower.kernel.Module;
-import io.sunshower.kernel.status.StatusAware;
+import io.sunshower.kernel.dependencies.DependencyGraph;
+import io.sunshower.kernel.module.ModuleInstallationGroup;
+import io.sunshower.kernel.module.ModuleInstallationStatusGroup;
+import io.sunshower.kernel.module.ModuleLifecycleChangeGroup;
+import io.sunshower.kernel.module.ModuleLifecycleStatusGroup;
 import java.util.List;
 
-public interface ModuleManager extends StatusAware {
+public interface ModuleManager extends KernelMember {
 
-  void install(Module module);
+  Module getModule(Coordinate coordinate);
 
-  List<Module> getModules(Module.Type type);
+  ModuleInstallationStatusGroup prepare(ModuleInstallationGroup group);
 
-  void resolve(Module module);
+  ModuleLifecycleStatusGroup prepare(ModuleLifecycleChangeGroup group);
 
-  LifecycleAction prepareFor(Lifecycle.State starting, Module dependent);
+  DependencyGraph getDependencyGraph();
+
+  ModuleClasspathManager getModuleLoader();
+
+  List<Module> getModules();
+
+  List<Module> getModules(Lifecycle.State resolved);
 }

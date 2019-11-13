@@ -1,11 +1,11 @@
 package io.sunshower.kernel.core;
 
-import io.sunshower.kernel.concurrency.ConcurrentProcess;
+import io.sunshower.PluginContext;
 import io.sunshower.kernel.concurrency.Scheduler;
 import java.nio.file.FileSystem;
 import java.util.List;
 
-public interface Kernel {
+public interface Kernel extends PluginContext {
 
   KernelLifecycle getLifecycle();
 
@@ -15,10 +15,6 @@ public interface Kernel {
 
   <T> List<T> locateServices(Class<T> type);
 
-  void scheduleTask(ConcurrentProcess process);
-
-  Scheduler getScheduler();
-
   FileSystem getFileSystem();
 
   void start();
@@ -26,4 +22,8 @@ public interface Kernel {
   void reload();
 
   void stop();
+
+  ModuleClasspathManager getModuleClasspathManager();
+
+  Scheduler<String> getScheduler();
 }

@@ -1,12 +1,12 @@
 package io.sunshower.gyre;
 
+import static io.sunshower.gyre.DirectedGraph.outgoing;
+import static org.junit.jupiter.api.Assertions.*;
+
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
-
-import static io.sunshower.gyre.DirectedGraph.outgoing;
-import static org.junit.jupiter.api.Assertions.*;
 
 class SchedulerTest {
 
@@ -73,8 +73,8 @@ class SchedulerTest {
     assertEquals(schedule.size(), 3, "must have 3 levels");
 
     expect(schedule.get(0), "2", "9", "10");
-    expect(schedule.get(1), "11", "5", "8");
-    expect(schedule.get(2), "3", "7");
+    expect(schedule.get(1), "11", "8");
+    expect(schedule.get(2), "3", "5", "7");
   }
 
   private void expect(TaskSet<DirectedGraph.Edge<String>, String> stringTaskSet, String... labels) {

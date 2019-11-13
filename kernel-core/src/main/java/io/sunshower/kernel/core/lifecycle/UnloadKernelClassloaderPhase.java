@@ -1,28 +1,26 @@
 package io.sunshower.kernel.core.lifecycle;
 
+import io.sunshower.gyre.Scope;
 import io.sunshower.kernel.classloading.KernelClassloader;
-import io.sunshower.kernel.process.*;
-import io.sunshower.kernel.process.Process;
-import java.io.IOException;
-import lombok.val;
+import io.sunshower.kernel.concurrency.Task;
+import io.sunshower.kernel.concurrency.TaskException;
+import io.sunshower.kernel.concurrency.TaskStatus;
+import io.sunshower.kernel.core.Kernel;
 
-public class UnloadKernelClassloaderPhase
-    extends AbstractPhase<KernelProcessEvent, KernelProcessContext> {
-  enum EventType implements KernelProcessEvent {}
+@SuppressWarnings("PMD.UseProperClassLoader")
+public class UnloadKernelClassloaderPhase extends Task {
 
-  public UnloadKernelClassloaderPhase() {
-    super(EventType.class);
+  public UnloadKernelClassloaderPhase(String name) {
+    super(name);
   }
 
   @Override
-  @SuppressWarnings("PMD.UseProperClassLoader")
-  protected void doExecute(
-      Process<KernelProcessEvent, KernelProcessContext> process, KernelProcessContext context) {
-    val classloader = (KernelClassloader) context.getKernel().getClassLoader();
+  public TaskValue run(Scope scope) {
     try {
-      classloader.close();
-    } catch (IOException e) {
-      throw new PhaseException(State.Unrecoverable, this, "failed to unload classloader", e);
+      ((KernelClassloader) scope.<Kernel>get("SunshowerKernel").getClassLoader()).close();
+    } catch (Exception ex) {
+      throw new TaskException(ex, TaskStatus.UNRECOVERABLE);
     }
+    return null;
   }
 }

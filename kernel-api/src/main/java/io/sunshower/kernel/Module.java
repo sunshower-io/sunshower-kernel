@@ -1,5 +1,7 @@
 package io.sunshower.kernel;
 
+import io.sunshower.PluginActivator;
+import io.sunshower.kernel.core.ModuleClasspath;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.ServiceLoader;
@@ -29,6 +31,8 @@ public interface Module extends Comparable<Module> {
     }
   }
 
+  ModuleClasspath getModuleClasspath();
+
   int getOrder();
 
   /** @return the relative paths of any created library directories */
@@ -43,6 +47,8 @@ public interface Module extends Comparable<Module> {
   Source getSource();
 
   Lifecycle getLifecycle();
+
+  PluginActivator getActivator();
 
   Coordinate getCoordinate();
 

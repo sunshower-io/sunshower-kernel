@@ -1,9 +1,8 @@
 package io.sunshower.gyre;
 
-import lombok.val;
-
 import java.util.*;
 import java.util.function.Predicate;
+import lombok.val;
 
 public class AbstractDirectedGraph<E, V> implements DirectedGraph<E, V> {
 
@@ -63,6 +62,11 @@ public class AbstractDirectedGraph<E, V> implements DirectedGraph<E, V> {
   }
 
   @Override
+  public Graph<Edge<E>, V> createNew() {
+    return new AbstractDirectedGraph<>();
+  }
+
+  @Override
   public int edgeCount() {
     int count = 0;
     for (val neighborList : adjacencies.values()) {
@@ -90,8 +94,8 @@ public class AbstractDirectedGraph<E, V> implements DirectedGraph<E, V> {
       adjacencies.put(source, neighbors);
     }
 
-    val neighbor = new Adjacency<E, V>(source, target, edge.getLabel());
-    neighbor.directions = edge.getDirection().set(neighbor.directions);
+    val neighbor = new Adjacency<E, V>(source, target, edge != null ? (E) edge.getLabel() : null);
+    neighbor.directions = edge != null ? edge.getDirection().set(neighbor.directions) : 1;
     neighbors.add(neighbor);
     if (!adjacencies.containsKey(target)) {
       adjacencies.put(target, new HashSet<>());
@@ -214,7 +218,11 @@ public class AbstractDirectedGraph<E, V> implements DirectedGraph<E, V> {
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public V getSource(Edge<E> edge) {
+    if (edge instanceof Adjacency) {
+      return (V) ((Adjacency) edge).source;
+    }
     for (val adjacency : adjacencies.entrySet()) {
       for (val actual : adjacency.getValue()) {
         if (edge.getDirection().is(actual.directions)
@@ -330,13 +338,49 @@ public class AbstractDirectedGraph<E, V> implements DirectedGraph<E, V> {
     }
     return result;
   }
+
+  @Override
+  public Set<Pair<V, Edge<E>>> removeDependents(V vertex, Predicate<Edge<E>> edgeFilter) {
+
+    Set<Pair<V, Edge<E>>> results = new HashSet<>();
+    for (val adjacency : adjacencies.values()) {
+      val adjiter = adjacency.iterator();
+      while (adjiter.hasNext()) {
+        val next = adjiter.next();
+        if (Objects.equals(next.target, vertex)) {
+          results.add(Pair.of(next.target, next));
+          adjiter.remove();
+        }
+      }
+    }
+    return results;
+  }
+
+  @Override
+  public Collection<Edge<E>> getDependents(V vertex, Predicate<Edge<E>> edgeFilter) {
+    List<Edge<E>> results = new ArrayList<>();
+    for (val adjacency : adjacencies.values()) {
+      val adjiter = adjacency.iterator();
+      while (adjiter.hasNext()) {
+        val next = adjiter.next();
+        if (Objects.equals(next.target, vertex)) {
+          results.add(next);
+        }
+      }
+    }
+    return results;
+  }
+
+  @Override
+  public void delete(V node) {
+    adjacencies.remove(node);
+  }
   /**
    * this method removes a vertex from the graph, including from all of the adjacency-lists that
    * vertex appears in
    */
   @Override
   public boolean remove(V vertex) {
-    //    return adjacencies.remove(vertex) != null;
     if (adjacencies.remove(vertex) != null) {
       for (val adjacency : adjacencies.values()) {
         val adjiter = adjacency.iterator();
@@ -416,5 +460,10 @@ public class AbstractDirectedGraph<E, V> implements DirectedGraph<E, V> {
     public String toString() {
       return String.format("E[%s:%s]", value, getDirection());
     }
+  }
+
+  @Override
+  public String toString() {
+    return new GraphWriter<Edge<E>, V>().write(this);
   }
 }

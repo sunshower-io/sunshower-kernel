@@ -1,6 +1,7 @@
 package io.sunshower.kernel.core;
 
-import java.util.concurrent.CompletableFuture;
+import io.sunshower.kernel.concurrency.Process;
+import java.util.concurrent.CompletionStage;
 
 public interface KernelLifecycle {
 
@@ -20,9 +21,9 @@ public interface KernelLifecycle {
 
   State getState();
 
-  CompletableFuture<Void> stop();
+  CompletionStage<Process<String>> stop();
 
-  CompletableFuture<Void> start();
+  CompletionStage<Process<String>> start();
 
-  CompletableFuture<Void> setState(State state);
+  CompletionStage<Process<String>> setState(State state);
 }

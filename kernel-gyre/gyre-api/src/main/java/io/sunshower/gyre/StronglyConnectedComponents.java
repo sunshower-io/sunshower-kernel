@@ -1,13 +1,12 @@
 package io.sunshower.gyre;
 
-import lombok.val;
+import static java.lang.Math.min;
+import static java.lang.String.format;
 
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
-import static java.lang.Math.min;
-import static java.lang.String.format;
+import lombok.val;
 
 public class StronglyConnectedComponents<E, V> implements Transformation<E, V, Partition<E, V>> {
   @Override
@@ -99,7 +98,6 @@ public class StronglyConnectedComponents<E, V> implements Transformation<E, V, P
       this.index = index;
       this.vertex = vertex;
     }
-
   }
 
   private static final class SCComponent<E, V> implements Component<E, V> {
@@ -116,6 +114,11 @@ public class StronglyConnectedComponents<E, V> implements Transformation<E, V, P
 
     void add(E edge, V vertex) {
       elements.add(Pair.of(edge, vertex));
+    }
+
+    @Override
+    public int size() {
+      return elements.size();
     }
 
     @Override

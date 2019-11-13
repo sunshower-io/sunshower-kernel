@@ -2,8 +2,10 @@ package io.sunshower.kernel.core;
 
 import dagger.Module;
 import dagger.Provides;
-import io.sunshower.kernel.concurrency.MultichannelCapableScheduler;
+import io.sunshower.kernel.concurrency.ExecutorWorkerPool;
+import io.sunshower.kernel.concurrency.KernelScheduler;
 import io.sunshower.kernel.concurrency.Scheduler;
+import io.sunshower.kernel.concurrency.WorkerPool;
 import io.sunshower.kernel.dependencies.DefaultDependencyGraph;
 import io.sunshower.kernel.dependencies.DependencyGraph;
 import io.sunshower.kernel.launch.KernelOptions;
@@ -27,14 +29,21 @@ public class SunshowerKernelInjectionModule {
 
   @Provides
   @Singleton
-  public Scheduler scheduler(ExecutorService executorService) {
-    return new MultichannelCapableScheduler(executorService);
+  public WorkerPool workerPool() {
+    // TODO make kernel thread pool configurable
+    return new ExecutorWorkerPool(Executors.newFixedThreadPool(1));
   }
 
   @Provides
   @Singleton
-  public ExecutorService executorService() {
-    return Executors.newCachedThreadPool(); //hmmm--right type?
+  public Scheduler<String> kernelScheduler(WorkerPool pool) {
+    return new KernelScheduler<>(pool);
+  }
+
+  @Provides
+  @Singleton
+  public ExecutorService executorService(KernelOptions options) {
+    return Executors.newFixedThreadPool(options.getConcurrency());
   }
 
   @Provides
@@ -49,25 +58,17 @@ public class SunshowerKernelInjectionModule {
     return options;
   }
 
-  @Singleton
-  @Provides
-  public DefaultModuleContext moduleContext() {
-    return new DefaultModuleContext();
-  }
-
   @Provides
   @Singleton
-  public Kernel sunshowerKernel(SunshowerKernel kernel) {
+  public Kernel sunshowerKernel(SunshowerKernel kernel, ModuleManager moduleManager) {
+    moduleManager.initialize(kernel);
     return kernel;
   }
 
   @Provides
   @Singleton
-  public ModuleManager pluginManager(
-      DefaultModuleContext context,
-      ModuleClasspathManager classpathManager,
-      DependencyGraph dependencyGraph) {
-    return new DefaultModuleManager(context, classpathManager, dependencyGraph);
+  public ModuleManager pluginManager(DependencyGraph dependencyGraph) {
+    return new DefaultModuleManager(dependencyGraph);
   }
 
   @Provides

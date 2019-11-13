@@ -1,33 +1,29 @@
 package io.sunshower.kernel.core.lifecycle;
 
-import io.sunshower.kernel.process.*;
-import io.sunshower.kernel.process.Process;
-import java.io.IOException;
-import java.util.logging.Level;
+import io.sunshower.gyre.Scope;
+import io.sunshower.kernel.concurrency.Task;
+import io.sunshower.kernel.concurrency.TaskException;
+import io.sunshower.kernel.concurrency.TaskStatus;
+import io.sunshower.kernel.core.Kernel;
+
 import java.util.logging.Logger;
 
-public class UnloadKernelFilesystemPhase
-    extends AbstractPhase<KernelProcessEvent, KernelProcessContext> {
-  enum EventType implements KernelProcessEvent {}
-
+public class UnloadKernelFilesystemPhase extends Task {
   static final Logger logger = Logger.getLogger(UnloadKernelFilesystemPhase.class.getName());
 
-  public UnloadKernelFilesystemPhase() {
-    super(EventType.class);
+  public UnloadKernelFilesystemPhase(String name) {
+    super(name);
   }
 
   @Override
-  protected void doExecute(
-      Process<KernelProcessEvent, KernelProcessContext> process, KernelProcessContext context) {
+  public TaskValue run(Scope scope) {
     try {
-      logger.info("Unloading filesystem");
-      context.getKernel().getFileSystem().close();
-      logger.info("Successfully unloaded filesystem");
-    } catch (IOException e) {
-      logger.log(Level.INFO, "error", e.getMessage());
-      logger.log(Level.WARNING, "error", e);
-
-      throw new PhaseException(State.Unrecoverable, this, "failed to close kernel filesystem", e);
+      logger.info("unloading kernel filesystem");
+      scope.<Kernel>get("SunshowerKernel").getFileSystem().close();
+      logger.info("kernel filesystem unloaded");
+    } catch (Exception ex) {
+      throw new TaskException(ex, TaskStatus.UNRECOVERABLE);
     }
+    return null;
   }
 }
